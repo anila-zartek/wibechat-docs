@@ -302,6 +302,83 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 .search-empty{padding:32px;text-align:center;color:var(--text-muted);font-size:14px}
 .search-esc{font-size:11px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;padding:2px 6px;color:var(--text-muted);cursor:pointer}
 
+/* ---- PLAYGROUND ---- */
+.playground-container{border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;margin:20px 0 32px}
+.playground-header{padding:20px 24px;border-bottom:1px solid var(--border);background:var(--bg-alt)}
+.playground-header h3{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.playground-header p{font-size:14px;color:var(--text-secondary);margin:0}
+
+/* API Explorer */
+.api-explorer{display:grid;grid-template-columns:40% 60%;min-height:420px}
+.api-explorer-left{border-right:1px solid var(--border);display:flex;flex-direction:column}
+.api-explorer-right{display:flex;flex-direction:column;background:#0F1117;position:relative}
+.pg-tabs{display:flex;border-bottom:1px solid var(--border)}
+.pg-tab{flex:1;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);border-bottom:2px solid transparent;font-family:inherit;transition:var(--transition)}
+.pg-tab:hover{color:var(--text-secondary)}
+.pg-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--bg)}
+.pg-endpoint-list{flex:1;overflow-y:auto;padding:8px}
+.pg-endpoint{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-size:13px;border:1px solid transparent}
+.pg-endpoint:hover{background:var(--bg-subtle)}
+.pg-endpoint.selected{background:var(--primary-light);border-color:var(--primary)}
+.pg-endpoint .method{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;flex-shrink:0;min-width:40px;text-align:center}
+.pg-endpoint .method.get{background:#22C55E}
+.pg-endpoint .method.post{background:#3B82F6}
+.pg-endpoint .path{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text)}
+.pg-params{border-top:1px solid var(--border);padding:16px}
+.pg-params-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px}
+.pg-param-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pg-param-row label{font-size:12px;font-weight:600;color:var(--text-secondary);min-width:90px;font-family:'JetBrains Mono',monospace}
+.pg-param-row input,.pg-param-row select{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;outline:none;transition:border-color 0.15s}
+.pg-param-row input:focus,.pg-param-row select:focus{border-color:var(--primary)}
+.pg-send-btn{width:100%;padding:10px;border:none;border-radius:var(--radius);background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.pg-send-btn:hover{background:var(--primary-hover)}
+.pg-send-btn:disabled{opacity:.6;cursor:not-allowed}
+.pg-response-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #1E293B;background:#161B22}
+.pg-status{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.pg-status.s200{background:rgba(34,197,94,0.15);color:#4ADE80}
+.pg-status.s201{background:rgba(59,130,246,0.15);color:#60A5FA}
+.pg-response-time{font-size:12px;color:#6B7280;font-family:'JetBrains Mono',monospace}
+.pg-response-body{flex:1;overflow:auto;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:#CDD6F4;white-space:pre-wrap}
+.pg-response-body::-webkit-scrollbar{width:5px}
+.pg-response-body::-webkit-scrollbar-thumb{background:#2D3748;border-radius:4px}
+.pg-response-placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#6B7280;font-size:14px;font-family:'Inter',sans-serif}
+.pg-spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:pg-spin 0.6s linear infinite}
+@keyframes pg-spin{to{transform:rotate(360deg)}}
+
+/* Chat Simulator */
+.chat-sim{border-top:1px solid var(--border)}
+.chat-sim-header{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg-alt)}
+.chat-sim-header .channel-name{font-weight:700;font-size:15px;color:var(--text)}
+.chat-sim-header .channel-hash{color:var(--text-muted);font-weight:400}
+.chat-sim-online{font-size:12px;color:var(--text-muted);margin-left:auto}
+.chat-sim-online .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22C55E;margin-right:4px}
+.chat-messages{height:320px;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.chat-msg{display:flex;gap:10px;padding:6px 0}
+.chat-msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.chat-msg-body{min-width:0}
+.chat-msg-header{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.chat-msg-name{font-weight:600;font-size:13.5px;color:var(--text)}
+.chat-msg-time{font-size:11px;color:var(--text-muted)}
+.chat-msg-presence{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:2px;vertical-align:middle}
+.chat-msg-presence.online{background:#22C55E}
+.chat-msg-presence.idle{background:#F59E0B}
+.chat-msg-presence.offline{background:#94A3B8}
+.chat-msg-text{font-size:14px;color:var(--text-secondary);line-height:1.5;word-break:break-word}
+.chat-typing{padding:6px 20px 10px;font-size:13px;color:var(--text-muted);min-height:30px;display:flex;align-items:center;gap:8px}
+.typing-dots{display:inline-flex;gap:3px}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--text-muted);animation:typing-bounce 1.4s infinite}
+.typing-dots span:nth-child(2){animation-delay:0.2s}
+.typing-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes typing-bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.chat-input-bar{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--border);background:var(--bg)}
+.chat-input{flex:1;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;transition:border-color 0.15s}
+.chat-input:focus{border-color:var(--primary)}
+.chat-input::placeholder{color:var(--text-muted)}
+.chat-send-btn{padding:9px 18px;border:none;border-radius:var(--radius);background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transition);flex-shrink:0}
+.chat-send-btn:hover{background:var(--primary-hover)}
+
 /* ---- RESPONSIVE ---- */
 @media(max-width:1200px){
   .toc-panel{display:none}
@@ -324,6 +401,10 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
   .mobile-menu-btn{display:flex}
   .endpoint-desc{display:none}
   .cards-grid.cols-3{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .api-explorer{grid-template-columns:1fr;min-height:auto}
+  .api-explorer-left{border-right:none;border-bottom:1px solid var(--border)}
+  .pg-endpoint-list{max-height:200px}
+  .chat-messages{height:260px}
 }
 </style>
 </head>
@@ -352,6 +433,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
     <a href="#quickstart">Documentation</a>
     <a href="#api-reference">API Reference</a>
     <a href="#sdk-reference">SDKs</a>
+    <a href="#playground">Playground</a>
   </div>
   <div class="navbar-right">
     <button class="search-btn" onclick="openSearch()">
@@ -413,6 +495,16 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           <a href="#api-reference" data-nav>API Reference</a>
           <a href="#sdk-reference" data-nav>SDK Reference</a>
           <a href="#configuration" data-nav>Configuration</a>
+        </div>
+      </div>
+
+      <div class="nav-group" id="ng-demo">
+        <span class="nav-group-label" onclick="toggleNavGroup('ng-demo')">
+          Demo
+          <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+        <div class="nav-group-links">
+          <a href="#playground" data-nav>Interactive Playground</a>
         </div>
       </div>
     </nav>
@@ -551,6 +643,22 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <div class="card-title">Voice &amp; Video Calling</div>
           <div class="card-desc">LiveKit-powered rooms, token generation, room management</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-section-block">
+      <p class="hero-cards-label">Try It Out</p>
+      <div class="cards-grid cols-2" style="max-width:560px;margin:0 auto">
+        <a class="card" href="#playground" style="text-decoration:none;grid-column:1/-1">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--primary-light)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+          <div class="card-title">Interactive Playground</div>
+          <div class="card-desc">Try the Chat &amp; Calling APIs with simulated data — no setup needed. Send messages, explore endpoints, and see live responses.</div>
         </a>
       </div>
     </div>
@@ -3118,6 +3226,77 @@ queue = chat.<span class="fn">register_event_queue</span>(
 </div>
 </section>
 
+<!-- ============================================================ PLAYGROUND -->
+<section id="playground">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Demo</span><span class="sep"> / </span>
+  <span>Interactive Playground</span>
+</div>
+<h2 class="section-title">Interactive Playground</h2>
+<p class="section-desc">Try the WibeChat API without writing any code. All responses are simulated — no backend connection needed.</p>
+
+<div class="playground-container">
+  <!-- API Explorer -->
+  <div class="playground-header">
+    <h3>API Explorer</h3>
+    <p>Select an endpoint, edit parameters, and send a simulated request.</p>
+  </div>
+  <div class="api-explorer">
+    <div class="api-explorer-left">
+      <div class="pg-tabs">
+        <button class="pg-tab active" data-pg-cat="chat" onclick="pgSwitchCat(this)">Chat</button>
+        <button class="pg-tab" data-pg-cat="calling" onclick="pgSwitchCat(this)">Calling</button>
+      </div>
+      <div class="pg-endpoint-list" id="pgEndpointList"></div>
+      <div class="pg-params" id="pgParams">
+        <div class="pg-params-title">Parameters</div>
+        <div id="pgParamFields"></div>
+        <button class="pg-send-btn" id="pgSendBtn" onclick="pgSendRequest()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Send Request
+        </button>
+      </div>
+    </div>
+    <div class="api-explorer-right">
+      <div class="pg-response-bar" id="pgResponseBar" style="display:none">
+        <span class="pg-status s200" id="pgStatusBadge">200 OK</span>
+        <span class="pg-response-time" id="pgResponseTime"></span>
+      </div>
+      <div class="pg-response-body" id="pgResponseBody">
+        <div class="pg-response-placeholder">Select an endpoint and click "Send Request"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Simulator -->
+  <div class="chat-sim">
+    <div class="chat-sim-header">
+      <span class="channel-hash">#</span>
+      <span class="channel-name">general</span>
+      <span class="chat-sim-online"><span class="dot"></span>4 online</span>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-typing" id="chatTyping"></div>
+    <div class="chat-input-bar">
+      <input class="chat-input" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')chatSend()">
+      <button class="chat-send-btn" onclick="chatSend()">Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-nav">
+  <a href="#configuration" class="page-nav-btn prev">
+    <span class="page-nav-label">&larr; Previous</span>
+    <span class="page-nav-title">Configuration</span>
+  </a>
+  <a href="#playground" class="page-nav-btn next">
+    <span class="page-nav-label">Next &rarr;</span>
+    <span class="page-nav-title">Interactive Playground</span>
+  </a>
+</div>
+</section>
+
 </div><!-- /content-wrap -->
 
 <!-- FOOTER -->
@@ -3143,6 +3322,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
         <a href="#api-reference">API Reference</a>
         <a href="#sdk-reference">SDK Reference</a>
         <a href="#configuration">Configuration</a>
+        <a href="#playground">Playground</a>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
@@ -3394,11 +3574,299 @@ navLinks.forEach(link => {
 });
 
 // ============================================================
+// PLAYGROUND — MOCK DATA
+// ============================================================
+const MOCK_DATA = {
+  channels: [
+    { stream_id: 1, name: "general", description: "General discussion", invite_only: false, subscribers: [1,2,3,4] },
+    { stream_id: 2, name: "engineering", description: "Engineering team", invite_only: false, subscribers: [1,2] },
+    { stream_id: 3, name: "design", description: "Design discussions", invite_only: false, subscribers: [1,3] },
+    { stream_id: 4, name: "random", description: "Water cooler chat", invite_only: false, subscribers: [1,2,3,4] },
+  ],
+  users: [
+    { user_id: 1, email: "alice@demo.com", full_name: "Alice Chen", is_active: true, status: "online" },
+    { user_id: 2, email: "bob@demo.com", full_name: "Bob Smith", is_active: true, status: "idle" },
+    { user_id: 3, email: "charlie@demo.com", full_name: "Charlie Davis", is_active: false, status: "offline" },
+    { user_id: 4, email: "you@demo.com", full_name: "You", is_active: true, status: "online" },
+  ],
+  messages: [
+    { id: 101, sender_full_name: "Alice Chen", sender_id: 1, content: "Hey team! Ready for standup?", timestamp: 1718456400, stream_id: 1, subject: "daily" },
+    { id: 102, sender_full_name: "Bob Smith", sender_id: 2, content: "Sure, let me grab coffee first ☕", timestamp: 1718456460, stream_id: 1, subject: "daily" },
+    { id: 103, sender_full_name: "Alice Chen", sender_id: 1, content: "Take your time!", timestamp: 1718456520, stream_id: 1, subject: "daily" },
+    { id: 104, sender_full_name: "Charlie Davis", sender_id: 3, content: "I'll join in 5 min", timestamp: 1718456580, stream_id: 1, subject: "daily" },
+  ],
+  rooms: [
+    { name: "standup-room", sid: "RM_abc123def456", num_participants: 3, creation_time: 1718456400, max_participants: 10 },
+    { name: "interview-room", sid: "RM_def456ghi789", num_participants: 0, creation_time: 1718460000, max_participants: 5 },
+  ],
+  presence: {
+    "alice@demo.com": { status: "active", timestamp: 1718456520 },
+    "bob@demo.com": { status: "idle", timestamp: 1718456200 },
+    "charlie@demo.com": { status: "offline", timestamp: 1718450000 },
+    "you@demo.com": { status: "active", timestamp: 1718456580 },
+  },
+};
+
+const PG_ENDPOINTS = [
+  { cat: "chat", method: "GET", path: "/chat/channels/", desc: "List channels", params: [], response: () => ({ result: "success", streams: MOCK_DATA.channels }), status: 200 },
+  { cat: "chat", method: "POST", path: "/chat/messages/", desc: "Send a message", params: [
+    { name: "to", value: "general", type: "text" },
+    { name: "content", value: "Hello from the playground!", type: "text" },
+    { name: "topic", value: "greetings", type: "text" },
+  ], response: (p) => ({ result: "success", id: 200 + Math.floor(Math.random()*800), msg: "" }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/messages/", desc: "Get messages", params: [
+    { name: "channel", value: "general", type: "text" },
+    { name: "num_before", value: "50", type: "text" },
+  ], response: () => ({ result: "success", messages: MOCK_DATA.messages }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/users/", desc: "List users", params: [], response: () => ({ result: "success", members: MOCK_DATA.users }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/presence/", desc: "Get presence", params: [], response: () => ({ result: "success", presences: MOCK_DATA.presence }), status: 200 },
+  { cat: "chat", method: "POST", path: "/chat/files/", desc: "Upload file", params: [
+    { name: "filename", value: "report.pdf", type: "text" },
+  ], response: (p) => ({ result: "success", uri: "/user_uploads/1/ab/" + (p.filename || "file.pdf"), url: "https://chat.example.com/user_uploads/1/ab/" + (p.filename || "file.pdf") }), status: 200 },
+  { cat: "calling", method: "POST", path: "/calls/token/", desc: "Generate token", params: [
+    { name: "room", value: "standup-room", type: "text" },
+    { name: "identity", value: "user@example.com", type: "text" },
+    { name: "name", value: "Alice", type: "text" },
+    { name: "ttl", value: "3600", type: "text" },
+  ], response: (p) => ({ access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBUEl" + btoa(Math.random().toString()).slice(0,20) + "...", token_type: "Bearer", room: p.room || "standup-room", identity: p.identity || "user@example.com", name: p.name || "Alice", expires_in: parseInt(p.ttl) || 3600 }), status: 201 },
+  { cat: "calling", method: "GET", path: "/calls/rooms/", desc: "List rooms", params: [], response: () => ({ rooms: MOCK_DATA.rooms }), status: 200 },
+  { cat: "calling", method: "POST", path: "/calls/rooms/", desc: "Create room", params: [
+    { name: "name", value: "meeting-room", type: "text" },
+    { name: "max_participants", value: "10", type: "text" },
+  ], response: (p) => ({ name: p.name || "meeting-room", sid: "RM_" + Math.random().toString(36).slice(2,14), num_participants: 0, creation_time: Math.floor(Date.now()/1000), max_participants: parseInt(p.max_participants) || 10 }), status: 201 },
+];
+
+let pgCurrentCat = "chat";
+let pgSelectedIdx = 0;
+
+function pgSwitchCat(btn) {
+  document.querySelectorAll('.pg-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  pgCurrentCat = btn.dataset.pgCat;
+  pgSelectedIdx = 0;
+  pgRenderEndpoints();
+  pgSelectEndpoint(0);
+}
+
+function pgGetFiltered() {
+  return PG_ENDPOINTS.filter(e => e.cat === pgCurrentCat);
+}
+
+function pgRenderEndpoints() {
+  const list = document.getElementById('pgEndpointList');
+  if (!list) return;
+  const endpoints = pgGetFiltered();
+  list.innerHTML = endpoints.map((ep, i) =>
+    `<div class="pg-endpoint${i === pgSelectedIdx ? ' selected' : ''}" onclick="pgSelectEndpoint(${i})">` +
+    `<span class="method ${ep.method.toLowerCase()}">${ep.method}</span>` +
+    `<span class="path">${ep.path}</span></div>`
+  ).join('');
+}
+
+function pgSelectEndpoint(idx) {
+  pgSelectedIdx = idx;
+  pgRenderEndpoints();
+  const endpoints = pgGetFiltered();
+  const ep = endpoints[idx];
+  if (!ep) return;
+  const fields = document.getElementById('pgParamFields');
+  if (!fields) return;
+  if (ep.params.length === 0) {
+    fields.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:4px 0">No parameters required</div>';
+  } else {
+    fields.innerHTML = ep.params.map(p =>
+      `<div class="pg-param-row"><label>${p.name}</label><input type="${p.type}" value="${p.value}" data-param="${p.name}"></div>`
+    ).join('');
+  }
+}
+
+function pgSendRequest() {
+  const btn = document.getElementById('pgSendBtn');
+  const body = document.getElementById('pgResponseBody');
+  const bar = document.getElementById('pgResponseBar');
+  const badge = document.getElementById('pgStatusBadge');
+  const timeEl = document.getElementById('pgResponseTime');
+  if (!btn || !body) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="pg-spinner"></span> Sending...';
+  body.innerHTML = '';
+  if (bar) bar.style.display = 'none';
+
+  const endpoints = pgGetFiltered();
+  const ep = endpoints[pgSelectedIdx];
+  if (!ep) return;
+
+  const params = {};
+  document.querySelectorAll('#pgParamFields input').forEach(inp => {
+    params[inp.dataset.param] = inp.value;
+  });
+
+  const latency = 120 + Math.floor(Math.random() * 180);
+
+  setTimeout(() => {
+    const result = ep.response(params);
+    const json = JSON.stringify(result, null, 2);
+    const highlighted = pgHighlightJson(json);
+
+    if (bar) bar.style.display = 'flex';
+    if (badge) {
+      badge.textContent = ep.status === 201 ? '201 Created' : '200 OK';
+      badge.className = 'pg-status ' + (ep.status === 201 ? 's201' : 's200');
+    }
+    if (timeEl) timeEl.textContent = latency + 'ms';
+    body.innerHTML = highlighted;
+
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Send Request';
+  }, latency);
+}
+
+function pgHighlightJson(json) {
+  return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"([^"]+)":/g, '<span style="color:#89B4FA">"$1"</span>:')
+    .replace(/: "([^"]*?)"/g, ': <span style="color:#A6E3A1">"$1"</span>')
+    .replace(/: (\d+)/g, ': <span style="color:#FAB387">$1</span>')
+    .replace(/: (true|false|null)/g, ': <span style="color:#CBA6F7">$1</span>');
+}
+
+// ============================================================
+// PLAYGROUND — CHAT SIMULATOR
+// ============================================================
+const CHAT_USERS = [
+  { name: "Alice Chen", color: "#6366F1", status: "online" },
+  { name: "Bob Smith", color: "#F59E0B", status: "idle" },
+  { name: "Charlie Davis", color: "#EF4444", status: "offline" },
+  { name: "Echo Bot", color: "#22C55E", status: "online" },
+];
+
+const CHAT_INITIAL = [
+  { user: 0, text: "Hey team! Ready for standup?", time: "10:30 AM" },
+  { user: 1, text: "Sure, let me grab coffee first ☕", time: "10:31 AM" },
+  { user: 0, text: "Take your time!", time: "10:31 AM" },
+  { user: 2, text: "I'll join in 5 min", time: "10:32 AM" },
+];
+
+const BOT_REPLIES = [
+  "Got it! Message received.",
+  "Thanks for the update!",
+  "I'll note that down.",
+  "Roger that!",
+  "Acknowledged.",
+];
+
+const AMBIENT_MESSAGES = [
+  { user: 0, text: "Has anyone reviewed the PR yet?" },
+  { user: 1, text: "Working on the API docs now." },
+  { user: 2, text: "Back from lunch! What did I miss?" },
+  { user: 0, text: "The deployment looks good so far." },
+  { user: 1, text: "Let me know if you need help with testing." },
+];
+
+let chatMsgId = 0;
+let ambientIdx = 0;
+let ambientTimer = null;
+
+function chatGetTimeStr() {
+  const d = new Date();
+  let h = d.getHours(), m = d.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+}
+
+function chatRenderMsg(userName, text, time, userIdx) {
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+  const user = userIdx >= 0 ? CHAT_USERS[userIdx] : null;
+  const isYou = userIdx === -1;
+  const color = isYou ? '#0E7C86' : (user ? user.color : '#6B7280');
+  const name = isYou ? 'You' : userName;
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const status = isYou ? 'online' : (user ? user.status : 'online');
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg';
+  div.innerHTML =
+    `<div class="chat-msg-avatar" style="background:${color}">${initials}</div>` +
+    `<div class="chat-msg-body">` +
+      `<div class="chat-msg-header">` +
+        `<span class="chat-msg-name">${name}</span>` +
+        `<span class="chat-msg-presence ${status}"></span>` +
+        `<span class="chat-msg-time">${time}</span>` +
+      `</div>` +
+      `<div class="chat-msg-text">${escHtml(text)}</div>` +
+    `</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function chatShowTyping(name) {
+  const el = document.getElementById('chatTyping');
+  if (el) el.innerHTML = `<span class="typing-dots"><span></span><span></span><span></span></span> ${escHtml(name)} is typing...`;
+}
+
+function chatHideTyping() {
+  const el = document.getElementById('chatTyping');
+  if (el) el.innerHTML = '';
+}
+
+function chatSend() {
+  const input = document.getElementById('chatInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  chatRenderMsg('You', text, chatGetTimeStr(), -1);
+
+  // Bot reply after a short delay
+  setTimeout(() => {
+    chatShowTyping('Echo Bot');
+    setTimeout(() => {
+      chatHideTyping();
+      const reply = BOT_REPLIES[Math.floor(Math.random() * BOT_REPLIES.length)];
+      chatRenderMsg('Echo Bot', reply, chatGetTimeStr(), 3);
+    }, 800 + Math.random() * 800);
+  }, 400);
+}
+
+function chatAmbientMessage() {
+  if (ambientIdx >= AMBIENT_MESSAGES.length) ambientIdx = 0;
+  const msg = AMBIENT_MESSAGES[ambientIdx++];
+  chatRenderMsg(CHAT_USERS[msg.user].name, msg.text, chatGetTimeStr(), msg.user);
+}
+
+function initPlayground() {
+  // API Explorer
+  pgRenderEndpoints();
+  pgSelectEndpoint(0);
+
+  // Chat Simulator — initial messages
+  CHAT_INITIAL.forEach(m => chatRenderMsg(CHAT_USERS[m.user].name, m.text, m.time, m.user));
+
+  // Ambient messages every 12-18 seconds
+  function scheduleAmbient() {
+    ambientTimer = setTimeout(() => {
+      chatAmbientMessage();
+      scheduleAmbient();
+    }, 12000 + Math.random() * 6000);
+  }
+  scheduleAmbient();
+}
+
+// ============================================================
 // INIT
 // ============================================================
 buildGlobalPills();
 switchAllTabs(activePlatform);
 buildTOC();
+initPlayground();
 updateLayout();
 updateActiveNav();
 updateTOC();
