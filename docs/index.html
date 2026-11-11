@@ -3,250 +3,490 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wibechat Developer Documentation</title>
+<title>WibeChat Developer Documentation</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --teal:#0E7C86;--teal-dark:#096169;--teal-light:#10969F;--teal-bg:#E8F7F8;
-  --bg:#FFFFFF;--bg-alt:#F8FAFB;--bg-code:#1E1E2E;
-  --text:#1A1A2E;--text-secondary:#555770;--text-muted:#8888A0;
-  --border:#E2E4EA;--border-light:#F0F1F4;
+  --primary:#0E7C86;--primary-hover:#096169;--primary-light:#E8F7F8;
+  --bg:#FFFFFF;--bg-alt:#F8FAFB;--bg-subtle:#F1F5F9;--bg-code:#1a1b2e;
+  --text:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --border:#E2E8F0;--border-light:#F1F5F9;
   --react:#61DAFB;--python:#3776AB;--flutter:#02569B;
-  --swift:#F05138;--kotlin:#7F52FF;--go:#00ADD8;--java:#E76F00;--ruby:#CC342D;
-  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;
+  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;--tip:#10B981;
   --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:0 4px 12px rgba(0,0,0,0.1);
-  --radius:8px;--radius-lg:12px;
-  --sidebar-w:260px;
+  --shadow-md:0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+  --radius:8px;--radius-lg:12px;--radius-xl:16px;
+  --sidebar-w:272px;--toc-w:220px;
+  --transition:all 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --primary:#2DD4BF;--primary-hover:#14B8A6;--primary-light:#134e4a;
+  --bg:#0F172A;--bg-alt:#1E293B;--bg-subtle:#334155;--bg-code:#0d0f1a;
+  --text:#F1F5F9;--text-secondary:#94A3B8;--text-muted:#64748B;
+  --border:#334155;--border-light:#1E293B;
+  --shadow:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.5);
 }
 html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.65;font-size:15px}
-a{color:var(--teal);text-decoration:none}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.7;font-size:15px;transition:background 0.2s,color 0.2s}
+a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
 code,pre{font-family:'JetBrains Mono','Fira Code',monospace}
-/* Sidebar */
-.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:#FAFBFC;border-right:1px solid var(--border);overflow-y:auto;z-index:100;padding:20px 0;transition:transform .3s}
-.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.sidebar-logo .logo-icon{width:32px;height:32px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
-.sidebar-logo span{font-weight:700;font-size:17px;color:var(--text)}
-.sidebar-logo small{font-size:11px;color:var(--text-muted);display:block;margin-top:2px}
-.sidebar nav{padding:0 12px}
-.sidebar .nav-section{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:16px 8px 6px}
-.sidebar a{display:block;padding:6px 12px;border-radius:6px;color:var(--text-secondary);font-size:13.5px;font-weight:500;transition:all .15s}
-.sidebar a:hover{background:var(--teal-bg);color:var(--teal);text-decoration:none}
-.sidebar a.active{background:var(--teal-bg);color:var(--teal);font-weight:600}
-/* Main content */
-.main{margin-left:var(--sidebar-w);min-height:100vh}
-.content{max-width:860px;margin:0 auto;padding:40px 48px 100px}
-/* Hero */
-.hero{text-align:center;padding:80px 20px 60px;background:linear-gradient(135deg,#E8F7F8 0%,#fff 60%,#EEF6FF 100%);border-bottom:1px solid var(--border)}
-.hero h1{font-size:42px;font-weight:800;color:var(--text);margin-bottom:12px;letter-spacing:-.02em}
-.hero h1 span{color:var(--teal)}
-.hero .tagline{font-size:19px;color:var(--text-secondary);max-width:520px;margin:0 auto 36px}
-.platform-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,180px));gap:16px;justify-content:center;max-width:700px;margin:0 auto}
-.platform-card{background:#fff;border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px 16px;cursor:pointer;transition:all .2s;text-align:center}
-.platform-card:hover{border-color:var(--teal);box-shadow:var(--shadow-md);transform:translateY(-2px)}
-.platform-card.selected{border-color:var(--teal);background:var(--teal-bg)}
-.platform-card .platform-icon{font-size:28px;margin-bottom:6px}
-.platform-card .platform-name{font-weight:700;font-size:15px}
-.platform-card .platform-pkg{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* Section styles */
-section{padding-top:24px;margin-bottom:48px}
-.section-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.01em;padding-bottom:12px;border-bottom:2px solid var(--teal)}
-.section-subtitle{font-size:20px;font-weight:700;color:var(--text);margin:32px 0 12px}
-.section-desc{color:var(--text-secondary);margin-bottom:24px;font-size:15px}
-/* Platform tabs — scrollable for N platforms */
+
+/* ---- SIDEBAR ---- */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-alt);border-right:1px solid var(--border);overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:transform .3s,background 0.2s,border-color 0.2s}
+.sidebar-header{padding:18px 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--primary-hover));border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex-shrink:0;box-shadow:0 2px 8px rgba(14,124,134,0.3)}
+.logo-text{flex:1}
+.logo-text strong{font-weight:700;font-size:16px;color:var(--text);display:block;line-height:1.2}
+.logo-text small{font-size:11px;color:var(--text-muted);display:block;margin-top:1px}
+.version-badge{display:inline-flex;align-items:center;gap:4px;background:var(--primary-light);color:var(--primary);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.04em;border:1px solid rgba(14,124,134,0.2)}
+.search-box{position:relative}
+.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#sidebarSearch{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px 7px 34px;font-size:13px;color:var(--text);outline:none;transition:var(--transition);font-family:inherit}
+#sidebarSearch::placeholder{color:var(--text-muted)}
+#sidebarSearch:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(14,124,134,0.1)}
+.search-kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--text-muted);padding:2px 5px;font-family:inherit;pointer-events:none}
+.sidebar-nav{flex:1;padding:8px 10px;overflow-y:auto}
+.nav-group{margin-bottom:4px}
+.nav-group-header{display:flex;align-items:center;gap:7px;padding:9px 10px 5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);cursor:pointer;border-radius:6px;transition:var(--transition);user-select:none}
+.nav-group-header:hover{color:var(--text-secondary);background:var(--border-light)}
+.nav-group-header svg{flex-shrink:0}
+.nav-group-chevron{margin-left:auto;transition:transform 0.2s;color:var(--text-muted)}
+.nav-group.collapsed .nav-group-chevron{transform:rotate(-90deg)}
+.nav-group-links{overflow:hidden;transition:max-height 0.25s ease}
+.nav-group.collapsed .nav-group-links{max-height:0!important}
+.sidebar nav a{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;color:var(--text-secondary);font-size:13.5px;font-weight:500;transition:var(--transition);position:relative}
+.sidebar nav a:hover{background:var(--primary-light);color:var(--primary);text-decoration:none}
+.sidebar nav a.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+.sidebar nav a.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--primary);border-radius:0 2px 2px 0}
+.nav-hidden{display:none!important}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.sidebar-footer-links{display:flex;gap:12px}
+.sidebar-footer-links a{font-size:12px;color:var(--text-muted)}
+.sidebar-footer-links a:hover{color:var(--primary);text-decoration:none}
+.dark-toggle{background:var(--bg-subtle);border:1px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--text-secondary);transition:var(--transition)}
+.dark-toggle:hover{border-color:var(--primary);color:var(--primary)}
+.dark-toggle .toggle-icon{font-size:13px}
+
+/* ---- MAIN ---- */
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+
+/* ---- TOC ---- */
+.toc-panel{position:fixed;top:0;right:0;width:var(--toc-w);height:100vh;padding:24px 14px;overflow-y:auto;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.toc-panel.visible{opacity:1;pointer-events:all}
+.toc-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:10px;padding-top:60px}
+.toc-link{display:block;font-size:12.5px;color:var(--text-muted);padding:3px 0 3px 10px;border-left:2px solid var(--border);margin-bottom:1px;transition:var(--transition);line-height:1.4}
+.toc-link:hover{color:var(--primary);border-left-color:var(--primary);text-decoration:none}
+.toc-link.active{color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.toc-link.toc-h3{padding-left:20px;font-size:12px}
+
+/* ---- CONTENT ---- */
+.content-wrap{max-width:900px;margin:0 auto;padding:40px 48px 100px;width:100%}
+
+/* ---- BREADCRUMBS ---- */
+.breadcrumbs{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-bottom:28px;flex-wrap:wrap}
+.breadcrumbs a{color:var(--text-muted)}
+.breadcrumbs a:hover{color:var(--primary);text-decoration:none}
+.breadcrumbs .sep{color:var(--border)}
+
+/* ---- HERO ---- */
+.hero{background:linear-gradient(135deg,rgba(14,124,134,0.07) 0%,var(--bg) 50%,rgba(99,102,241,0.05) 100%);border-bottom:1px solid var(--border);padding:72px 48px 56px;text-align:center}
+.hero h1{font-size:40px;font-weight:800;color:var(--text);margin-bottom:14px;letter-spacing:-.025em;line-height:1.15}
+.hero h1 span{color:var(--primary)}
+.hero .tagline{font-size:19px;color:var(--text-secondary);max-width:520px;margin:0 auto 48px;line-height:1.6}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--primary);color:#fff;padding:11px 22px;border-radius:var(--radius);font-weight:600;font-size:14px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(14,124,134,0.35);text-decoration:none;color:#fff}
+.btn-secondary{display:inline-flex;align-items:center;gap:7px;background:var(--bg);color:var(--text-secondary);padding:11px 22px;border-radius:var(--radius);font-weight:600;font-size:14px;border:1.5px solid var(--border);cursor:pointer;transition:var(--transition);text-decoration:none}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px);text-decoration:none}
+
+/* ---- CARD GRIDS ---- */
+.cards-grid{display:grid;gap:16px}
+.cards-grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.cards-grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.cards-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:22px 20px;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;text-decoration:none;display:block;color:var(--text)}
+.card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px);text-decoration:none;color:var(--text)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),#2DD4BF);opacity:0;transition:opacity 0.2s}
+.card:hover::before{opacity:1}
+.card-icon{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:var(--primary)}
+.card-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:5px}
+.card-desc{font-size:13px;color:var(--text-secondary);line-height:1.5}
+.card-arrow{position:absolute;bottom:16px;right:16px;color:var(--text-muted);opacity:0;transform:translateX(-4px);transition:var(--transition)}
+.card:hover .card-arrow{opacity:1;transform:translateX(0)}
+.card.platform-card{text-align:center;padding:20px 16px}
+.card.platform-card .card-icon{margin:0 auto 10px}
+.card.platform-card.selected{border-color:var(--primary);background:var(--primary-light)}
+.card.platform-card .card-pkg{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:5px}
+.card.coming-soon-card{opacity:0.65;cursor:default}
+.card.coming-soon-card:hover{border-color:var(--border);box-shadow:none;transform:none}
+
+/* ---- SECTION ---- */
+section{padding-top:28px;margin-bottom:52px}
+.section-title{font-size:30px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.02em;padding-bottom:14px;border-bottom:2px solid var(--primary)}
+.section-subtitle{font-size:20px;font-weight:700;color:var(--text);margin:34px 0 12px;display:flex;align-items:center;gap:8px}
+.section-desc{color:var(--text-secondary);margin-bottom:22px;font-size:15px}
+p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.7}
+
+/* ---- GLOBAL PLATFORM BAR ---- */
+.global-platform-bar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;display:none;transition:background 0.2s}
+[data-theme="dark"] .global-platform-bar{background:rgba(15,23,42,0.92)}
+.global-platform-bar.visible{display:block}
+.global-platform-bar-inner{max-width:900px;margin:0 auto;padding:0 48px;display:flex;align-items:center;gap:14px}
+.global-platform-bar-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.global-platform-pills::-webkit-scrollbar{display:none}
+.global-platform-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text-secondary);transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:5px}
+.global-platform-pill:hover{border-color:var(--primary);color:var(--primary)}
+.global-platform-pill.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.global-platform-pill .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ---- PLATFORM TABS ---- */
 .platform-tabs-wrapper{position:relative;border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden}
-.platform-tabs-wrapper::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(90deg,transparent,var(--bg-alt));pointer-events:none;opacity:0;transition:opacity .2s}
-.platform-tabs-wrapper.has-overflow::after{opacity:1}
-.platform-tabs{display:flex;gap:0;overflow-x:auto;background:var(--bg-alt);scrollbar-width:none;-ms-overflow-style:none}
+.platform-tabs{display:flex;overflow-x:auto;background:var(--bg-alt);scrollbar-width:none}
 .platform-tabs::-webkit-scrollbar{display:none}
-.platform-tab{flex:0 0 auto;padding:10px 20px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:all .15s;border-bottom:2px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
-.platform-tab:hover{color:var(--text);background:#fff}
-.platform-tab.active{color:var(--teal);background:#fff;border-bottom-color:var(--teal)}
+.platform-tab{flex:0 0 auto;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:var(--transition);border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.platform-tab:hover{color:var(--text);background:var(--bg)}
+.platform-tab.active{color:var(--primary);background:var(--bg);border-bottom-color:var(--primary)}
 .platform-tab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.platform-tab .dot[data-color]{background:var(--teal)}
 .platform-tab .dot.react-dot{background:var(--react)}
 .platform-tab .dot.python-dot{background:var(--python)}
 .platform-tab .dot.flutter-dot{background:var(--flutter)}
-.platform-tab .dot.swift-dot{background:var(--swift)}
-.platform-tab .dot.kotlin-dot{background:var(--kotlin)}
-.platform-tab .dot.go-dot{background:var(--go)}
-.platform-tab .dot.java-dot{background:var(--java)}
-.platform-tab .dot.ruby-dot{background:var(--ruby)}
 .tab-content{display:none}
 .tab-content.active{display:block}
-/* Global platform picker — sticky */
-.global-platform-bar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 0;display:none}
-.global-platform-bar.visible{display:block}
-.global-platform-bar-inner{max-width:860px;margin:0 auto;padding:0 48px;display:flex;align-items:center;gap:12px}
-.global-platform-bar-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
-.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-.global-platform-pills::-webkit-scrollbar{display:none}
-.global-platform-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text-secondary);transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.global-platform-pill:hover{border-color:var(--teal);color:var(--teal)}
-.global-platform-pill.active{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
-.global-platform-pill .dot{width:6px;height:6px;border-radius:50%}
-@media(max-width:768px){
-  .global-platform-bar-inner{padding:0 16px}
-  .global-platform-bar-label{display:none}
-}
-/* Code blocks */
-.code-block{position:relative;background:var(--bg-code);border-radius:0 0 var(--radius) var(--radius);overflow:hidden;margin-bottom:24px}
-.code-block.standalone{border-radius:var(--radius)}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.08)}
-.code-header span{font-size:12px;color:#888;font-family:'JetBrains Mono',monospace}
-.copy-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:4px 12px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.copy-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
-.copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
-pre{padding:16px 20px;overflow-x:auto;font-size:13.5px;line-height:1.7;color:#CDD6F4}
+
+/* ---- CODE BLOCKS ---- */
+.code-block{position:relative;background:var(--bg-code);border-radius:0 0 var(--radius) var(--radius);overflow:hidden;margin-bottom:20px;border:1px solid rgba(255,255,255,0.06);transition:box-shadow 0.2s}
+.code-block:hover{box-shadow:0 0 0 2px rgba(45,212,191,0.15)}
+.code-block.standalone{border-radius:var(--radius);border:1px solid rgba(255,255,255,0.06)}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07)}
+.code-lang{display:flex;align-items:center;gap:7px;font-size:12px;color:#8892a4;font-family:'JetBrains Mono',monospace}
+.code-lang-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.copy-btn{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#9ca3af;padding:4px 11px;border-radius:5px;font-size:11.5px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:var(--transition)}
+.copy-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+.copy-btn.copied{background:rgba(34,197,94,0.2);color:#4ade80;border-color:rgba(34,197,94,0.3)}
+pre{padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.75;color:#CDD6F4}
+pre::-webkit-scrollbar{height:5px}
+pre::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
 pre code{background:none;padding:0;font-size:inherit}
-/* Inline code */
-code{background:var(--teal-bg);color:var(--teal-dark);padding:2px 6px;border-radius:4px;font-size:0.9em}
-/* Info boxes */
-.info-box{padding:16px 20px;border-radius:var(--radius);margin:20px 0;border-left:4px solid;font-size:14px}
-.info-box.tip{background:#F0FDF4;border-color:var(--success);color:#166534}
-.info-box.warning{background:#FFFBEB;border-color:var(--warning);color:#92400E}
-.info-box.note{background:var(--teal-bg);border-color:var(--teal);color:var(--teal-dark)}
-.info-box strong{display:block;margin-bottom:4px}
-/* Tables */
-table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:14px}
-th{text-align:left;padding:10px 14px;background:var(--bg-alt);border:1px solid var(--border);font-weight:600;color:var(--text)}
-td{padding:10px 14px;border:1px solid var(--border);color:var(--text-secondary)}
-td code{font-size:12px}
-/* Steps */
-.steps{counter-reset:step}
-.step{counter-increment:step;position:relative;padding:0 0 32px 52px;border-left:2px solid var(--border);margin-left:16px}
-.step:last-child{border-left-color:transparent;padding-bottom:0}
-.step::before{content:counter(step);position:absolute;left:-15px;top:0;width:28px;height:28px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.step h4{font-size:16px;font-weight:700;margin-bottom:8px}
+code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;border-radius:4px;font-size:0.875em}
+[data-theme="dark"] code{color:var(--primary)}
+
+/* ---- CALLOUTS ---- */
+.callout{display:flex;gap:14px;padding:16px 18px;border-radius:var(--radius);margin:20px 0;border-left:3px solid;font-size:14px;line-height:1.6}
+.callout-icon{flex-shrink:0;margin-top:1px}
+.callout-body .callout-title{font-weight:700;margin-bottom:4px;display:block}
+.callout-body p{margin:0;font-size:14px}
+.callout.info{background:rgba(59,130,246,0.08);border-color:#3B82F6;color:#1e40af}
+[data-theme="dark"] .callout.info{background:rgba(59,130,246,0.1);color:#93c5fd}
+.callout.warning{background:rgba(245,158,11,0.08);border-color:#F59E0B;color:#92400e}
+[data-theme="dark"] .callout.warning{background:rgba(245,158,11,0.1);color:#fcd34d}
+.callout.tip{background:rgba(16,185,129,0.08);border-color:#10B981;color:#065f46}
+[data-theme="dark"] .callout.tip{background:rgba(16,185,129,0.1);color:#6ee7b7}
+.callout.note{background:var(--primary-light);border-color:var(--primary);color:var(--primary-hover)}
+[data-theme="dark"] .callout.note{background:rgba(45,212,191,0.08);color:var(--primary)}
+
+/* ---- TABLES ---- */
+.table-wrap{border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin:16px 0 24px}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:14px}
+.table-wrap thead{position:sticky;top:0;z-index:1}
+.table-wrap th{text-align:left;padding:11px 16px;background:var(--bg-subtle);border-bottom:1px solid var(--border);font-weight:600;color:var(--text);font-size:13px}
+.table-wrap td{padding:10px 16px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
+.table-wrap tr:last-child td{border-bottom:none}
+.table-wrap tbody tr:nth-child(even){background:var(--bg-alt)}
+.table-wrap td code{font-size:12px}
+.badge-req{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.03em}
+.badge-required{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)}
+.badge-optional{background:rgba(100,116,139,0.1);color:#64748b;border:1px solid rgba(100,116,139,0.2)}
+
+/* ---- STEPS ---- */
+.steps{counter-reset:step;padding-left:0}
+.step{counter-increment:step;position:relative;padding:0 0 32px 60px;margin-left:0}
+.step:last-child{padding-bottom:0}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 2px 8px rgba(14,124,134,0.35);z-index:1}
+.step::after{content:'';position:absolute;left:17px;top:38px;bottom:0;width:2px;background:linear-gradient(180deg,var(--primary),var(--border));opacity:0.5}
+.step:last-child::after{display:none}
+.step-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius);padding:18px 20px;margin-bottom:4px;transition:var(--transition)}
+.step-card:hover{box-shadow:var(--shadow)}
+.step h4{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
 .step p{color:var(--text-secondary);margin-bottom:12px;font-size:14px}
-/* Endpoint cards */
-.endpoint{background:#fff;border:1px solid var(--border);border-radius:var(--radius);margin:16px 0;overflow:hidden}
-.endpoint-header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--bg-alt);border-bottom:1px solid var(--border);cursor:pointer}
-.endpoint-method{padding:4px 10px;border-radius:4px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff}
+
+/* ---- ENDPOINT CARDS ---- */
+.endpoint{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin:14px 0;overflow:hidden;transition:box-shadow 0.2s}
+.endpoint:hover{box-shadow:var(--shadow)}
+.endpoint.get-border{border-left:3px solid #22C55E}
+.endpoint.post-border{border-left:3px solid #3B82F6}
+.endpoint.put-border{border-left:3px solid #F59E0B}
+.endpoint.patch-border{border-left:3px solid #8B5CF6}
+.endpoint.delete-border{border-left:3px solid #EF4444}
+.endpoint-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg-alt);border-bottom:1px solid transparent;cursor:pointer;user-select:none;transition:var(--transition)}
+.endpoint-header:hover{background:var(--bg-subtle)}
+.endpoint.open .endpoint-header{border-bottom-color:var(--border)}
+.endpoint-method{padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;flex-shrink:0}
 .endpoint-method.get{background:#22C55E}
 .endpoint-method.post{background:#3B82F6}
 .endpoint-method.put{background:#F59E0B}
 .endpoint-method.patch{background:#8B5CF6}
 .endpoint-method.delete{background:#EF4444}
-.endpoint-path{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500}
-.endpoint-desc{margin-left:auto;font-size:13px;color:var(--text-muted)}
-.endpoint-body{padding:20px;display:none}
-.endpoint-body.open{display:block}
-/* Coming soon placeholder */
-.coming-soon{text-align:center;padding:48px 24px;color:var(--text-muted)}
-.coming-soon .coming-soon-icon{font-size:48px;margin-bottom:16px;opacity:0.5}
-.coming-soon h4{font-size:18px;font-weight:700;color:var(--text-secondary);margin-bottom:8px}
-.coming-soon p{font-size:14px;max-width:400px;margin:0 auto}
-/* Mobile */
-.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;background:var(--teal);border:none;border-radius:8px;color:#fff;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
+.endpoint-path{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:500;color:var(--text)}
+.endpoint-desc{margin-left:auto;font-size:12.5px;color:var(--text-muted);padding-right:8px}
+.endpoint-chevron{flex-shrink:0;color:var(--text-muted);transition:transform 0.2s}
+.endpoint.open .endpoint-chevron{transform:rotate(180deg)}
+.endpoint-body{max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1)}
+.endpoint.open .endpoint-body{max-height:2000px}
+.endpoint-body-inner{padding:20px}
+
+/* ---- COMING SOON ---- */
+.coming-soon{text-align:center;padding:52px 24px;color:var(--text-muted);background:var(--bg-alt);border-radius:var(--radius);border:1px dashed var(--border)}
+.coming-soon-icon{font-size:44px;margin-bottom:16px;opacity:0.5}
+.coming-soon h4{font-size:17px;font-weight:700;color:var(--text-secondary);margin-bottom:8px}
+.coming-soon p{font-size:14px;max-width:400px;margin:0 auto;color:var(--text-muted)}
+
+/* ---- PREV/NEXT NAV ---- */
+.page-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:60px;padding-top:32px;border-top:1px solid var(--border)}
+.page-nav-btn{display:flex;flex-direction:column;padding:18px 20px;border:1.5px solid var(--border);border-radius:var(--radius-lg);text-decoration:none;color:var(--text-secondary);transition:var(--transition);min-width:0}
+.page-nav-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);text-decoration:none;box-shadow:var(--shadow)}
+.page-nav-btn.prev{align-items:flex-start}
+.page-nav-btn.next{align-items:flex-end;text-align:right}
+.page-nav-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.page-nav-title{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.page-nav-btn:hover .page-nav-title{color:var(--primary)}
+
+/* ---- FOOTER ---- */
+.site-footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:48px 0 32px;margin-top:auto}
+.footer-inner{max-width:900px;margin:0 auto;padding:0 48px}
+.footer-grid{display:grid;grid-template-columns:1fr repeat(3,auto);gap:40px;align-items:start;margin-bottom:36px}
+.footer-brand .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.footer-brand .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--primary),var(--primary-hover));border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
+.footer-brand strong{font-size:16px;font-weight:700;color:var(--text)}
+.footer-brand p{font-size:13px;color:var(--text-muted);line-height:1.5;max-width:220px;margin:0}
+.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:12px}
+.footer-col a{display:block;font-size:13.5px;color:var(--text-secondary);margin-bottom:7px;transition:var(--transition)}
+.footer-col a:hover{color:var(--primary);text-decoration:none}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border)}
+.footer-bottom p{font-size:13px;color:var(--text-muted)}
+.footer-social{display:flex;gap:12px}
+.footer-social a{width:32px;height:32px;border-radius:7px;background:var(--bg-subtle);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:var(--transition)}
+.footer-social a:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary);text-decoration:none}
+
+/* ---- MOBILE ---- */
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;background:var(--primary);border:none;border-radius:9px;color:#fff;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
+
+/* ---- SYNTAX COLORS ---- */
+.kw{color:#CBA6F7}.str{color:#A6E3A1}.cm{color:#585b70;font-style:italic}
+.fn{color:#89B4FA}.num{color:#FAB387}.op{color:#89DCEB}
+.ty{color:#F9E2AF}.at{color:#F38BA8}.var{color:#CDD6F4}
+.tag{color:#89B4FA}.prop{color:#A6E3A1}
+
+/* ---- SCROLLBAR ---- */
+.sidebar::-webkit-scrollbar,.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb,.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:1200px){
+  .toc-panel{display:none}
+  .content-wrap{max-width:100%}
+}
 @media(max-width:768px){
+  :root{--sidebar-w:272px}
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0}
-  .content{padding:24px 20px 80px}
-  .menu-toggle{display:flex}
+  .content-wrap{padding:24px 20px 80px}
+  .hero{padding:48px 20px 40px}
   .hero h1{font-size:28px}
   .hero .tagline{font-size:16px}
-  .platform-cards{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));max-width:100%}
+  .menu-toggle{display:flex}
   .endpoint-desc{display:none}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .page-nav{grid-template-columns:1fr}
+  .footer-inner{padding:0 20px}
+  .global-platform-bar-inner{padding:0 16px}
+  .global-platform-bar-label{display:none}
+  .cards-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
 }
-/* Syntax colors */
-.kw{color:#CBA6F7} .str{color:#A6E3A1} .cm{color:#6C7086;font-style:italic}
-.fn{color:#89B4FA} .num{color:#FAB387} .op{color:#89DCEB}
-.ty{color:#F9E2AF} .at{color:#F38BA8} .var{color:#CDD6F4}
-.tag{color:#89B4FA} .prop{color:#A6E3A1}
-/* Scrollbar */
-.sidebar::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px}
-pre::-webkit-scrollbar{height:4px}
-pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
-/* Badge */
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.badge-react{background:#E0F7FA;color:#0097A7}
-.badge-python{background:#E8EAF6;color:#3F51B5}
-.badge-flutter{background:#E3F2FD;color:#1565C0}
 </style>
 </head>
 <body>
-
-<!-- Mobile menu toggle -->
 <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
 
-<!-- Sidebar -->
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon">W</div>
-    <div><span>Wibechat</span><small>Developer Docs</small></div>
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="logo-icon">W</div>
+      <div class="logo-text">
+        <strong>WibeChat</strong>
+        <small>Developer Docs</small>
+      </div>
+      <span class="version-badge">v1.0</span>
+    </div>
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="sidebarSearch" placeholder="Search docs..." autocomplete="off">
+      <span class="search-kbd">⌘K</span>
+    </div>
   </div>
-  <nav>
-    <a href="#hero">Home</a>
-    <div class="nav-section">Getting Started</div>
-    <a href="#quickstart">Quick Start</a>
-    <a href="#authentication">Authentication</a>
-    <div class="nav-section">Integration</div>
-    <a href="#chat">Chat Integration</a>
-    <a href="#calling">Calling Integration</a>
-    <a href="#realtime">Real-time Events</a>
-    <div class="nav-section">Reference</div>
-    <a href="#api-reference">API Reference</a>
-    <a href="#sdk-reference">SDK Reference</a>
-    <a href="#configuration">Configuration</a>
-  </nav>
+  <div class="sidebar-nav">
+    <nav>
+      <a href="#hero" data-nav>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </a>
+
+      <div class="nav-group" id="ng-start">
+        <div class="nav-group-header" onclick="toggleNavGroup('ng-start')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+          Getting Started
+          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="nav-group-links">
+          <a href="#quickstart" data-nav>Quick Start</a>
+          <a href="#authentication" data-nav>Authentication</a>
+        </div>
+      </div>
+
+      <div class="nav-group" id="ng-integration">
+        <div class="nav-group-header" onclick="toggleNavGroup('ng-integration')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Integration
+          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="nav-group-links">
+          <a href="#chat" data-nav>Chat Integration</a>
+          <a href="#calling" data-nav>Calling Integration</a>
+          <a href="#realtime" data-nav>Real-time Events</a>
+        </div>
+      </div>
+
+      <div class="nav-group" id="ng-ref">
+        <div class="nav-group-header" onclick="toggleNavGroup('ng-ref')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Reference
+          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="nav-group-links">
+          <a href="#api-reference" data-nav>API Reference</a>
+          <a href="#sdk-reference" data-nav>SDK Reference</a>
+          <a href="#configuration" data-nav>Configuration</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-links">
+      <a href="https://admin.wibechat.com" target="_blank">Admin Portal</a>
+      <a href="mailto:support@wibechat.com">Support</a>
+    </div>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkToggleBtn">
+      <span class="toggle-icon">🌙</span>
+      <span class="toggle-label">Dark</span>
+    </button>
+  </div>
 </aside>
 
-<!-- Main -->
+<!-- TOC PANEL -->
+<aside class="toc-panel" id="tocPanel">
+  <div class="toc-panel-title">On this page</div>
+  <div id="tocLinks"></div>
+</aside>
+
+<!-- MAIN -->
 <div class="main">
 
-<!-- Hero -->
+<!-- HERO -->
 <header class="hero" id="hero">
-  <h1>Build with <span>Wibechat</span></h1>
+  <h1>Build with <span>WibeChat</span></h1>
   <p class="tagline">Add chat and calling to your app in minutes. One API key, production-ready components.</p>
-  <div class="platform-cards">
-    <div class="platform-card" data-platform="react" onclick="setGlobalPlatform('react')">
-      <div class="platform-icon">&#9883;</div>
-      <div class="platform-name">React</div>
-      <div class="platform-pkg">@wibechat/react</div>
+  <div class="hero-cta">
+    <a href="#quickstart" class="btn-primary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Get Started
+    </a>
+    <a href="#api-reference" class="btn-secondary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      API Reference
+    </a>
+  </div>
+
+  <div style="margin-bottom:28px">
+    <p style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:16px">Products</p>
+    <div class="cards-grid cols-2" style="max-width:520px;margin:0 auto 36px">
+      <div class="card" onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="card-title">Chat &amp; Messaging</div>
+        <div class="card-desc">Channels, DMs, presence, file uploads, real-time events</div>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+      <div class="card" onclick="document.getElementById('calling').scrollIntoView({behavior:'smooth'})">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.47 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="card-title">Voice &amp; Video Calling</div>
+        <div class="card-desc">LiveKit-powered rooms, token generation, room management</div>
+        <span class="card-arrow">&#8594;</span>
+      </div>
     </div>
-    <div class="platform-card" data-platform="python" onclick="setGlobalPlatform('python')">
-      <div class="platform-icon">&#128013;</div>
-      <div class="platform-name">Python</div>
-      <div class="platform-pkg">pip install wibechat</div>
+  </div>
+
+  <p style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:16px">Choose your platform</p>
+  <div class="cards-grid cols-3" style="max-width:520px;margin:0 auto">
+    <div class="card platform-card" data-platform="react" onclick="setGlobalPlatform('react')">
+      <div class="card-icon" style="background:rgba(97,218,251,0.15);color:#61DAFB">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path fill-rule="evenodd" d="M12 4c1.37 0 2.7.147 3.956.44 1.025.24 1.98.597 2.792 1.065C20.025 6.45 20.8 7.4 20.8 8.41c0 1.013-.774 1.963-2.052 2.907-.812.467-1.767.824-2.792 1.065C14.7 12.675 13.37 12.82 12 12.82c-1.37 0-2.7-.145-3.956-.437-1.025-.241-1.98-.598-2.792-1.065C3.974 10.374 3.2 9.424 3.2 8.41c0-1.011.774-1.961 2.052-2.906.812-.468 1.767-.824 2.792-1.064A18.86 18.86 0 0 1 12 4Zm0 1.6a17.3 17.3 0 0 0-3.624.401c-.914.214-1.741.527-2.405.908C4.996 7.502 4.8 7.98 4.8 8.41c0 .43.196.908 1.171 1.502.664.38 1.49.694 2.405.908A17.3 17.3 0 0 0 12 11.22c1.254 0 2.46-.136 3.624-.4.914-.214 1.741-.527 2.405-.908.975-.594 1.171-1.072 1.171-1.502s-.196-.908-1.171-1.502c-.664-.38-1.491-.694-2.405-.908A17.3 17.3 0 0 0 12 5.6Z"/></svg>
+      </div>
+      <div class="card-title">React</div>
+      <div class="card-pkg">@wibechat/react</div>
     </div>
-    <div class="platform-card" data-platform="flutter" onclick="setGlobalPlatform('flutter')">
-      <div class="platform-icon">&#9670;</div>
-      <div class="platform-name">Flutter</div>
-      <div class="platform-pkg">Coming Soon</div>
+    <div class="card platform-card" data-platform="python" onclick="setGlobalPlatform('python')">
+      <div class="card-icon" style="background:rgba(55,118,171,0.15);color:#3776AB">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.959 3.403 5.959h2.03v-2.867s-.109-3.408 3.35-3.408h5.766s3.24.052 3.24-3.13V3.13S18.302 0 11.914 0ZM8.708 1.808a1.049 1.049 0 1 1 0 2.098 1.049 1.049 0 0 1 0-2.098ZM12.086 24c6.093 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.12S24 18.211 24 12.031c0-6.18-3.403-5.959-3.403-5.959h-2.03v2.867s.109 3.408-3.35 3.408H9.451s-3.24-.052-3.24 3.13v5.393S5.698 24 12.086 24Zm3.206-1.808a1.049 1.049 0 1 1 0-2.098 1.049 1.049 0 0 1 0 2.098Z"/></svg>
+      </div>
+      <div class="card-title">Python</div>
+      <div class="card-pkg">pip install wibechat</div>
+    </div>
+    <div class="card platform-card coming-soon-card" data-platform="flutter">
+      <div class="card-icon" style="background:rgba(2,86,155,0.12);color:#02569B">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0 2.3 12 6 15.7 21.684.013h-7.37ZM14.314 11.97l-6.206 6.206 6.206 6.206h7.37L15.478 18.07l6.212-6.1h-7.376Z"/></svg>
+      </div>
+      <div class="card-title">Flutter</div>
+      <div class="card-pkg">Coming Soon</div>
     </div>
   </div>
 </header>
 
-<!-- Global platform picker (sticky, appears after scrolling past hero) -->
+<!-- Global platform picker -->
 <div class="global-platform-bar" id="globalPlatformBar">
   <div class="global-platform-bar-inner">
     <span class="global-platform-bar-label">Platform</span>
-    <div class="global-platform-pills" id="globalPills">
-      <!-- Populated by JS from PLATFORMS registry -->
-    </div>
+    <div class="global-platform-pills" id="globalPills"></div>
   </div>
 </div>
 
-<div class="content">
+<div class="content-wrap">
 
-<!-- ============================================================ -->
-<!-- QUICK START -->
-<!-- ============================================================ -->
+<!-- ============================================================ QUICK START -->
 <section id="quickstart">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Getting Started</span><span class="sep">›</span>
+  <span>Quick Start</span>
+</div>
 <h2 class="section-title">Quick Start</h2>
-<p class="section-desc">Get up and running with Wibechat in 5 steps. Choose your platform to see tailored instructions.</p>
+<p class="section-desc">Get up and running with WibeChat in 5 steps. Choose your platform to see tailored instructions.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="quickstart">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
 
@@ -255,28 +495,33 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 <div class="steps">
 
 <div class="step">
+<div class="step-card">
 <h4>Install the SDK</h4>
-<p>Install the Wibechat React SDK. The core client (<code>@wibechat/core</code>) is included automatically as a dependency.</p>
+<p>Install the WibeChat React SDK. The core client (<code>@wibechat/core</code>) is included automatically as a dependency.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>npm install @wibechat/react</code></pre>
 </div>
 </div>
+</div>
 
 <div class="step">
+<div class="step-card">
 <h4>Set your API key</h4>
-<p>Add your Wibechat API key to <code>.env.local</code>. You get this from the Wibechat Admin Portal.</p>
+<p>Add your WibeChat API key to <code>.env.local</code>. You get this from the WibeChat Admin Portal.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>.env.local</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#facc15"></span>.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span></code></pre>
 </div>
 </div>
+</div>
 
 <div class="step">
+<div class="step-card">
 <h4>Wrap your app with WibeChatProvider</h4>
 <p>The provider initializes the SDK client and provides context to all child components. Import the styles CSS for pre-built component styling.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> <span class="str">'@wibechat/react/styles.css'</span>;
 
@@ -291,12 +536,14 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 }</code></pre>
 </div>
 </div>
+</div>
 
 <div class="step">
+<div class="step-card">
 <h4>Add a chat window</h4>
 <p>Drop in a fully-featured chat UI with channels, messages, and input — all in one component.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>components/Chat.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Chat.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">ChatWindow</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">export default function</span> <span class="fn">Chat</span>() {
@@ -310,17 +557,19 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 }</code></pre>
 </div>
 </div>
+</div>
 
 <div class="step">
+<div class="step-card">
 <h4>Add a call button</h4>
 <p>First, install the LiveKit UI packages for the call interface:</p>
 <div class="code-block standalone">
-<div class="code-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
 </div>
 <p>Then generate a LiveKit token and launch a call room. Use with <code>@livekit/components-react</code> for the call UI.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
@@ -354,6 +603,7 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 }</code></pre>
 </div>
 </div>
+</div>
 
 </div><!-- /steps -->
 </div><!-- /react tab -->
@@ -361,21 +611,22 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 <!-- Python Quick Start -->
 <div class="tab-content" data-platform="python" data-group="quickstart">
 <div class="steps">
-
 <div class="step">
+<div class="step-card">
 <h4>Install the SDK</h4>
-<p>Install the Wibechat Python SDK from PyPI.</p>
+<p>Install the WibeChat Python SDK from PyPI.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>pip install wibechat</code></pre>
 </div>
 </div>
-
+</div>
 <div class="step">
+<div class="step-card">
 <h4>Set environment variables</h4>
 <p>Export your credentials or use a <code>.env</code> file. Chat and Calling use separate servers.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>.env</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#facc15"></span>.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm"># Chat (Zulip)</span>
 <span class="var">WIBECHAT_CHAT_URL</span>=<span class="str">https://your-chat-server.example.com</span>
 <span class="var">WIBECHAT_CHAT_EMAIL</span>=<span class="str">bot@your-org.example.com</span>
@@ -387,12 +638,13 @@ pre::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
 <span class="var">WIBECHAT_CLIENT_ID</span>=<span class="str">your-client-uuid</span></code></pre>
 </div>
 </div>
-
+</div>
 <div class="step">
+<div class="step-card">
 <h4>Initialize the chat client</h4>
 <p>Create a <code>WibechatChat</code> instance to interact with channels and messages.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>main.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>(
@@ -402,12 +654,13 @@ chat = <span class="ty">WibechatChat</span>(
 )</code></pre>
 </div>
 </div>
-
+</div>
 <div class="step">
+<div class="step-card">
 <h4>Send a message</h4>
 <p>Send messages to channels or directly to users.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>main.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm"># Send to a channel</span>
 chat.<span class="fn">send_message</span>(
     to=<span class="str">"general"</span>,
@@ -422,12 +675,13 @@ chat.<span class="fn">send_direct_message</span>(
 )</code></pre>
 </div>
 </div>
-
+</div>
 <div class="step">
+<div class="step-card">
 <h4>Generate a call token</h4>
 <p>Use <code>WibechatClient</code> to get LiveKit access tokens for call rooms.</p>
 <div class="code-block standalone">
-<div class="code-header"><span>main.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
@@ -446,7 +700,7 @@ token = client.<span class="fn">get_token</span>(
 <span class="fn">print</span>(token.access_token)  <span class="cm"># Pass to the client</span></code></pre>
 </div>
 </div>
-
+</div>
 </div><!-- /steps -->
 </div><!-- /python tab -->
 
@@ -457,45 +711,65 @@ token = client.<span class="fn">get_token</span>(
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is currently in development. In the meantime, you can use the REST API directly from Dart's <code>http</code> package. See the <a href="#api-reference">API Reference</a> section for endpoint details.</p>
 </div>
-</div><!-- /flutter tab -->
+</div>
+
+<div class="page-nav">
+  <a href="#hero" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Home</span>
+  </a>
+  <a href="#authentication" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">Authentication</span>
+  </a>
+</div>
 </section>
 
-<!-- ============================================================ -->
-<!-- AUTHENTICATION -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ AUTHENTICATION -->
 <section id="authentication">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Getting Started</span><span class="sep">›</span>
+  <span>Authentication</span>
+</div>
 <h2 class="section-title">Authentication</h2>
-<p class="section-desc">Wibechat uses a single API key for authentication. All API requests require an <code>Authorization: Bearer</code> header. Call tokens are generated via the SDK.</p>
+<p class="section-desc">WibeChat uses a single API key for authentication. All API requests require an <code>Authorization: Bearer</code> header. Call tokens are generated via the SDK.</p>
 
 <h3 class="section-subtitle">API Key</h3>
-<p class="section-desc">Each organization gets a single API key from the <a href="https://admin.wibechat.com">Wibechat Admin Portal</a>. This one key grants access to all enabled services (chat, audio, video) — no need for separate keys per service.</p>
+<p>Each organization gets a single API key from the <a href="https://admin.wibechat.com">WibeChat Admin Portal</a>. This one key grants access to all enabled services (chat, audio, video) — no need for separate keys per service.</p>
 
+<div class="table-wrap">
 <table>
   <thead><tr><th>Key Prefix</th><th>Example</th><th>Description</th></tr></thead>
   <tbody>
     <tr><td><code>wb_chat_</code></td><td><code>wb_chat_a1b2c3d4e5f6</code></td><td>Your organization API key — works for chat, audio, and video</td></tr>
   </tbody>
 </table>
+</div>
 
-<div class="info-box note">
-  <strong>One key, all services</strong>
-  Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.
+<div class="callout note">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">One key, all services</span>
+    Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.
+  </div>
 </div>
 
 <h3 class="section-subtitle">Using the API Key</h3>
-<p class="section-desc">All requests to the Wibechat gateway require the API key in the <code>Authorization</code> header.</p>
+<p>All requests to the WibeChat gateway require the API key in the <code>Authorization</code> header.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="auth-token">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
 
 <div class="tab-content active" data-platform="react" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span>Using with the SDK (recommended)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Using with the SDK (recommended)</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="cm">// The SDK handles auth headers automatically</span>
@@ -508,9 +782,8 @@ token = client.<span class="fn">get_token</span>(
   {children}
 &lt;/<span class="ty">WibeChatProvider</span>&gt;</code></pre>
 </div>
-
 <div class="code-block standalone">
-<div class="code-header"><span>Raw HTTP (if not using the SDK)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Raw HTTP (if not using the SDK)</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm">// All API requests use Bearer token auth</span>
 <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.chat.zartek.in/api/gateway/chat/channels/'</span>, {
   headers: {
@@ -523,7 +796,7 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="tab-content" data-platform="python" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span>Authentication</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Authentication</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>, <span class="ty">WibechatClient</span>
 
 <span class="cm"># Chat uses email + API key (Zulip credentials)</span>
@@ -555,10 +828,10 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 </div>
 
 <h3 class="section-subtitle">Call Room Tokens</h3>
-<p class="section-desc">LiveKit call rooms require a JWT access token. Generate one using <code>client.calls.createToken()</code>.</p>
+<p>LiveKit call rooms require a JWT access token. Generate one using <code>client.calls.createToken()</code>.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>Generating a call token</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Generating a call token</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_chat_xxxxxxxxxxxx'</span> });
@@ -574,33 +847,50 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 <span class="cm">// Pass this token to LiveKitRoom or the CallButton component</span></code></pre>
 </div>
 
-<div class="info-box warning">
-  <strong>Token security</strong>
-  The <code>wb_chat_</code> API key is a publishable key — it's safe to use in client-side code (similar to Stripe's publishable key). Call tokens are short-lived JWTs generated through the Wibechat gateway. For additional security, you can proxy API calls through your backend.
+<div class="callout warning">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Token security</span>
+    The <code>wb_chat_</code> API key is a publishable key — it's safe to use in client-side code (similar to Stripe's publishable key). Call tokens are short-lived JWTs generated through the WibeChat gateway. For additional security, you can proxy API calls through your backend.
+  </div>
+</div>
+
+<div class="page-nav">
+  <a href="#quickstart" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Quick Start</span>
+  </a>
+  <a href="#chat" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">Chat Integration</span>
+  </a>
 </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- CHAT INTEGRATION -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ CHAT INTEGRATION -->
 <section id="chat">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Integration</span><span class="sep">›</span>
+  <span>Chat Integration</span>
+</div>
 <h2 class="section-title">Chat Integration</h2>
 <p class="section-desc">Embed full-featured messaging in your application: channels, messages, users, presence, and file uploads.</p>
 
 <h3 class="section-subtitle">Channels</h3>
-<p class="section-desc">Channels are group conversations. List, create, and select channels using the <code>useChannels</code> hook or pre-built components.</p>
+<p>Channels are group conversations. List, create, and select channels using the <code>useChannels</code> hook or pre-built components.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-channels">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
-
 <div class="tab-content active" data-platform="react" data-group="chat-channels">
 <div class="code-block">
-<div class="code-header"><span>components/ChannelSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/ChannelSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">ChannelList</span>, <span class="fn">useChannels</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built component</span>
@@ -629,10 +919,9 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 }</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="python" data-group="chat-channels">
 <div class="code-block">
-<div class="code-header"><span>channels.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>channels.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>()  <span class="cm"># uses env vars</span>
@@ -643,7 +932,6 @@ streams = chat.<span class="fn">get_streams</span>()
     <span class="fn">print</span>(<span class="kw">f</span><span class="str">"#{s.name} (id={s.id}) — {s.description}"</span>)</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="flutter" data-group="chat-channels">
 <div class="coming-soon">
   <div class="coming-soon-icon">&#9670;</div>
@@ -653,19 +941,18 @@ streams = chat.<span class="fn">get_streams</span>()
 </div>
 
 <h3 class="section-subtitle">Messages</h3>
-<p class="section-desc">Fetch message history with infinite scroll and send new messages using the <code>useMessages</code> hook.</p>
+<p>Fetch message history with infinite scroll and send new messages using the <code>useMessages</code> hook.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-messages">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
-
 <div class="tab-content active" data-platform="react" data-group="chat-messages">
 <div class="code-block">
-<div class="code-header"><span>components/Messages.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Messages.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useMessages</span>, <span class="ty">MessageList</span>, <span class="ty">MessageInput</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built components</span>
@@ -681,11 +968,8 @@ streams = chat.<span class="fn">get_streams</span>()
 <span class="cm">// Option 2: Hook for custom UI</span>
 <span class="kw">function</span> <span class="fn">CustomMessages</span>({ channel }) {
   <span class="kw">const</span> {
-    messages,
-    loading,
-    hasMore,
-    <span class="fn">loadMore</span>,
-    <span class="fn">sendMessage</span>,
+    messages, loading, hasMore,
+    <span class="fn">loadMore</span>, <span class="fn">sendMessage</span>,
   } = <span class="fn">useMessages</span>({ channel, pageSize: <span class="num">50</span> });
 
   <span class="kw">return</span> (
@@ -702,10 +986,9 @@ streams = chat.<span class="fn">get_streams</span>()
 }</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="python" data-group="chat-messages">
 <div class="code-block">
-<div class="code-header"><span>messages.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>messages.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm"># Send a message to a channel</span>
 chat.<span class="fn">send_message</span>(
     to=<span class="str">"general"</span>,
@@ -728,7 +1011,6 @@ messages = chat.<span class="fn">get_messages</span>(
     <span class="fn">print</span>(<span class="kw">f</span><span class="str">"{msg.sender_name}: {msg.content}"</span>)</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="flutter" data-group="chat-messages">
 <div class="coming-soon">
   <div class="coming-soon-icon">&#9670;</div>
@@ -738,19 +1020,18 @@ messages = chat.<span class="fn">get_messages</span>(
 </div>
 
 <h3 class="section-subtitle">Users &amp; Presence</h3>
-<p class="section-desc">Show online/idle/offline status for users in your organization.</p>
+<p>Show online/idle/offline status for users in your organization.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-presence">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
-
 <div class="tab-content active" data-platform="react" data-group="chat-presence">
 <div class="code-block">
-<div class="code-header"><span>components/UserSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/UserSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">UserList</span>, <span class="fn">useUsers</span>, <span class="fn">usePresence</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built component with presence indicators</span>
@@ -767,8 +1048,7 @@ messages = chat.<span class="fn">get_messages</span>(
         <span class="kw">const</span> status = presences[user.email]?.aggregated?.status ?? <span class="str">'offline'</span>;
         <span class="kw">return</span> (
           &lt;li key={user.user_id}&gt;
-            {user.full_name} — <span class="kw">
-            </span>{status}
+            {user.full_name} — {status}
           &lt;/li&gt;
         );
       })}
@@ -777,10 +1057,9 @@ messages = chat.<span class="fn">get_messages</span>(
 }</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="python" data-group="chat-presence">
 <div class="code-block">
-<div class="code-header"><span>users.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>users.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm"># List all users</span>
 users = chat.<span class="fn">get_users</span>()
 <span class="kw">for</span> u <span class="kw">in</span> users:
@@ -791,7 +1070,6 @@ profile = chat.<span class="fn">get_profile</span>()
 <span class="fn">print</span>(<span class="kw">f</span><span class="str">"Logged in as: {profile['full_name']}"</span>)</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="flutter" data-group="chat-presence">
 <div class="coming-soon">
   <div class="coming-soon-icon">&#9670;</div>
@@ -801,10 +1079,10 @@ profile = chat.<span class="fn">get_profile</span>()
 </div>
 
 <h3 class="section-subtitle">File Uploads</h3>
-<p class="section-desc">Upload files and include them in messages.</p>
+<p>Upload files and include them in messages.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>File upload example</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>File upload example</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">FileUploader</span>() {
@@ -825,29 +1103,43 @@ profile = chat.<span class="fn">get_profile</span>()
   <span class="kw">return</span> &lt;input type=<span class="str">"file"</span> onChange={e =&gt; <span class="fn">handleUpload</span>(e.target.files[<span class="num">0</span>])} /&gt;;
 }</code></pre>
 </div>
+
+<div class="page-nav">
+  <a href="#authentication" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Authentication</span>
+  </a>
+  <a href="#calling" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">Calling Integration</span>
+  </a>
+</div>
 </section>
 
-<!-- ============================================================ -->
-<!-- CALLING INTEGRATION -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ CALLING INTEGRATION -->
 <section id="calling">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Integration</span><span class="sep">›</span>
+  <span>Calling Integration</span>
+</div>
 <h2 class="section-title">Calling Integration</h2>
-<p class="section-desc">Add voice and video calls powered by LiveKit. Wibechat generates access tokens and manages rooms — you bring the LiveKit UI components.</p>
+<p class="section-desc">Add voice and video calls powered by LiveKit. WibeChat generates access tokens and manages rooms — you bring the LiveKit UI components.</p>
 
 <h3 class="section-subtitle">CallButton Component</h3>
-<p class="section-desc">The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL.</p>
+<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
-
 <div class="tab-content active" data-platform="react" data-group="call-join">
 <div class="code-block">
-<div class="code-header"><span>components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
@@ -882,10 +1174,9 @@ profile = chat.<span class="fn">get_profile</span>()
 }</code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="python" data-group="call-join">
 <div class="code-block">
-<div class="code-header"><span>calls.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses env vars</span>
@@ -898,13 +1189,12 @@ token = client.<span class="fn">get_token</span>(
     ttl_seconds=<span class="num">3600</span>,
 )
 
-<span class="fn">print</span>(token.access_token)     <span class="cm"># JWT for LiveKit</span>
-<span class="fn">print</span>(token.session_id)       <span class="cm"># Session identifier</span>
-<span class="fn">print</span>(token.room_name)        <span class="cm"># "standup-room"</span>
-<span class="fn">print</span>(token.expires_in_seconds)  <span class="cm"># 3600</span></code></pre>
+<span class="fn">print</span>(token.access_token)       <span class="cm"># JWT for LiveKit</span>
+<span class="fn">print</span>(token.session_id)         <span class="cm"># Session identifier</span>
+<span class="fn">print</span>(token.room_name)          <span class="cm"># "standup-room"</span>
+<span class="fn">print</span>(token.expires_in_seconds) <span class="cm"># 3600</span></code></pre>
 </div>
 </div>
-
 <div class="tab-content" data-platform="flutter" data-group="call-join">
 <div class="coming-soon">
   <div class="coming-soon-icon">&#9670;</div>
@@ -914,10 +1204,10 @@ token = client.<span class="fn">get_token</span>(
 </div>
 
 <h3 class="section-subtitle">useCallToken Hook</h3>
-<p class="section-desc">For more control, use the <code>useCallToken</code> hook to generate tokens programmatically.</p>
+<p>For more control, use the <code>useCallToken</code> hook to generate tokens programmatically.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useCallToken</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
 
@@ -947,10 +1237,10 @@ token = client.<span class="fn">get_token</span>(
 </div>
 
 <h3 class="section-subtitle">Room Management</h3>
-<p class="section-desc">Create and list call rooms using the core client.</p>
+<p>Create and list call rooms using the core client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>Room management via core client</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Room management via core client</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">RoomManager</span>() {
@@ -971,24 +1261,37 @@ token = client.<span class="fn">get_token</span>(
       console.log(<span class="str">`${r.name}: ${r.num_participants} participants`</span>)
     );
   };
-
-  <span class="kw">return</span> <span class="cm">/* your UI */</span>;
 }</code></pre>
+</div>
+
+<div class="page-nav">
+  <a href="#chat" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Chat Integration</span>
+  </a>
+  <a href="#realtime" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">Real-time Events</span>
+  </a>
 </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- REAL-TIME EVENTS -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ REAL-TIME EVENTS -->
 <section id="realtime">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Integration</span><span class="sep">›</span>
+  <span>Real-time Events</span>
+</div>
 <h2 class="section-title">Real-time Events</h2>
 <p class="section-desc">Subscribe to live events via Server-Sent Events (SSE) for messages, typing indicators, presence changes, and more.</p>
 
 <h3 class="section-subtitle">Connecting</h3>
-<p class="section-desc">Enable real-time events either via the provider prop or manually via the client.</p>
+<p>Enable real-time events either via the provider prop or manually via the client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>Enabling real-time events</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Enabling real-time events</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm">// Option 1: Via the provider (auto-connects on mount)</span>
 &lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
@@ -1003,8 +1306,9 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Event Types</h3>
-<p class="section-desc">Subscribe to specific event types using <code>client.events.on()</code>. Each subscription returns an unsubscribe function.</p>
+<p>Subscribe to specific event types using <code>client.events.on()</code>. Each subscription returns an unsubscribe function.</p>
 
+<div class="table-wrap">
 <table>
   <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
   <tbody>
@@ -1019,9 +1323,10 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>heartbeat</code></td><td><code>{}</code></td><td>Keep-alive signal</td></tr>
   </tbody>
 </table>
+</div>
 
 <div class="code-block standalone">
-<div class="code-header"><span>Subscribing to events</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Subscribing to events</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { useEffect } <span class="kw">from</span> <span class="str">'react'</span>;
 
@@ -1064,36 +1369,59 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
 </div>
 
-<div class="info-box tip">
-  <strong>Auto-reconnect</strong>
-  The SSE connection automatically reconnects with exponential backoff (3s to 60s cap) if the connection drops. You don't need to handle reconnection logic manually.
+<div class="callout tip">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Auto-reconnect</span>
+    The SSE connection automatically reconnects with exponential backoff (3s to 60s cap) if the connection drops. You don't need to handle reconnection logic manually.
+  </div>
+</div>
+
+<div class="page-nav">
+  <a href="#calling" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Calling Integration</span>
+  </a>
+  <a href="#api-reference" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">API Reference</span>
+  </a>
 </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- API REFERENCE -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ API REFERENCE -->
 <section id="api-reference">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Reference</span><span class="sep">›</span>
+  <span>API Reference</span>
+</div>
 <h2 class="section-title">API Reference</h2>
 <p class="section-desc">REST API endpoints for direct integration. Base URL: <code>https://api.chat.zartek.in</code></p>
 
-<div class="info-box note">
-  <strong>Authentication</strong>
-  All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer {your_api_key}</code>
+<div class="callout info">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Authentication</span>
+    All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer {your_api_key}</code>
+  </div>
 </div>
 
 <h3 class="section-subtitle">Organization</h3>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border" id="ep-org-get">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/org/</span>
     <span class="endpoint-desc">Get organization info</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Returns the organization profile, credential info, and enabled services.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"organization"</span>: {
     <span class="prop">"id"</span>: <span class="num">16</span>,
@@ -1111,21 +1439,24 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   }
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
 <h3 class="section-subtitle">Chat</h3>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/channels/</span>
     <span class="endpoint-desc">List channels</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Returns all channels the organization has access to.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"channels"</span>: [
     {
@@ -1136,18 +1467,21 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   ]
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint post-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/channels/</span>
     <span class="endpoint-desc">Create a channel</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <div class="code-block standalone">
-    <div class="code-header"><span>Request body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"engineering"</span>,
   <span class="prop">"description"</span>: <span class="str">"Engineering team discussions"</span>,
@@ -1155,7 +1489,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"channel"</span>: {
     <span class="prop">"stream_id"</span>: <span class="num">5</span>,
@@ -1164,16 +1498,20 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   }
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/messages/</span>
     <span class="endpoint-desc">Get messages</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
+    <div class="table-wrap">
     <table>
       <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
@@ -1184,8 +1522,9 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
         <tr><td><code>topic</code></td><td>string</td><td>Filter by topic (requires channel)</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"messages"</span>: [
     {
@@ -1203,18 +1542,21 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   ]
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint post-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/messages/</span>
     <span class="endpoint-desc">Send a message</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <div class="code-block standalone">
-    <div class="code-header"><span>Request body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"type"</span>: <span class="str">"stream"</span>,
   <span class="prop">"to"</span>: <span class="str">"general"</span>,
@@ -1222,6 +1564,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <span class="prop">"topic"</span>: <span class="str">"greetings"</span>
 }</code></pre>
     </div>
+    <div class="table-wrap">
     <table>
       <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
@@ -1231,25 +1574,27 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
         <tr><td><code>topic</code></td><td>string</td><td>Topic name (for stream messages)</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
-  <span class="prop">"id"</span>: <span class="num">12346</span>
-}</code></pre>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<pre><code>{ <span class="prop">"id"</span>: <span class="num">12346</span> }</code></pre>
+    </div>
     </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/users/</span>
     <span class="endpoint-desc">List users</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Returns all users in the organization.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"users"</span>: [
     {
@@ -1262,19 +1607,22 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   ]
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/presence/</span>
     <span class="endpoint-desc">Get user presence</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Returns presence status for all users (active, idle, or offline).</p>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"presences"</span>: {
     <span class="prop">"alice@example.com"</span>: {
@@ -1286,43 +1634,49 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   }
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint post-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/files/</span>
     <span class="endpoint-desc">Upload a file</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Upload a file via multipart form data. Returns a URI to include in messages.</p>
+    <div class="table-wrap">
     <table>
       <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td><code>file</code></td><td>File</td><td>The file to upload (multipart/form-data)</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
-  <span class="prop">"uri"</span>: <span class="str">"/user_uploads/1/abc123/report.pdf"</span>
-}</code></pre>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<pre><code>{ <span class="prop">"uri"</span>: <span class="str">"/user_uploads/1/abc123/report.pdf"</span> }</code></pre>
+    </div>
     </div>
   </div>
 </div>
 
 <h3 class="section-subtitle">Calling</h3>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint post-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/calls/token/</span>
     <span class="endpoint-desc">Generate a call token</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <div class="code-block standalone">
-    <div class="code-header"><span>Request body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"room"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"identity"</span>: <span class="str">"alice@example.com"</span>,
@@ -1330,34 +1684,37 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <span class="prop">"ttl"</span>: <span class="num">3600</span>
 }</code></pre>
     </div>
+    <div class="table-wrap">
     <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td><code>room</code></td><td>string</td><td>Room name (required)</td></tr>
-        <tr><td><code>identity</code></td><td>string</td><td>Participant identity, e.g. email (required)</td></tr>
-        <tr><td><code>name</code></td><td>string</td><td>Display name (optional)</td></tr>
-        <tr><td><code>ttl</code></td><td>integer</td><td>Token TTL in seconds (60–86400, default: 3600)</td></tr>
+        <tr><td><code>room</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Room name</td></tr>
+        <tr><td><code>identity</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Participant identity, e.g. email</td></tr>
+        <tr><td><code>name</code></td><td>string</td><td><span class="badge-req badge-optional">Optional</span></td><td>Display name</td></tr>
+        <tr><td><code>ttl</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Token TTL in seconds (60–86400, default: 3600)</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
-  <span class="prop">"token"</span>: <span class="str">"eyJhbGciOiJIUzI1NiIs..."</span>
-}</code></pre>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<pre><code>{ <span class="prop">"token"</span>: <span class="str">"eyJhbGciOiJIUzI1NiIs..."</span> }</code></pre>
+    </div>
     </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/calls/rooms/</span>
     <span class="endpoint-desc">List active rooms</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Returns all currently active call rooms in your organization.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span>Response 200</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"rooms"</span>: [
     {
@@ -1369,62 +1726,86 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   ]
 }</code></pre>
     </div>
+    </div>
   </div>
 </div>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint post-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/calls/rooms/</span>
     <span class="endpoint-desc">Create a room</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <div class="code-block standalone">
-    <div class="code-header"><span>Request body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"max_participants"</span>: <span class="num">10</span>,
   <span class="prop">"empty_timeout"</span>: <span class="num">300</span>
 }</code></pre>
     </div>
+    <div class="table-wrap">
     <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td><code>name</code></td><td>string</td><td>Room name (required)</td></tr>
-        <tr><td><code>empty_timeout</code></td><td>integer</td><td>Seconds before empty room auto-closes (default: 300)</td></tr>
-        <tr><td><code>max_participants</code></td><td>integer</td><td>Max participants, 0 = unlimited (default: 0)</td></tr>
+        <tr><td><code>name</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Room name</td></tr>
+        <tr><td><code>empty_timeout</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Seconds before empty room auto-closes (default: 300)</td></tr>
+        <tr><td><code>max_participants</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Max participants, 0 = unlimited (default: 0)</td></tr>
       </tbody>
     </table>
+    </div>
+    </div>
   </div>
 </div>
 
 <h3 class="section-subtitle">Events (SSE)</h3>
 
-<div class="endpoint">
-  <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+<div class="endpoint get-border">
+  <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/events/stream/</span>
     <span class="endpoint-desc">Real-time event stream (SSE)</span>
+    <svg class="endpoint-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
   <div class="endpoint-body">
+    <div class="endpoint-body-inner">
     <p>Server-Sent Events stream. Pass your API key as a query parameter: <code>?api_key=wb_chat_xxx</code>. The SDK handles this automatically via <code>client.connectRealTime()</code>.</p>
     <p>Events are sent as JSON with <code>type</code> and <code>payload</code> fields. See the <a href="#realtime">Real-time Events</a> section for all event types.</p>
+    </div>
   </div>
+</div>
+
+<div class="page-nav">
+  <a href="#realtime" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">Real-time Events</span>
+  </a>
+  <a href="#sdk-reference" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">SDK Reference</span>
+  </a>
 </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- SDK REFERENCE -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ SDK REFERENCE -->
 <section id="sdk-reference">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Reference</span><span class="sep">›</span>
+  <span>SDK Reference</span>
+</div>
 <h2 class="section-title">SDK Reference</h2>
 <p class="section-desc">Complete reference for all SDK components, hooks, types, and methods.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="sdk-ref">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span> React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span> Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span> Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
 </div>
 </div>
 
@@ -1432,6 +1813,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <div class="tab-content active" data-platform="react" data-group="sdk-ref">
 
 <h3 class="section-subtitle">Components</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Component</th><th>Description</th><th>Key Props</th></tr></thead>
   <tbody>
@@ -1445,8 +1827,10 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>&lt;CallButton&gt;</code></td><td>Generates LiveKit token on click</td><td><code>room</code>, <code>identity</code>, <code>name?</code>, <code>livekitServerUrl?</code>, <code>ttl?</code>, <code>onTokenGenerated?</code>, <code>label?</code></td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">Hooks</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Hook</th><th>Returns</th><th>Description</th></tr></thead>
   <tbody>
@@ -1458,10 +1842,11 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>useCallToken()</code></td><td><code>{ token, loading, error, generateToken }</code></td><td>On-demand LiveKit token generation</td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">Core Client (<code>@wibechat/core</code>)</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>WibeChatClient constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>WibeChatClient constructor</span></div>
 <pre><code><span class="kw">new</span> <span class="ty">WibeChatClient</span>({
   apiKey: <span class="ty">string</span>,              <span class="cm">// Required — your API key</span>
   baseUrl?: <span class="ty">string</span>,            <span class="cm">// Default: 'https://api.chat.zartek.in'</span>
@@ -1470,6 +1855,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Client Methods</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
   <tbody>
@@ -1478,8 +1864,10 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>disconnectRealTime()</code></td><td>—</td><td><code>void</code> — disconnect from the SSE event stream</td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">client.chat — Chat Methods</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
   <tbody>
@@ -1492,8 +1880,10 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>getPresence()</code></td><td>—</td><td><code>Promise&lt;PresenceData&gt;</code></td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">client.calls — Calling Methods</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
   <tbody>
@@ -1502,8 +1892,10 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>createRoom(opts)</code></td><td><code>{ name, empty_timeout?, max_participants? }</code></td><td><code>Promise&lt;Room&gt;</code></td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">client.events — Real-time</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Description</th></tr></thead>
   <tbody>
@@ -1513,10 +1905,11 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>onStateChange(listener)</code></td><td><code>(state) =&gt; void</code></td><td>Subscribe to connection state changes</td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">TypeScript Types</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>Key interfaces</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Key interfaces</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">interface</span> <span class="ty">OrgInfo</span> {
   organization: { id: <span class="ty">number</span>; name: <span class="ty">string</span>; slug: <span class="ty">string</span> };
   credential: { service: <span class="str">'CHAT'</span> | <span class="str">'AUDIO'</span> | <span class="str">'VIDEO'</span>; key_prefix: <span class="ty">string</span> };
@@ -1559,10 +1952,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }
 
 <span class="kw">type</span> <span class="ty">PresenceData</span> = Record&lt;<span class="ty">string</span>, {
-  aggregated: {
-    status: <span class="str">'active'</span> | <span class="str">'idle'</span> | <span class="str">'offline'</span>;
-    timestamp: <span class="ty">number</span>;
-  };
+  aggregated: { status: <span class="str">'active'</span> | <span class="str">'idle'</span> | <span class="str">'offline'</span>; timestamp: <span class="ty">number</span> };
 }&gt;;
 
 <span class="kw">type</span> <span class="ty">EventType</span> =
@@ -1576,6 +1966,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Error Classes</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Class</th><th>Status</th><th>Description</th></tr></thead>
   <tbody>
@@ -1590,13 +1981,14 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </tbody>
 </table>
 </div>
+</div>
 
 <!-- Python SDK -->
 <div class="tab-content" data-platform="python" data-group="sdk-ref">
 
 <h3 class="section-subtitle">WibechatChat — Chat Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>Constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Constructor</span></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>(
@@ -1606,6 +1998,7 @@ chat = <span class="ty">WibechatChat</span>(
 )</code></pre>
 </div>
 
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
   <tbody>
@@ -1620,10 +2013,11 @@ chat = <span class="ty">WibechatChat</span>(
     <tr><td><code>get_events()</code></td><td><code>queue_id, last_event_id</code></td><td><code>list[dict]</code></td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">WibechatClient — Calling Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>Constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Constructor</span></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
@@ -1633,16 +2027,18 @@ client = <span class="ty">WibechatClient</span>(
 )</code></pre>
 </div>
 
+<div class="table-wrap">
 <table>
   <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
   <tbody>
     <tr><td><code>get_token()</code></td><td><code>room_name, user_identity, user_name?, ttl_seconds?</code></td><td><code>TokenResponse</code></td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">Data Classes</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>Types</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Types</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="at">@dataclass</span>
 <span class="kw">class</span> <span class="ty">Message</span>:
     id: <span class="ty">int</span>
@@ -1677,7 +2073,7 @@ client = <span class="ty">WibechatClient</span>(
 
 <h3 class="section-subtitle">Real-time Events (Long Polling)</h3>
 <div class="code-block standalone">
-<div class="code-header"><span>events.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>events.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm"># Register an event queue</span>
 queue = chat.<span class="fn">register_event_queue</span>(
     event_types=[<span class="str">"message"</span>, <span class="str">"typing"</span>, <span class="str">"presence"</span>],
@@ -1706,29 +2102,50 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <p>The Flutter SDK is under development. Use the REST API endpoints listed in the <a href="#api-reference">API Reference</a> section with Dart's <code>http</code> or <code>dio</code> package.</p>
 </div>
 </div>
+
+<div class="page-nav">
+  <a href="#api-reference" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">API Reference</span>
+  </a>
+  <a href="#configuration" class="page-nav-btn next">
+    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-title">Configuration</span>
+  </a>
+</div>
 </section>
 
-<!-- ============================================================ -->
-<!-- CONFIGURATION -->
-<!-- ============================================================ -->
+
+<!-- ============================================================ CONFIGURATION -->
 <section id="configuration">
+<div class="breadcrumbs">
+  <a href="#hero">Home</a><span class="sep">›</span>
+  <span>Reference</span><span class="sep">›</span>
+  <span>Configuration</span>
+</div>
 <h2 class="section-title">Configuration</h2>
 <p class="section-desc">Setup guides and configuration reference.</p>
 
 <h3 class="section-subtitle">Environment Variables</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>NEXT_PUBLIC_WIBECHAT_API_KEY</code></td><td>Yes</td><td>Your organization API key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_API_KEY</code></td><td><span class="badge-req badge-required">Required</span></td><td>Your organization API key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
   </tbody>
 </table>
+</div>
 
-<div class="info-box note">
-  <strong>Client-side API keys</strong>
-  The <code>wb_chat_</code> API key is a publishable key and is safe to expose in the browser (prefixed with <code>NEXT_PUBLIC_</code>). The gateway enforces rate limits and permissions per organization. For additional security, you can proxy API calls through your backend.
+<div class="callout note">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Client-side API keys</span>
+    The <code>wb_chat_</code> API key is a publishable key and is safe to expose in the browser (prefixed with <code>NEXT_PUBLIC_</code>). The gateway enforces rate limits and permissions per organization. For additional security, you can proxy API calls through your backend.
+  </div>
 </div>
 
 <h3 class="section-subtitle">WibeChatProvider Options</h3>
+<div class="table-wrap">
 <table>
   <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
@@ -1740,12 +2157,13 @@ queue = chat.<span class="fn">register_event_queue</span>(
     <tr><td><code>theme</code></td><td><code>WibeChatTheme</code></td><td>—</td><td>Custom theme overrides</td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">Theming</h3>
-<p class="section-desc">Override the default theme by passing a <code>theme</code> object to <code>WibeChatProvider</code>, or override CSS custom properties directly.</p>
+<p>Override the default theme by passing a <code>theme</code> object to <code>WibeChatProvider</code>, or override CSS custom properties directly.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>Custom theme example</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Custom theme example</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>&lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
   <span class="prop">theme</span>={{
@@ -1766,8 +2184,9 @@ queue = chat.<span class="fn">register_event_queue</span>(
 </div>
 
 <h3 class="section-subtitle">CSS Custom Properties</h3>
-<p class="section-desc">All components use CSS custom properties prefixed with <code>--wc-</code>. Override them in your stylesheet for global theming.</p>
+<p>All components use CSS custom properties prefixed with <code>--wc-</code>. Override them in your stylesheet for global theming.</p>
 
+<div class="table-wrap">
 <table>
   <thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
@@ -1786,92 +2205,165 @@ queue = chat.<span class="fn">register_event_queue</span>(
     <tr><td><code>--wc-sidebar-width</code></td><td><code>280px</code></td><td>Sidebar width</td></tr>
   </tbody>
 </table>
+</div>
 
 <h3 class="section-subtitle">LiveKit Setup</h3>
-<p class="section-desc">For calling features, install the LiveKit React components alongside the Wibechat SDK.</p>
+<p>For calling features, install the LiveKit React components alongside the WibeChat SDK.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
 </div>
 
-<div class="info-box tip">
-  <strong>LiveKit handles the call UI</strong>
-  Wibechat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.
+<div class="callout tip">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">LiveKit handles the call UI</span>
+    WibeChat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.
+  </div>
+</div>
+
+<div class="page-nav">
+  <a href="#sdk-reference" class="page-nav-btn prev">
+    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-title">SDK Reference</span>
+  </a>
+  <a href="#hero" class="page-nav-btn next">
+    <span class="page-nav-label">&#8593; Back to top</span>
+    <span class="page-nav-title">Home</span>
+  </a>
 </div>
 </section>
 
-<!-- Footer -->
-<div style="text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);margin-top:60px;color:var(--text-muted);font-size:13px">
-  <p>&copy; 2026 Wibechat. All rights reserved.</p>
-  <p style="margin-top:8px">
-    <a href="https://wibechat.com">Website</a> &middot;
-    <a href="https://admin.wibechat.com">Admin Portal</a> &middot;
-    <a href="mailto:support@wibechat.com">Support</a>
-  </p>
-</div>
+</div><!-- /content-wrap -->
 
-</div><!-- /content -->
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-row">
+          <div class="logo-icon">W</div>
+          <strong>WibeChat</strong>
+        </div>
+        <p>Add chat and calling to your app in minutes. Production-ready components and APIs.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#chat">Chat &amp; Messaging</a>
+        <a href="#calling">Voice &amp; Video</a>
+        <a href="https://admin.wibechat.com" target="_blank">Admin Portal</a>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <a href="#quickstart">Quick Start</a>
+        <a href="#api-reference">API Reference</a>
+        <a href="#sdk-reference">SDK Reference</a>
+        <a href="#configuration">Configuration</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="https://wibechat.com" target="_blank">Website</a>
+        <a href="mailto:support@wibechat.com">Support</a>
+        <a href="https://wibechat.com/status" target="_blank">Status</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 WibeChat. All rights reserved. Built with care by Zartek.</p>
+      <div class="footer-social">
+        <a href="#" title="GitHub" aria-label="GitHub">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="#" title="Twitter" aria-label="Twitter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
 </div><!-- /main -->
 
-<!-- ============================================================ -->
-<!-- JavaScript -->
-<!-- ============================================================ -->
 <script>
 // ============================================================
-// Platform Registry — add new platforms here, everything else adapts
+// PLATFORMS
 // ============================================================
 const PLATFORMS = [
-  { id: 'react',   name: 'React',   color: 'var(--react)',   pkg: '@wibechat/react' },
-  { id: 'python',  name: 'Python',  color: 'var(--python)',  pkg: 'pip install wibechat' },
-  { id: 'flutter', name: 'Flutter', color: 'var(--flutter)', pkg: 'Coming Soon' },
+  { id: 'react',   name: 'React',   color: '#61DAFB', pkg: '@wibechat/react' },
+  { id: 'python',  name: 'Python',  color: '#3776AB', pkg: 'pip install wibechat' },
+  { id: 'flutter', name: 'Flutter', color: '#02569B', pkg: 'Coming Soon' },
 ];
 
-let activePlatform = localStorage.getItem('wb-docs-platform') || PLATFORMS[0].id;
+let activePlatform = localStorage.getItem('wb-docs-platform') || 'react';
 
 // ============================================================
-// Build global platform picker pills
+// DARK MODE
+// ============================================================
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+  const btn = document.getElementById('darkToggleBtn');
+  if (btn) {
+    btn.querySelector('.toggle-icon').textContent = dark ? '☀️' : '🌙';
+    btn.querySelector('.toggle-label').textContent = dark ? 'Light' : 'Dark';
+  }
+}
+
+function toggleDark() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  localStorage.setItem('wb-docs-theme', isDark ? 'light' : 'dark');
+  applyTheme(!isDark);
+}
+
+// Init theme
+applyTheme(localStorage.getItem('wb-docs-theme') === 'dark');
+
+// ============================================================
+// NAV GROUP COLLAPSE
+// ============================================================
+function toggleNavGroup(id) {
+  const group = document.getElementById(id);
+  if (group) group.classList.toggle('collapsed');
+}
+
+// Set initial heights for collapsible groups
+document.querySelectorAll('.nav-group-links').forEach(el => {
+  el.style.maxHeight = el.scrollHeight + 'px';
+});
+
+// ============================================================
+// GLOBAL PLATFORM PILLS
 // ============================================================
 function buildGlobalPills() {
   const container = document.getElementById('globalPills');
   if (!container) return;
   container.innerHTML = PLATFORMS.map(p =>
     `<button class="global-platform-pill${p.id === activePlatform ? ' active' : ''}" data-platform="${p.id}" onclick="setGlobalPlatform('${p.id}')">` +
-    `<span class="dot" style="background:${p.color}"></span> ${p.name}</button>`
+    `<span class="dot" style="background:${p.color}"></span>${p.name}</button>`
   ).join('');
 }
 
 function setGlobalPlatform(platform) {
   activePlatform = platform;
   localStorage.setItem('wb-docs-platform', platform);
-
-  // Update global pills
   document.querySelectorAll('.global-platform-pill').forEach(pill => {
     pill.classList.toggle('active', pill.dataset.platform === platform);
   });
-
-  // Update hero cards
   document.querySelectorAll('.platform-card').forEach(card => {
     card.classList.toggle('selected', card.dataset.platform === platform);
   });
-
-  // Switch all tab groups
   switchAllTabs(platform);
 }
 
 // ============================================================
-// Tab switching — works with wrapper structure
+// TABS
 // ============================================================
 function switchTab(btn) {
   const wrapper = btn.closest('.platform-tabs-wrapper');
+  if (!wrapper) return;
   const platform = btn.dataset.tab;
   const groupName = wrapper.dataset.tabGroup;
-
-  // Update tab buttons in this group
   wrapper.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-
-  // Update tab content for this group (siblings of the wrapper)
   let sibling = wrapper.nextElementSibling;
   while (sibling && sibling.classList.contains('tab-content')) {
     if (sibling.dataset.group === groupName) {
@@ -1889,69 +2381,127 @@ function switchAllTabs(platform) {
 }
 
 // ============================================================
-// Show/hide global platform bar on scroll
+// ENDPOINT CARDS
+// ============================================================
+function toggleEndpoint(header) {
+  const card = header.closest('.endpoint');
+  card.classList.toggle('open');
+}
+
+// ============================================================
+// COPY CODE
+// ============================================================
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ============================================================
+// GLOBAL BAR ON SCROLL
 // ============================================================
 function updateGlobalBar() {
   const hero = document.getElementById('hero');
   const bar = document.getElementById('globalPlatformBar');
   if (!hero || !bar) return;
-  const heroBottom = hero.getBoundingClientRect().bottom;
-  bar.classList.toggle('visible', heroBottom < 0);
+  bar.classList.toggle('visible', hero.getBoundingClientRect().bottom < 0);
 }
 
 // ============================================================
-// Tab overflow detection — adds fade indicator
-// ============================================================
-function checkTabOverflow() {
-  document.querySelectorAll('.platform-tabs-wrapper').forEach(wrapper => {
-    const tabs = wrapper.querySelector('.platform-tabs');
-    if (tabs) {
-      wrapper.classList.toggle('has-overflow', tabs.scrollWidth > tabs.clientWidth);
-    }
-  });
-}
-
-// ============================================================
-// Copy to clipboard
-// ============================================================
-function copyCode(btn) {
-  const pre = btn.closest('.code-block').querySelector('pre');
-  const text = pre.textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'Copy';
-      btn.classList.remove('copied');
-    }, 2000);
-  });
-}
-
-// ============================================================
-// Sidebar active state on scroll
+// SIDEBAR ACTIVE + TOC
 // ============================================================
 const sections = document.querySelectorAll('section[id], header[id]');
-const navLinks = document.querySelectorAll('.sidebar nav a');
+const navLinks = document.querySelectorAll('.sidebar nav a[data-nav]');
 
 function updateActiveNav() {
   let current = '';
   sections.forEach(section => {
-    const rect = section.getBoundingClientRect();
-    if (rect.top <= 120) current = section.id;
+    if (section.getBoundingClientRect().top <= 130) current = section.id;
   });
   navLinks.forEach(link => {
-    link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
   });
 }
 
 // ============================================================
-// Init
+// TOC PANEL
+// ============================================================
+function buildTOC() {
+  const tocLinks = document.getElementById('tocLinks');
+  if (!tocLinks) return;
+  const content = document.querySelector('.content-wrap');
+  if (!content) return;
+  const headings = content.querySelectorAll('h2.section-title, h3.section-subtitle');
+  let html = '';
+  headings.forEach(h => {
+    const isH3 = h.tagName === 'H3';
+    const text = h.textContent.replace(/\s+/g,' ').trim();
+    // find nearest section
+    const section = h.closest('section');
+    const id = section ? section.id : '';
+    if (id) {
+      html += `<a href="#${id}" class="toc-link${isH3 ? ' toc-h3' : ''}" data-toc-section="${id}">${text}</a>`;
+    }
+  });
+  tocLinks.innerHTML = html;
+}
+
+function updateTOC() {
+  const tocPanel = document.getElementById('tocPanel');
+  if (!tocPanel) return;
+  const heroBottom = document.getElementById('hero')?.getBoundingClientRect().bottom ?? 0;
+  tocPanel.classList.toggle('visible', heroBottom < 0);
+
+  let current = '';
+  sections.forEach(s => {
+    if (s.getBoundingClientRect().top <= 130) current = s.id;
+  });
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('data-toc-section') === current);
+  });
+}
+
+// ============================================================
+// SIDEBAR SEARCH
+// ============================================================
+document.getElementById('sidebarSearch')?.addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.sidebar nav a[data-nav]').forEach(link => {
+    if (!q) {
+      link.classList.remove('nav-hidden');
+    } else {
+      link.classList.toggle('nav-hidden', !link.textContent.toLowerCase().includes(q));
+    }
+  });
+  document.querySelectorAll('.nav-group').forEach(group => {
+    if (!q) {
+      group.style.display = '';
+      return;
+    }
+    const visibleLinks = group.querySelectorAll('a[data-nav]:not(.nav-hidden)');
+    group.style.display = visibleLinks.length ? '' : 'none';
+  });
+});
+
+// Cmd+K / Ctrl+K shortcut
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('sidebarSearch')?.focus();
+  }
+});
+
+// ============================================================
+// INIT
 // ============================================================
 buildGlobalPills();
 switchAllTabs(activePlatform);
-checkTabOverflow();
+buildTOC();
 
-// Mark hero card as selected on load
 document.querySelectorAll('.platform-card').forEach(card => {
   card.classList.toggle('selected', card.dataset.platform === activePlatform);
 });
@@ -1959,19 +2509,17 @@ document.querySelectorAll('.platform-card').forEach(card => {
 window.addEventListener('scroll', () => {
   updateActiveNav();
   updateGlobalBar();
+  updateTOC();
 }, { passive: true });
 
-window.addEventListener('resize', checkTabOverflow, { passive: true });
-
 updateActiveNav();
+updateTOC();
 
-// Close mobile sidebar on link click
 navLinks.forEach(link => {
   link.addEventListener('click', () => {
     document.querySelector('.sidebar').classList.remove('open');
   });
 });
 </script>
-
 </body>
 </html>
