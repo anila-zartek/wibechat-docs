@@ -3486,11 +3486,19 @@ const mainContent = document.getElementById('mainContent');
 const tocPanel = document.getElementById('tocPanel');
 const navbar = document.getElementById('navbar');
 
+// Anchor jumps stop with the hero ending just under the navbar (scroll-padding-top),
+// so treat anything within that offset (+ slack) as "past the hero".
+function isPastHero() {
+  const hero = document.getElementById('hero');
+  if (!hero) return true;
+  const offset = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  return hero.getBoundingClientRect().bottom <= offset + 40;
+}
+
 function updateLayout() {
   const hero = document.getElementById('hero');
   if (!hero) return;
-  const heroBottom = hero.getBoundingClientRect().bottom;
-  const pastHero = heroBottom < 0;
+  const pastHero = isPastHero();
 
   // Show/hide sidebar
   if (pastHero) {
@@ -3543,9 +3551,7 @@ function buildTOC() {
 }
 
 function updateTOC() {
-  const hero = document.getElementById('hero');
-  const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
-  if (tocPanel) tocPanel.classList.toggle('visible', heroBottom < 0);
+  if (tocPanel) tocPanel.classList.toggle('visible', isPastHero());
   let current = '';
   sections.forEach(s => {
     if (s.getBoundingClientRect().top <= 100) current = s.id;
