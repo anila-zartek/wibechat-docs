@@ -855,6 +855,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
       <span class="prop">room</span>=<span class="str">"standup-room"</span>
       <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
       <span class="prop">name</span>=<span class="str">"Alice"</span>
+      <span class="prop">livekitServerUrl</span>=<span class="str">"wss://your-call-server.example.com"</span>
       <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
         setCallState({ token, serverUrl, room });
       }}
@@ -1866,7 +1867,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 
 <h3 class="section-subtitle">CallButton Component</h3>
-<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL.</p>
+<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
@@ -1912,6 +1913,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
       <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
       <span class="prop">name</span>=<span class="str">"Alice"</span>
       <span class="prop">label</span>=<span class="str">"Join Call"</span>
+      <span class="prop">livekitServerUrl</span>=<span class="str">"wss://your-call-server.example.com"</span>
       <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
         setCallState({ token, serverUrl, room });
       }}
