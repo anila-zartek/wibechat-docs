@@ -128,10 +128,18 @@ code,pre{font-family:'JetBrains Mono','Fira Code',monospace}
 
 /* ---- SECTION ---- */
 section{padding-top:28px;margin-bottom:52px}
-.section-title{font-size:30px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.02em;padding-bottom:14px;border-bottom:2px solid var(--primary)}
-.section-subtitle{font-size:20px;font-weight:700;color:var(--text);margin:34px 0 12px;display:flex;align-items:center;gap:8px}
-.section-desc{color:var(--text-secondary);margin-bottom:22px;font-size:15px}
+.section-title{font-size:30px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.02em;padding-bottom:14px;border-bottom:2px solid var(--primary)}
+.section-subtitle{font-size:20px;font-weight:700;color:var(--text);margin:36px 0 12px;display:flex;align-items:center;gap:8px}
+.section-desc{color:var(--text-secondary);margin-bottom:28px;font-size:15px}
 p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.7}
+
+/* ---- SECTION NAV ---- */
+.section-nav{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:24px;border-top:1px solid var(--border)}
+.section-nav-link{display:flex;flex-direction:column;padding:16px 20px;border:1px solid var(--border);border-radius:var(--radius-lg);flex:1;text-decoration:none;transition:var(--transition)}
+.section-nav-link:hover{border-color:var(--primary);background:var(--primary-light);text-decoration:none}
+.section-nav-link.next{text-align:right}
+.section-nav-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.section-nav-title{font-size:15px;font-weight:600;color:var(--primary);margin-top:4px}
 
 /* ---- GLOBAL PLATFORM BAR ---- */
 .global-platform-bar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;display:none;transition:background 0.2s}
@@ -201,8 +209,8 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 .table-wrap tbody tr:nth-child(even){background:var(--bg-alt)}
 .table-wrap td code{font-size:12px}
 .badge-req{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.03em}
-.badge-required{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)}
-.badge-optional{background:rgba(100,116,139,0.1);color:#64748b;border:1px solid rgba(100,116,139,0.2)}
+.badge-required{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;background:#FEE2E2;color:#DC2626}
+.badge-optional{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;background:#F1F5F9;color:#64748B}
 
 /* ---- STEPS ---- */
 .steps{counter-reset:step;padding-left:0}
@@ -707,9 +715,9 @@ token = client.<span class="fn">get_token</span>(
 <!-- Flutter Quick Start -->
 <div class="tab-content" data-platform="flutter" data-group="quickstart">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>The Flutter SDK is currently in development. In the meantime, you can use the REST API directly from Dart's <code>http</code> package. See the <a href="#api-reference">API Reference</a> section for endpoint details.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -752,7 +760,7 @@ token = client.<span class="fn">get_token</span>(
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">One key, all services</span>
-    Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.
+    <p>Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.</p>
   </div>
 </div>
 
@@ -769,7 +777,7 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="tab-content active" data-platform="react" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Using with the SDK (recommended)</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="cm">// The SDK handles auth headers automatically</span>
@@ -783,7 +791,7 @@ token = client.<span class="fn">get_token</span>(
 &lt;/<span class="ty">WibeChatProvider</span>&gt;</code></pre>
 </div>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Raw HTTP (if not using the SDK)</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm">// All API requests use Bearer token auth</span>
 <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.chat.zartek.in/api/gateway/chat/channels/'</span>, {
   headers: {
@@ -796,7 +804,7 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="tab-content" data-platform="python" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Authentication</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>, <span class="ty">WibechatClient</span>
 
 <span class="cm"># Chat uses email + API key (Zulip credentials)</span>
@@ -821,9 +829,9 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 
 <div class="tab-content" data-platform="flutter" data-group="auth-token">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>Use the REST API directly with the <code>Authorization: Bearer {apiKey}</code> header. See the <a href="#api-reference">API Reference</a> for details.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -831,7 +839,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 <p>LiveKit call rooms require a JWT access token. Generate one using <code>client.calls.createToken()</code>.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Generating a call token</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_chat_xxxxxxxxxxxx'</span> });
@@ -851,7 +859,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Token security</span>
-    The <code>wb_chat_</code> API key is a publishable key — it's safe to use in client-side code (similar to Stripe's publishable key). Call tokens are short-lived JWTs generated through the WibeChat gateway. For additional security, you can proxy API calls through your backend.
+    <p>The <code>wb_chat_</code> API key is a publishable key — it's safe to use in client-side code (similar to Stripe's publishable key). Call tokens are short-lived JWTs generated through the WibeChat gateway. For additional security, you can proxy API calls through your backend.</p>
   </div>
 </div>
 
@@ -877,6 +885,14 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 </div>
 <h2 class="section-title">Chat Integration</h2>
 <p class="section-desc">Embed full-featured messaging in your application: channels, messages, users, presence, and file uploads.</p>
+
+<div class="callout tip">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Pre-built components vs hooks</span>
+    <p>Use pre-built components (<code>&lt;ChatWindow&gt;</code>, <code>&lt;ChannelList&gt;</code>, <code>&lt;MessageList&gt;</code>) for the fastest integration. Use hooks (<code>useChannels</code>, <code>useMessages</code>) when you need full control over the UI or want to build custom interfaces.</p>
+  </div>
+</div>
 
 <h3 class="section-subtitle">Channels</h3>
 <p>Channels are group conversations. List, create, and select channels using the <code>useChannels</code> hook or pre-built components.</p>
@@ -934,9 +950,9 @@ streams = chat.<span class="fn">get_streams</span>()
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-channels">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>Use the <code>GET /api/gateway/chat/channels/</code> REST endpoint. See <a href="#api-reference">API Reference</a>.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -1013,9 +1029,9 @@ messages = chat.<span class="fn">get_messages</span>(
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-messages">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>Use the <code>GET /api/gateway/chat/messages/</code> and <code>POST /api/gateway/chat/messages/</code> REST endpoints. See <a href="#api-reference">API Reference</a>.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -1072,9 +1088,9 @@ profile = chat.<span class="fn">get_profile</span>()
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-presence">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>Use the <code>GET /api/gateway/chat/users/</code> and <code>GET /api/gateway/chat/presence/</code> REST endpoints.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -1082,7 +1098,7 @@ profile = chat.<span class="fn">get_profile</span>()
 <p>Upload files and include them in messages.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>File upload example</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/FileUpload.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">FileUploader</span>() {
@@ -1126,6 +1142,14 @@ profile = chat.<span class="fn">get_profile</span>()
 </div>
 <h2 class="section-title">Calling Integration</h2>
 <p class="section-desc">Add voice and video calls powered by LiveKit. WibeChat generates access tokens and manages rooms — you bring the LiveKit UI components.</p>
+
+<div class="callout note">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">LiveKit dependency</span>
+    <p>Calling features require <code>@livekit/components-react</code> and <code>@livekit/components-styles</code> for the React call UI. WibeChat handles token generation and room management; LiveKit handles the actual audio/video rendering. Install them with: <code>npm install @livekit/components-react @livekit/components-styles</code></p>
+  </div>
+</div>
 
 <h3 class="section-subtitle">CallButton Component</h3>
 <p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL.</p>
@@ -1197,9 +1221,9 @@ token = client.<span class="fn">get_token</span>(
 </div>
 <div class="tab-content" data-platform="flutter" data-group="call-join">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>Use the REST API to generate tokens, then pass them to <code>livekit_client</code> for the call UI.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -1240,7 +1264,7 @@ token = client.<span class="fn">get_token</span>(
 <p>Create and list call rooms using the core client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Room management via core client</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/RoomManager.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">RoomManager</span>() {
@@ -1291,7 +1315,7 @@ token = client.<span class="fn">get_token</span>(
 <p>Enable real-time events either via the provider prop or manually via the client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Enabling real-time events</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="cm">// Option 1: Via the provider (auto-connects on mount)</span>
 &lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
@@ -1326,7 +1350,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Subscribing to events</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { useEffect } <span class="kw">from</span> <span class="str">'react'</span>;
 
@@ -1373,7 +1397,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Auto-reconnect</span>
-    The SSE connection automatically reconnects with exponential backoff (3s to 60s cap) if the connection drops. You don't need to handle reconnection logic manually.
+    <p>The SSE connection automatically reconnects with exponential backoff (3s to 60s cap) if the connection drops. You don't need to handle reconnection logic manually.</p>
   </div>
 </div>
 
@@ -1404,11 +1428,20 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Authentication</span>
-    All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer {your_api_key}</code>
+    <p>All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer {your_api_key}</code></p>
+  </div>
+</div>
+
+<div class="callout note">
+  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Error Responses</span>
+    <p>All endpoints return errors in the format: <code>{"error": "message", "status": 400}</code>. Common status codes: <code>400</code> Bad Request, <code>401</code> Unauthorized, <code>403</code> Forbidden, <code>404</code> Not Found, <code>429</code> Rate Limited.</p>
   </div>
 </div>
 
 <h3 class="section-subtitle">Organization</h3>
+<p>Retrieve your organization profile and check which services are enabled for your API key.</p>
 
 <div class="endpoint get-border" id="ep-org-get">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -1444,6 +1477,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Chat</h3>
+<p>Endpoints for managing channels, sending and retrieving messages, listing users, tracking presence, and uploading files.</p>
 
 <div class="endpoint get-border">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -1480,8 +1514,19 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
+    <p>Create a new channel (stream) in the organization. All members will be able to subscribe to public channels.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Channel name (lowercase, no spaces)</td></tr>
+        <tr><td><code>description</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td>Channel description</td></tr>
+        <tr><td><code>is_private</code></td><td><code>boolean</code></td><td><span class="badge-optional">Optional</span></td><td>Whether the channel is private (default: false)</td></tr>
+      </tbody>
+    </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"engineering"</span>,
   <span class="prop">"description"</span>: <span class="str">"Engineering team discussions"</span>,
@@ -1511,15 +1556,16 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
+    <p>Retrieve paginated message history. Use <code>anchor</code> for pagination and filter by channel or topic.</p>
     <div class="table-wrap">
     <table>
-      <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td><code>anchor</code></td><td>string | number</td><td>Message anchor (default: <code>"newest"</code>)</td></tr>
-        <tr><td><code>num_before</code></td><td>integer</td><td>Messages before anchor (default: 50, max: 500)</td></tr>
-        <tr><td><code>num_after</code></td><td>integer</td><td>Messages after anchor (default: 0, max: 500)</td></tr>
-        <tr><td><code>channel</code></td><td>string</td><td>Filter by channel name</td></tr>
-        <tr><td><code>topic</code></td><td>string</td><td>Filter by topic (requires channel)</td></tr>
+        <tr><td><code>anchor</code></td><td><code>string | number</code></td><td><span class="badge-optional">Optional</span></td><td>Message anchor (default: <code>"newest"</code>)</td></tr>
+        <tr><td><code>num_before</code></td><td><code>integer</code></td><td><span class="badge-optional">Optional</span></td><td>Messages before anchor (default: 50, max: 500)</td></tr>
+        <tr><td><code>num_after</code></td><td><code>integer</code></td><td><span class="badge-optional">Optional</span></td><td>Messages after anchor (default: 0, max: 500)</td></tr>
+        <tr><td><code>channel</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td>Filter by channel name</td></tr>
+        <tr><td><code>topic</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td>Filter by topic (requires channel)</td></tr>
       </tbody>
     </table>
     </div>
@@ -1555,25 +1601,26 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
+    <p>Send a new message to a channel (stream) or as a direct message to one or more users.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>type</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td><code>"stream"</code> (channel) or <code>"direct"</code> (DM). Default: <code>"stream"</code></td></tr>
+        <tr><td><code>to</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Channel name or comma-separated emails for DM</td></tr>
+        <tr><td><code>content</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Message content (Markdown supported)</td></tr>
+        <tr><td><code>topic</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td>Topic name (for stream messages)</td></tr>
+      </tbody>
+    </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"type"</span>: <span class="str">"stream"</span>,
   <span class="prop">"to"</span>: <span class="str">"general"</span>,
   <span class="prop">"content"</span>: <span class="str">"Hello everyone!"</span>,
   <span class="prop">"topic"</span>: <span class="str">"greetings"</span>
 }</code></pre>
-    </div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><code>type</code></td><td>string</td><td><code>"stream"</code> (channel) or <code>"direct"</code> (DM). Default: <code>"stream"</code></td></tr>
-        <tr><td><code>to</code></td><td>string</td><td>Channel name or comma-separated emails for DM</td></tr>
-        <tr><td><code>content</code></td><td>string</td><td>Message content (Markdown supported)</td></tr>
-        <tr><td><code>topic</code></td><td>string</td><td>Topic name (for stream messages)</td></tr>
-      </tbody>
-    </table>
     </div>
     <div class="code-block standalone">
     <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
@@ -1650,9 +1697,9 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <p>Upload a file via multipart form data. Returns a URI to include in messages.</p>
     <div class="table-wrap">
     <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td><code>file</code></td><td>File</td><td>The file to upload (multipart/form-data)</td></tr>
+        <tr><td><code>file</code></td><td><code>File</code></td><td><span class="badge-required">Required</span></td><td>The file to upload (multipart/form-data)</td></tr>
       </tbody>
     </table>
     </div>
@@ -1665,6 +1712,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Calling</h3>
+<p>Endpoints for generating LiveKit access tokens and managing call rooms in your organization.</p>
 
 <div class="endpoint post-border">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -1675,25 +1723,26 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
+    <p>Generates a short-lived LiveKit JWT access token for joining a call room. Pass the returned token to <code>&lt;LiveKitRoom&gt;</code> or the <code>livekit_client</code> SDK.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>room</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Room name</td></tr>
+        <tr><td><code>identity</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Participant identity, e.g. email</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td>Display name</td></tr>
+        <tr><td><code>ttl</code></td><td><code>integer</code></td><td><span class="badge-optional">Optional</span></td><td>Token TTL in seconds (60–86400, default: 3600)</td></tr>
+      </tbody>
+    </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"room"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"identity"</span>: <span class="str">"alice@example.com"</span>,
   <span class="prop">"name"</span>: <span class="str">"Alice"</span>,
   <span class="prop">"ttl"</span>: <span class="num">3600</span>
 }</code></pre>
-    </div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><code>room</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Room name</td></tr>
-        <tr><td><code>identity</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Participant identity, e.g. email</td></tr>
-        <tr><td><code>name</code></td><td>string</td><td><span class="badge-req badge-optional">Optional</span></td><td>Display name</td></tr>
-        <tr><td><code>ttl</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Token TTL in seconds (60–86400, default: 3600)</td></tr>
-      </tbody>
-    </table>
     </div>
     <div class="code-block standalone">
     <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
@@ -1739,29 +1788,42 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
+    <p>Creates or ensures a LiveKit room exists. Rooms are also created automatically when the first participant joins using a token.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>Room name</td></tr>
+        <tr><td><code>empty_timeout</code></td><td><code>integer</code></td><td><span class="badge-optional">Optional</span></td><td>Seconds before empty room auto-closes (default: 300)</td></tr>
+        <tr><td><code>max_participants</code></td><td><code>integer</code></td><td><span class="badge-optional">Optional</span></td><td>Max participants, 0 = unlimited (default: 0)</td></tr>
+      </tbody>
+    </table>
+    </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"max_participants"</span>: <span class="num">10</span>,
   <span class="prop">"empty_timeout"</span>: <span class="num">300</span>
 }</code></pre>
     </div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><code>name</code></td><td>string</td><td><span class="badge-req badge-required">Required</span></td><td>Room name</td></tr>
-        <tr><td><code>empty_timeout</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Seconds before empty room auto-closes (default: 300)</td></tr>
-        <tr><td><code>max_participants</code></td><td>integer</td><td><span class="badge-req badge-optional">Optional</span></td><td>Max participants, 0 = unlimited (default: 0)</td></tr>
-      </tbody>
-    </table>
+    <div class="code-block standalone">
+    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<pre><code>{
+  <span class="prop">"room"</span>: {
+    <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
+    <span class="prop">"sid"</span>: <span class="str">"RM_abc123"</span>,
+    <span class="prop">"num_participants"</span>: <span class="num">0</span>,
+    <span class="prop">"creation_time"</span>: <span class="num">1718456400</span>
+  }
+}</code></pre>
     </div>
     </div>
   </div>
 </div>
 
 <h3 class="section-subtitle">Events (SSE)</h3>
+<p>Server-Sent Events endpoint for receiving real-time updates without polling.</p>
 
 <div class="endpoint get-border">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -1846,7 +1908,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">Core Client (<code>@wibechat/core</code>)</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>WibeChatClient constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">new</span> <span class="ty">WibeChatClient</span>({
   apiKey: <span class="ty">string</span>,              <span class="cm">// Required — your API key</span>
   baseUrl?: <span class="ty">string</span>,            <span class="cm">// Default: 'https://api.chat.zartek.in'</span>
@@ -1909,7 +1971,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">TypeScript Types</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Key interfaces</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">interface</span> <span class="ty">OrgInfo</span> {
   organization: { id: <span class="ty">number</span>; name: <span class="ty">string</span>; slug: <span class="ty">string</span> };
   credential: { service: <span class="str">'CHAT'</span> | <span class="str">'AUDIO'</span> | <span class="str">'VIDEO'</span>; key_prefix: <span class="ty">string</span> };
@@ -1988,7 +2050,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">WibechatChat — Chat Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>(
@@ -2017,7 +2079,7 @@ chat = <span class="ty">WibechatChat</span>(
 
 <h3 class="section-subtitle">WibechatClient — Calling Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Constructor</span></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
@@ -2097,9 +2159,9 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <!-- Flutter SDK -->
 <div class="tab-content" data-platform="flutter" data-group="sdk-ref">
 <div class="coming-soon">
-  <div class="coming-soon-icon">&#9670;</div>
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
-  <p>The Flutter SDK is under development. Use the REST API endpoints listed in the <a href="#api-reference">API Reference</a> section with Dart's <code>http</code> or <code>dio</code> package.</p>
+  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
 </div>
 
@@ -2140,21 +2202,21 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Client-side API keys</span>
-    The <code>wb_chat_</code> API key is a publishable key and is safe to expose in the browser (prefixed with <code>NEXT_PUBLIC_</code>). The gateway enforces rate limits and permissions per organization. For additional security, you can proxy API calls through your backend.
+    <p>The <code>wb_chat_</code> API key is a publishable key and is safe to expose in the browser (prefixed with <code>NEXT_PUBLIC_</code>). The gateway enforces rate limits and permissions per organization. For additional security, you can proxy API calls through your backend.</p>
   </div>
 </div>
 
 <h3 class="section-subtitle">WibeChatProvider Options</h3>
 <div class="table-wrap">
 <table>
-  <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>apiKey</code></td><td><code>string</code></td><td>—</td><td>Required. Your WibeChat API key.</td></tr>
-    <tr><td><code>baseUrl</code></td><td><code>string</code></td><td><code>'https://api.chat.zartek.in'</code></td><td>API base URL</td></tr>
-    <tr><td><code>timeout</code></td><td><code>number</code></td><td><code>30000</code></td><td>Request timeout in milliseconds</td></tr>
-    <tr><td><code>connectRealTime</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Auto-connect to SSE on mount</td></tr>
-    <tr><td><code>colorScheme</code></td><td><code>'light' | 'dark' | 'auto'</code></td><td><code>'light'</code></td><td>Color scheme for built-in components</td></tr>
-    <tr><td><code>theme</code></td><td><code>WibeChatTheme</code></td><td>—</td><td>Custom theme overrides</td></tr>
+    <tr><td><code>apiKey</code></td><td><code>string</code></td><td><span class="badge-required">Required</span></td><td>—</td><td>Your WibeChat API key.</td></tr>
+    <tr><td><code>baseUrl</code></td><td><code>string</code></td><td><span class="badge-optional">Optional</span></td><td><code>'https://api.chat.zartek.in'</code></td><td>API base URL</td></tr>
+    <tr><td><code>timeout</code></td><td><code>number</code></td><td><span class="badge-optional">Optional</span></td><td><code>30000</code></td><td>Request timeout in milliseconds</td></tr>
+    <tr><td><code>connectRealTime</code></td><td><code>boolean</code></td><td><span class="badge-optional">Optional</span></td><td><code>false</code></td><td>Auto-connect to SSE on mount</td></tr>
+    <tr><td><code>colorScheme</code></td><td><code>'light' | 'dark' | 'auto'</code></td><td><span class="badge-optional">Optional</span></td><td><code>'light'</code></td><td>Color scheme for built-in components</td></tr>
+    <tr><td><code>theme</code></td><td><code>WibeChatTheme</code></td><td><span class="badge-optional">Optional</span></td><td>—</td><td>Custom theme overrides</td></tr>
   </tbody>
 </table>
 </div>
@@ -2163,7 +2225,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <p>Override the default theme by passing a <code>theme</code> object to <code>WibeChatProvider</code>, or override CSS custom properties directly.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>Custom theme example</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
 <pre><code>&lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
   <span class="prop">theme</span>={{
@@ -2188,7 +2250,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
 
 <div class="table-wrap">
 <table>
-  <thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead>
+  <thead><tr><th>Property</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr><td><code>--wc-color-primary</code></td><td><code>#6366f1</code></td><td>Primary/accent color</td></tr>
     <tr><td><code>--wc-color-primary-hover</code></td><td><code>#4f46e5</code></td><td>Hover state</td></tr>
@@ -2219,7 +2281,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">LiveKit handles the call UI</span>
-    WibeChat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.
+    <p>WibeChat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.</p>
   </div>
 </div>
 
