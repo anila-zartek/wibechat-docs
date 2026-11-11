@@ -327,7 +327,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 /* API Explorer */
 .api-explorer{display:grid;grid-template-columns:40% 60%;min-height:420px}
 .api-explorer-left{border-right:1px solid var(--border);display:flex;flex-direction:column}
-.api-explorer-right{display:flex;flex-direction:column;background:#0F1117;position:relative}
+.api-explorer-right{display:flex;flex-direction:column;background:#0F1117;position:relative;min-width:0}
 .pg-tabs{display:flex;border-bottom:1px solid var(--border)}
 .pg-tab{flex:1;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);border-bottom:2px solid transparent;font-family:inherit;transition:var(--transition)}
 .pg-tab:hover{color:var(--text-secondary)}
@@ -344,11 +344,16 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 .pg-params-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px}
 .pg-param-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .pg-param-row label{font-size:12px;font-weight:600;color:var(--text-secondary);min-width:90px;font-family:'JetBrains Mono',monospace}
-.pg-param-row input,.pg-param-row select{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;outline:none;transition:border-color 0.15s}
+.pg-param-row input,.pg-param-row select{flex:1;min-width:0;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;outline:none;transition:border-color 0.15s}
 .pg-param-row input:focus,.pg-param-row select:focus{border-color:var(--primary)}
 .pg-send-btn{width:100%;padding:10px;border:none;border-radius:var(--radius);background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
 .pg-send-btn:hover{background:var(--primary-hover)}
 .pg-send-btn:disabled{opacity:.6;cursor:not-allowed}
+.pg-request{border-bottom:1px solid #1E293B}
+.pg-request-bar{display:flex;align-items:center;justify-content:space-between;padding:6px 16px;background:#161B22;border-bottom:1px solid #1E293B}
+.pg-request-title{font-size:13px;color:#8892A4;font-family:'JetBrains Mono',monospace}
+.pg-request-body{margin:0;padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#CDD6F4;white-space:pre;overflow-x:auto}
+.pg-request-body .str{color:#A6E3A1}
 .pg-response-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #1E293B;background:#161B22}
 .pg-status{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
 .pg-status.s200{background:rgba(34,197,94,0.15);color:#4ADE80}
@@ -3340,7 +3345,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <!-- API Explorer -->
   <div class="playground-header">
     <h3>API Explorer</h3>
-    <p>Select an endpoint, edit parameters, and send a simulated request.</p>
+    <p>Select an endpoint, edit parameters, and send a simulated request. The example request updates as you type and can be copied to run against the real API.</p>
   </div>
   <div class="api-explorer">
     <div class="api-explorer-left">
@@ -3359,6 +3364,13 @@ queue = chat.<span class="fn">register_event_queue</span>(
       </div>
     </div>
     <div class="api-explorer-right">
+      <div class="pg-request">
+        <div class="pg-request-bar">
+          <span class="pg-request-title">Example Request</span>
+          <button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
+        </div>
+        <pre class="pg-request-body" id="pgRequestBody"></pre>
+      </div>
       <div class="pg-response-bar" id="pgResponseBar" style="display:none">
         <span class="pg-status s200" id="pgStatusBadge">200 OK</span>
         <span class="pg-response-time" id="pgResponseTime"></span>
@@ -3719,7 +3731,7 @@ function toggleEndpoint(header) {
 // COPY CODE
 // ============================================================
 function copyCode(btn) {
-  const pre = btn.closest('.code-block').querySelector('pre');
+  const pre = btn.closest('.code-block, .pg-request').querySelector('pre');
   navigator.clipboard.writeText(pre.textContent).then(() => {
     const orig = btn.innerHTML;
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
@@ -3892,12 +3904,12 @@ const PG_ENDPOINTS = [
     { name: "room", value: "standup-room", type: "text" },
     { name: "identity", value: "alice@example.com", type: "text" },
     { name: "name", value: "Alice", type: "text" },
-    { name: "ttl", value: "3600", type: "text" },
+    { name: "ttl", value: "3600", type: "text", num: true },
   ], response: (p) => ({ access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBUEl" + btoa(Math.random().toString()).slice(0,20) + "...", token_type: "Bearer", room: p.room || "standup-room", identity: p.identity || "alice@example.com", name: p.name || "Alice", expires_in: parseInt(p.ttl) || 3600 }), status: 201 },
   { cat: "calling", method: "GET", path: "/calls/rooms/", desc: "List rooms", params: [], response: () => ({ rooms: MOCK_DATA.rooms }), status: 200 },
   { cat: "calling", method: "POST", path: "/calls/rooms/", desc: "Create room", params: [
     { name: "name", value: "meeting-room", type: "text" },
-    { name: "max_participants", value: "10", type: "text" },
+    { name: "max_participants", value: "10", type: "text", num: true },
   ], response: (p) => ({ name: p.name || "meeting-room", sid: "RM_" + Math.random().toString(36).slice(2,14), num_participants: 0, creation_time: Math.floor(Date.now()/1000), max_participants: parseInt(p.max_participants) || 10 }), status: 201 },
 ];
 
@@ -3940,9 +3952,59 @@ function pgSelectEndpoint(idx) {
     fields.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:4px 0">No parameters required</div>';
   } else {
     fields.innerHTML = ep.params.map(p =>
-      `<div class="pg-param-row"><label>${p.name}</label><input type="${p.type}" value="${p.value}" data-param="${p.name}"></div>`
+      `<div class="pg-param-row"><label>${p.name}</label><input type="${p.type}" value="${p.value}" data-param="${p.name}" oninput="pgRenderRequest()"></div>`
     ).join('');
   }
+  pgRenderRequest();
+}
+
+const PG_API_KEY = 'wb_chat_xxxxxxxxxxxx';
+const PG_BASE_URL = 'https://api.chat.zartek.in/api/gateway';
+
+// Builds the cURL command for an endpoint as [text, isString] parts, in the same
+// layout as the Example Request blocks in the API Reference.
+function pgBuildCurl(ep, params) {
+  const str = s => [s, true];
+  const auth = ['-H ', str(`"Authorization: Bearer ${PG_API_KEY}"`), ' \\\n  '];
+  const url = PG_BASE_URL + ep.path;
+  const filled = ep.params.filter(p => (params[p.name] ?? '') !== '');
+
+  if (ep.method === 'GET') {
+    const query = filled.map(p => `${p.name}=${encodeURIComponent(params[p.name])}`).join('&');
+    return ['curl ', ...auth, query ? str(`"${url}?${query}"`) : url];
+  }
+  if (ep.path === '/chat/files/') {
+    return ['curl -X POST \\\n  ', ...auth, '-F ', str(`"file=@${params.filename || 'report.pdf'}"`), ' \\\n  ', url];
+  }
+  const body = {};
+  filled.forEach(p => {
+    const v = params[p.name];
+    body[p.name] = p.num && /^\d+$/.test(v) ? Number(v) : v;
+  });
+  const json = JSON.stringify(body).replace(/'/g, "'\\''");
+  return ['curl -X POST \\\n  ', ...auth, '-H ', str('"Content-Type: application/json"'), ' \\\n  ',
+    '-d ', str(`'${json}'`), ' \\\n  ', url];
+}
+
+function pgRenderRequest() {
+  const el = document.getElementById('pgRequestBody');
+  const ep = pgGetFiltered()[pgSelectedIdx];
+  if (!el || !ep) return;
+  const params = {};
+  document.querySelectorAll('#pgParamFields input').forEach(inp => {
+    params[inp.dataset.param] = inp.value;
+  });
+  el.textContent = '';
+  pgBuildCurl(ep, params).forEach(part => {
+    if (Array.isArray(part)) {
+      const span = document.createElement('span');
+      span.className = 'str';
+      span.textContent = part[0];
+      el.appendChild(span);
+    } else {
+      el.appendChild(document.createTextNode(part));
+    }
+  });
 }
 
 function pgSendRequest() {
