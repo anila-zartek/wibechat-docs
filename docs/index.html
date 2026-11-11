@@ -13,6 +13,9 @@
   --border:#E5E7EB;--border-light:#F3F4F6;
   --primary:#0E7C86;--primary-hover:#096169;--primary-light:#ECFDF5;
   --react:#61DAFB;--python:#3776AB;--flutter:#02569B;
+  --swift:#F05138;--kotlin:#7F52FF;--go:#00ADD8;
+  --java:#E76F00;--ruby:#CC342D;--javascript:#F7DF1E;
+  --rest:#22C55E;--react-native:#61DAFB;
   --radius:8px;--radius-lg:12px;--radius-xl:16px;
   --sidebar-w:256px;--toc-w:200px;--navbar-h:60px;
   --shadow-sm:0 1px 2px rgba(0,0,0,0.05);
@@ -127,9 +130,23 @@ p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.75
 code{background:var(--bg-subtle);color:var(--text);padding:2px 6px;border-radius:4px;font-size:0.875em;border:1px solid var(--border)}
 [data-theme="dark"] code{background:#374151;color:#E5E7EB}
 
+/* ---- PLATFORM GRID (hero) ---- */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.platform-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:var(--transition);background:var(--bg)}
+.platform-card:hover{border-color:var(--primary);box-shadow:var(--shadow-sm)}
+.platform-card.selected{border-color:var(--primary);background:var(--primary-light)}
+.platform-card.coming-soon{opacity:0.7}
+.platform-card.coming-soon:hover{opacity:1}
+.platform-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.platform-info{flex:1;min-width:0}
+.platform-name{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.platform-pkg{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.platform-arrow{color:var(--text-muted);font-size:14px;flex-shrink:0;transition:var(--transition)}
+.platform-card:hover .platform-arrow{color:var(--primary);transform:translateX(2px)}
+.soon-badge{font-size:10px;font-weight:600;background:var(--bg-subtle);color:var(--text-muted);padding:1px 6px;border-radius:8px}
 /* ---- PLATFORM TABS ---- */
 .platform-tabs-wrapper{background:var(--bg-alt);border:1px solid var(--border);border-bottom:none;border-radius:var(--radius-lg) var(--radius-lg) 0 0;overflow:hidden}
-.platform-tabs{display:flex;overflow-x:auto;scrollbar-width:none}
+.platform-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;background:var(--bg-alt);border-bottom:1px solid var(--border)}
 .platform-tabs::-webkit-scrollbar{display:none}
 .platform-tab{flex:0 0 auto;padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:var(--transition);border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:inherit}
 .platform-tab:hover{color:var(--text-secondary);background:var(--bg)}
@@ -419,29 +436,95 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
     <div class="hero-section-block">
       <p class="hero-cards-label">Get Started</p>
-      <div class="cards-grid cols-3" style="max-width:720px;margin:0 auto">
-        <a class="card" href="#quickstart" onclick="setGlobalPlatform('react')">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span class="card-dot" style="background:#61DAFB"></span>
-            <span style="font-weight:600;font-size:16px;color:var(--text)">React</span>
-            <span style="margin-left:auto;color:var(--text-muted);font-size:16px">&rarr;</span>
+      <p class="home-section-desc" style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Choose your platform to see tailored integration guides.</p>
+      <div class="platform-grid" style="max-width:960px;margin:0 auto">
+        <div class="platform-card" data-platform="react" onclick="setGlobalPlatform('react');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#61DAFB"></div>
+          <div class="platform-info">
+            <span class="platform-name">React</span>
+            <span class="platform-pkg">@wibechat/react</span>
           </div>
-          <code style="font-size:11px;color:var(--text-muted)">@wibechat/react</code>
-        </a>
-        <a class="card" href="#quickstart" onclick="setGlobalPlatform('python')">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span class="card-dot" style="background:#3776AB"></span>
-            <span style="font-weight:600;font-size:16px;color:var(--text)">Python</span>
-            <span style="margin-left:auto;color:var(--text-muted);font-size:16px">&rarr;</span>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card" data-platform="javascript" onclick="setGlobalPlatform('javascript');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#F7DF1E"></div>
+          <div class="platform-info">
+            <span class="platform-name">JavaScript</span>
+            <span class="platform-pkg">@wibechat/core</span>
           </div>
-          <code style="font-size:11px;color:var(--text-muted)">pip install wibechat</code>
-        </a>
-        <div class="card coming-soon">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span class="card-dot" style="background:#02569B"></span>
-            <span style="font-weight:600;font-size:16px;color:var(--text)">Flutter</span>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="react-native" onclick="setGlobalPlatform('react-native');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#61DAFB"></div>
+          <div class="platform-info">
+            <span class="platform-name">React Native <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">@wibechat/react-native</span>
           </div>
-          <span class="badge-soon">Coming Soon</span>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card" data-platform="python" onclick="setGlobalPlatform('python');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#3776AB"></div>
+          <div class="platform-info">
+            <span class="platform-name">Python</span>
+            <span class="platform-pkg">pip install wibechat</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="swift" onclick="setGlobalPlatform('swift');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#F05138"></div>
+          <div class="platform-info">
+            <span class="platform-name">Swift (iOS) <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">WibeChatSwift</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="kotlin" onclick="setGlobalPlatform('kotlin');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#7F52FF"></div>
+          <div class="platform-info">
+            <span class="platform-name">Kotlin (Android) <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">wibechat-android</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="flutter" onclick="setGlobalPlatform('flutter');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#02569B"></div>
+          <div class="platform-info">
+            <span class="platform-name">Flutter <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">wibechat_flutter</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="go" onclick="setGlobalPlatform('go');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#00ADD8"></div>
+          <div class="platform-info">
+            <span class="platform-name">Go <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">wibechat-go</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="java" onclick="setGlobalPlatform('java');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#E76F00"></div>
+          <div class="platform-info">
+            <span class="platform-name">Java <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">wibechat-java</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card coming-soon" data-platform="ruby" onclick="setGlobalPlatform('ruby');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#CC342D"></div>
+          <div class="platform-info">
+            <span class="platform-name">Ruby <span class="soon-badge">Soon</span></span>
+            <span class="platform-pkg">wibechat-ruby</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
+        </div>
+        <div class="platform-card" data-platform="rest" onclick="setGlobalPlatform('rest');window.location.hash='quickstart'">
+          <div class="platform-dot" style="background:#22C55E"></div>
+          <div class="platform-info">
+            <span class="platform-name">REST API</span>
+            <span class="platform-pkg">cURL / HTTP</span>
+          </div>
+          <span class="platform-arrow">&#8594;</span>
         </div>
       </div>
     </div>
@@ -531,8 +614,16 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="platform-tabs-wrapper" data-tab-group="quickstart">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 
@@ -730,12 +821,166 @@ token = client.<span class="fn">get_token</span>(
 </div><!-- /steps -->
 </div><!-- /python tab -->
 
+<!-- JavaScript Quick Start -->
+<div class="tab-content" data-platform="javascript" data-group="quickstart">
+<div class="steps">
+<div class="step">
+<h4>Install the SDK</h4>
+<p>Install the WibeChat core JavaScript SDK. Works in any browser or Node.js environment.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>npm install @wibechat/core</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Set your API key</h4>
+<p>Add your WibeChat API key to your <code>.env</code> file.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="var">WIBECHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span></code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Initialize the client</h4>
+<p>Create a <code>WibeChatClient</code> instance and use it throughout your app.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">client.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({
+  <span class="prop">apiKey</span>: <span class="str">'wb_chat_xxxxxxxxxxxx'</span>,
+});</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Send a message</h4>
+<p>Send messages to channels using the chat namespace.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">send.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">sendMessage</span>({
+  <span class="prop">to</span>: <span class="str">'general'</span>,
+  <span class="prop">content</span>: <span class="str">'Hello from vanilla JS!'</span>,
+  <span class="prop">topic</span>: <span class="str">'greetings'</span>,
+});</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Generate a call token</h4>
+<p>Get a LiveKit JWT token for joining a call room.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">call.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">client</span>.calls.<span class="fn">createToken</span>({
+  <span class="prop">room</span>: <span class="str">'standup-room'</span>,
+  <span class="prop">identity</span>: <span class="str">'user@example.com'</span>,
+  <span class="prop">name</span>: <span class="str">'Alice'</span>,
+  <span class="prop">ttl</span>: <span class="num">3600</span>,
+});
+console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// JWT string — pass to LiveKit</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<!-- React Native Quick Start -->
+<div class="tab-content" data-platform="react-native" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <!-- Flutter Quick Start -->
 <div class="tab-content" data-platform="flutter" data-group="quickstart">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Swift Quick Start -->
+<div class="tab-content" data-platform="swift" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Kotlin Quick Start -->
+<div class="tab-content" data-platform="kotlin" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin (Android) SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Go Quick Start -->
+<div class="tab-content" data-platform="go" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Java Quick Start -->
+<div class="tab-content" data-platform="java" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Ruby Quick Start -->
+<div class="tab-content" data-platform="ruby" data-group="quickstart">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- REST API Quick Start -->
+<div class="tab-content" data-platform="rest" data-group="quickstart">
+<div class="steps">
+<div class="step">
+<h4>Get your API key</h4>
+<p>Retrieve your API key from the <a href="https://admin.wibechat.com">WibeChat Admin Portal</a>. It starts with <code>wb_chat_</code>.</p>
+</div>
+<div class="step">
+<h4>List channels</h4>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  https://api.chat.zartek.in/api/gateway/chat/channels/</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Send a message</h4>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>curl -X POST \
+  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"to":"general","content":"Hello!","topic":"greetings"}'</span> \
+  https://api.chat.zartek.in/api/gateway/chat/messages/</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Generate a call token</h4>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>curl -X POST \
+  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"room":"standup-room","identity":"user@example.com","name":"Alice"}'</span> \
+  https://api.chat.zartek.in/api/gateway/calls/token/</code></pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -787,8 +1032,16 @@ token = client.<span class="fn">get_token</span>(
 <div class="platform-tabs-wrapper" data-tab-group="auth-token">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 
@@ -844,11 +1097,85 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 </div>
 </div>
 
+<div class="tab-content" data-platform="javascript" data-group="auth-token">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
+
+<span class="cm">// The SDK handles auth headers automatically</span>
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({
+  <span class="prop">apiKey</span>: <span class="str">'wb_chat_xxxxxxxxxxxx'</span>,
+});
+
+<span class="cm">// Or use raw HTTP with Bearer token</span>
+<span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.chat.zartek.in/api/gateway/chat/channels/'</span>, {
+  <span class="prop">headers</span>: { <span class="str">'Authorization'</span>: <span class="str">'Bearer wb_chat_xxxxxxxxxxxx'</span> },
+});</code></pre>
+</div>
+</div>
+
+<div class="tab-content" data-platform="react-native" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <div class="tab-content" data-platform="flutter" data-group="auth-token">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="swift" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="kotlin" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="go" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="java" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="ruby" data-group="auth-token">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="rest" data-group="auth-token">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># Pass your API key as a Bearer token in every request</span>
+curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  https://api.chat.zartek.in/api/gateway/org/</code></pre>
 </div>
 </div>
 
@@ -916,8 +1243,16 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 <div class="platform-tabs-wrapper" data-tab-group="chat-channels">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-channels">
@@ -964,11 +1299,76 @@ streams = chat.<span class="fn">get_streams</span>()
     <span class="fn">print</span>(<span class="kw">f</span><span class="str">"#{s.name} (id={s.id}) — {s.description}"</span>)</code></pre>
 </div>
 </div>
+<div class="tab-content" data-platform="javascript" data-group="chat-channels">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">const</span> <span class="var">channels</span> = <span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">getChannels</span>();
+<span class="var">channels</span>.<span class="fn">forEach</span>(ch =&gt; console.<span class="fn">log</span>(<span class="str">`#${ch.name}`</span>));</code></pre>
+</div>
+</div>
+
+<div class="tab-content" data-platform="react-native" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <div class="tab-content" data-platform="flutter" data-group="chat-channels">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="swift" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="kotlin" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="go" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="java" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="ruby" data-group="chat-channels">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="rest" data-group="chat-channels">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># List channels</span>
+curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  https://api.chat.zartek.in/api/gateway/chat/channels/</code></pre>
 </div>
 </div>
 
@@ -978,8 +1378,16 @@ streams = chat.<span class="fn">get_streams</span>()
 <div class="platform-tabs-wrapper" data-tab-group="chat-messages">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-messages">
@@ -1043,11 +1451,93 @@ messages = chat.<span class="fn">get_messages</span>(
     <span class="fn">print</span>(<span class="kw">f</span><span class="str">"{msg.sender_name}: {msg.content}"</span>)</code></pre>
 </div>
 </div>
+<div class="tab-content" data-platform="javascript" data-group="chat-messages">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm">// Send a message</span>
+<span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">sendMessage</span>({
+  <span class="prop">to</span>: <span class="str">'general'</span>,
+  <span class="prop">content</span>: <span class="str">'Hello!'</span>,
+  <span class="prop">topic</span>: <span class="str">'greetings'</span>,
+});
+
+<span class="cm">// Fetch message history</span>
+<span class="kw">const</span> <span class="var">messages</span> = <span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">getMessages</span>({
+  <span class="prop">channel</span>: <span class="str">'general'</span>,
+  <span class="prop">num_before</span>: <span class="num">50</span>,
+});</code></pre>
+</div>
+</div>
+
+<div class="tab-content" data-platform="react-native" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <div class="tab-content" data-platform="flutter" data-group="chat-messages">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="swift" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="kotlin" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="go" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="java" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="ruby" data-group="chat-messages">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="rest" data-group="chat-messages">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># Get messages</span>
+curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  <span class="str">"https://api.chat.zartek.in/api/gateway/chat/messages/?channel=general&amp;num_before=50"</span>
+
+<span class="cm"># Send a message</span>
+curl -X POST \
+  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"to":"general","content":"Hello!","topic":"greetings"}'</span> \
+  https://api.chat.zartek.in/api/gateway/chat/messages/</code></pre>
 </div>
 </div>
 
@@ -1057,8 +1547,16 @@ messages = chat.<span class="fn">get_messages</span>(
 <div class="platform-tabs-wrapper" data-tab-group="chat-presence">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-presence">
@@ -1102,11 +1600,80 @@ profile = chat.<span class="fn">get_profile</span>()
 <span class="fn">print</span>(<span class="kw">f</span><span class="str">"Logged in as: {profile['full_name']}"</span>)</code></pre>
 </div>
 </div>
+<div class="tab-content" data-platform="javascript" data-group="chat-presence">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">const</span> <span class="var">users</span> = <span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">getUsers</span>();
+<span class="kw">const</span> <span class="var">presence</span> = <span class="kw">await</span> <span class="var">client</span>.chat.<span class="fn">getPresence</span>();</code></pre>
+</div>
+</div>
+
+<div class="tab-content" data-platform="react-native" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <div class="tab-content" data-platform="flutter" data-group="chat-presence">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="swift" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="kotlin" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="go" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="java" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="ruby" data-group="chat-presence">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="rest" data-group="chat-presence">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># List users</span>
+curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  https://api.chat.zartek.in/api/gateway/chat/users/
+
+<span class="cm"># Get presence</span>
+curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  https://api.chat.zartek.in/api/gateway/chat/presence/</code></pre>
 </div>
 </div>
 
@@ -1172,8 +1739,16 @@ profile = chat.<span class="fn">get_profile</span>()
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="call-join">
@@ -1234,11 +1809,84 @@ token = client.<span class="fn">get_token</span>(
 <span class="fn">print</span>(token.expires_in_seconds) <span class="cm"># 3600</span></code></pre>
 </div>
 </div>
+<div class="tab-content" data-platform="javascript" data-group="call-join">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">client</span>.calls.<span class="fn">createToken</span>({
+  <span class="prop">room</span>: <span class="str">'standup-room'</span>,
+  <span class="prop">identity</span>: <span class="str">'user@example.com'</span>,
+  <span class="prop">name</span>: <span class="str">'Alice'</span>,
+  <span class="prop">ttl</span>: <span class="num">3600</span>,
+});
+console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// JWT string for LiveKit</span></code></pre>
+</div>
+</div>
+
+<div class="tab-content" data-platform="react-native" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <div class="tab-content" data-platform="flutter" data-group="call-join">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="swift" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="kotlin" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="go" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="java" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="ruby" data-group="call-join">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<div class="tab-content" data-platform="rest" data-group="call-join">
+<div class="code-block">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># Generate a call token</span>
+curl -X POST \
+  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"room":"standup-room","identity":"user@example.com","name":"Alice","ttl":3600}'</span> \
+  https://api.chat.zartek.in/api/gateway/calls/token/</code></pre>
 </div>
 </div>
 
@@ -1878,8 +2526,16 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <div class="platform-tabs-wrapper" data-tab-group="sdk-ref">
 <div class="platform-tabs">
   <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="javascript" onclick="switchTab(this)"><span class="dot" style="background:#F7DF1E"></span>JavaScript</button>
+  <button class="platform-tab" data-tab="react-native" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React Native</button>
   <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="swift" onclick="switchTab(this)"><span class="dot" style="background:#F05138"></span>Swift</button>
+  <button class="platform-tab" data-tab="kotlin" onclick="switchTab(this)"><span class="dot" style="background:#7F52FF"></span>Kotlin</button>
   <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
+  <button class="platform-tab" data-tab="go" onclick="switchTab(this)"><span class="dot" style="background:#00ADD8"></span>Go</button>
+  <button class="platform-tab" data-tab="java" onclick="switchTab(this)"><span class="dot" style="background:#E76F00"></span>Java</button>
+  <button class="platform-tab" data-tab="ruby" onclick="switchTab(this)"><span class="dot" style="background:#CC342D"></span>Ruby</button>
+  <button class="platform-tab" data-tab="rest" onclick="switchTab(this)"><span class="dot" style="background:#22C55E"></span>REST API</button>
 </div>
 </div>
 
@@ -2168,6 +2824,82 @@ queue = chat.<span class="fn">register_event_queue</span>(
 </div>
 </div>
 
+<!-- JavaScript SDK -->
+<div class="tab-content" data-platform="javascript" data-group="sdk-ref">
+
+<h3 class="section-subtitle">Core Client (<code>@wibechat/core</code>)</h3>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">new</span> <span class="ty">WibeChatClient</span>({
+  <span class="prop">apiKey</span>: <span class="ty">string</span>,       <span class="cm">// Required — your API key</span>
+  <span class="prop">baseUrl</span>?: <span class="ty">string</span>,     <span class="cm">// Default: 'https://api.chat.zartek.in'</span>
+  <span class="prop">timeout</span>?: <span class="ty">number</span>,     <span class="cm">// Default: 30000 (ms)</span>
+})</code></pre>
+</div>
+
+<h3 class="section-subtitle">Client Methods</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>getOrgInfo()</code></td><td>—</td><td><code>Promise&lt;OrgInfo&gt;</code></td></tr>
+    <tr><td><code>connectRealTime()</code></td><td>—</td><td><code>void</code></td></tr>
+    <tr><td><code>disconnectRealTime()</code></td><td>—</td><td><code>void</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="section-subtitle">client.chat Methods</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>getChannels()</code></td><td>—</td><td><code>Promise&lt;Channel[]&gt;</code></td></tr>
+    <tr><td><code>createChannel(opts)</code></td><td><code>{ name, description?, is_private? }</code></td><td><code>Promise&lt;Channel&gt;</code></td></tr>
+    <tr><td><code>getMessages(opts?)</code></td><td><code>{ anchor?, num_before?, num_after?, channel?, topic? }</code></td><td><code>Promise&lt;Message[]&gt;</code></td></tr>
+    <tr><td><code>sendMessage(opts)</code></td><td><code>{ type?, to, content, topic? }</code></td><td><code>Promise&lt;{ id: number }&gt;</code></td></tr>
+    <tr><td><code>getUsers()</code></td><td>—</td><td><code>Promise&lt;User[]&gt;</code></td></tr>
+    <tr><td><code>getPresence()</code></td><td>—</td><td><code>Promise&lt;PresenceData&gt;</code></td></tr>
+    <tr><td><code>uploadFile(file, filename?)</code></td><td><code>File | Blob, string?</code></td><td><code>Promise&lt;{ uri: string }&gt;</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="section-subtitle">client.calls Methods</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Parameters</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>createToken(opts)</code></td><td><code>{ room, identity, name?, ttl? }</code></td><td><code>Promise&lt;string&gt;</code> (JWT)</td></tr>
+    <tr><td><code>listRooms()</code></td><td>—</td><td><code>Promise&lt;Room[]&gt;</code></td></tr>
+    <tr><td><code>createRoom(opts)</code></td><td><code>{ name, empty_timeout?, max_participants? }</code></td><td><code>Promise&lt;Room&gt;</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="section-subtitle">client.events Methods</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Parameters</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>connect()</code></td><td>—</td><td>Connect to SSE stream</td></tr>
+    <tr><td><code>disconnect()</code></td><td>—</td><td>Disconnect from SSE stream</td></tr>
+    <tr><td><code>on(type, listener)</code></td><td><code>EventType, (event) =&gt; void</code></td><td>Subscribe; returns unsubscribe fn</td></tr>
+    <tr><td><code>onStateChange(listener)</code></td><td><code>(state) =&gt; void</code></td><td>Subscribe to connection state changes</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!-- React Native SDK -->
+<div class="tab-content" data-platform="react-native" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>React Native SDK — Coming Soon</h4>
+  <p>The React Native SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
 <!-- Flutter SDK -->
 <div class="tab-content" data-platform="flutter" data-group="sdk-ref">
 <div class="coming-soon">
@@ -2175,6 +2907,84 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
+</div>
+
+<!-- Swift SDK -->
+<div class="tab-content" data-platform="swift" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Swift SDK — Coming Soon</h4>
+  <p>The Swift SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Kotlin SDK -->
+<div class="tab-content" data-platform="kotlin" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Kotlin SDK — Coming Soon</h4>
+  <p>The Kotlin SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Go SDK -->
+<div class="tab-content" data-platform="go" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Go SDK — Coming Soon</h4>
+  <p>The Go SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Java SDK -->
+<div class="tab-content" data-platform="java" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Java SDK — Coming Soon</h4>
+  <p>The Java SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- Ruby SDK -->
+<div class="tab-content" data-platform="ruby" data-group="sdk-ref">
+<div class="coming-soon">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <h4>Ruby SDK — Coming Soon</h4>
+  <p>The Ruby SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+</div>
+</div>
+
+<!-- REST API SDK tab -->
+<div class="tab-content" data-platform="rest" data-group="sdk-ref">
+<p>The REST API is the foundation for all WibeChat integrations. Every SDK method maps directly to a REST endpoint.</p>
+
+<h3 class="section-subtitle">Base URL</h3>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>https://api.chat.zartek.in</code></pre>
+</div>
+
+<h3 class="section-subtitle">Endpoint Overview</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/org/</code></td><td>Organization info &amp; services</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/chat/channels/</code></td><td>List channels</td></tr>
+    <tr><td><span class="endpoint-method post" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#3B82F6">POST</span></td><td><code>/api/gateway/chat/channels/</code></td><td>Create a channel</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/chat/messages/</code></td><td>Get messages</td></tr>
+    <tr><td><span class="endpoint-method post" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#3B82F6">POST</span></td><td><code>/api/gateway/chat/messages/</code></td><td>Send a message</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/chat/users/</code></td><td>List users</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/chat/presence/</code></td><td>Get user presence</td></tr>
+    <tr><td><span class="endpoint-method post" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#3B82F6">POST</span></td><td><code>/api/gateway/chat/files/</code></td><td>Upload a file</td></tr>
+    <tr><td><span class="endpoint-method post" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#3B82F6">POST</span></td><td><code>/api/gateway/calls/token/</code></td><td>Generate a call token</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/calls/rooms/</code></td><td>List active call rooms</td></tr>
+    <tr><td><span class="endpoint-method post" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#3B82F6">POST</span></td><td><code>/api/gateway/calls/rooms/</code></td><td>Create a call room</td></tr>
+    <tr><td><span class="endpoint-method get" style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;background:#22C55E">GET</span></td><td><code>/api/gateway/events/stream/</code></td><td>Real-time SSE stream</td></tr>
+  </tbody>
+</table>
+</div>
+<p>See the full <a href="#api-reference">API Reference</a> for request/response schemas and parameters.</p>
 </div>
 
 <div class="page-nav">
@@ -2363,9 +3173,17 @@ queue = chat.<span class="fn">register_event_queue</span>(
 // PLATFORMS
 // ============================================================
 const PLATFORMS = [
-  { id: 'react',   name: 'React',   color: '#61DAFB' },
-  { id: 'python',  name: 'Python',  color: '#3776AB' },
-  { id: 'flutter', name: 'Flutter', color: '#02569B' },
+  { id: 'react',        name: 'React',        color: '#61DAFB', pkg: '@wibechat/react' },
+  { id: 'javascript',   name: 'JavaScript',   color: '#F7DF1E', pkg: '@wibechat/core' },
+  { id: 'react-native', name: 'React Native', color: '#61DAFB', pkg: '@wibechat/react-native', comingSoon: true },
+  { id: 'python',       name: 'Python',       color: '#3776AB', pkg: 'pip install wibechat' },
+  { id: 'swift',        name: 'Swift',        color: '#F05138', pkg: 'WibeChatSwift', comingSoon: true },
+  { id: 'kotlin',       name: 'Kotlin',       color: '#7F52FF', pkg: 'wibechat-android', comingSoon: true },
+  { id: 'flutter',      name: 'Flutter',      color: '#02569B', pkg: 'wibechat_flutter', comingSoon: true },
+  { id: 'go',           name: 'Go',           color: '#00ADD8', pkg: 'wibechat-go', comingSoon: true },
+  { id: 'java',         name: 'Java',         color: '#E76F00', pkg: 'wibechat-java', comingSoon: true },
+  { id: 'ruby',         name: 'Ruby',         color: '#CC342D', pkg: 'wibechat-ruby', comingSoon: true },
+  { id: 'rest',         name: 'REST API',     color: '#22C55E', pkg: 'cURL / HTTP' },
 ];
 let activePlatform = localStorage.getItem('wb-docs-platform') || 'react';
 
