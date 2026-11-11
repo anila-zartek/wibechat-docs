@@ -8,234 +8,206 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --primary:#0E7C86;--primary-hover:#096169;--primary-light:#E8F7F8;
-  --bg:#FFFFFF;--bg-alt:#F8FAFB;--bg-subtle:#F1F5F9;--bg-code:#1a1b2e;
-  --text:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
-  --border:#E2E8F0;--border-light:#F1F5F9;
+  --bg:#FFFFFF;--bg-alt:#F9FAFB;--bg-subtle:#F3F4F6;
+  --text:#111827;--text-secondary:#4B5563;--text-muted:#9CA3AF;
+  --border:#E5E7EB;--border-light:#F3F4F6;
+  --primary:#0E7C86;--primary-hover:#096169;--primary-light:#ECFDF5;
   --react:#61DAFB;--python:#3776AB;--flutter:#02569B;
-  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;--tip:#10B981;
-  --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.10);
-  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
   --radius:8px;--radius-lg:12px;--radius-xl:16px;
-  --sidebar-w:272px;--toc-w:220px;
-  --transition:all 0.18s cubic-bezier(0.4,0,0.2,1);
+  --sidebar-w:256px;--toc-w:200px;--navbar-h:60px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.05);
+  --shadow:0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 24px rgba(0,0,0,0.10);
+  --transition:all 0.15s cubic-bezier(0.4,0,0.2,1);
 }
 [data-theme="dark"]{
-  --primary:#2DD4BF;--primary-hover:#14B8A6;--primary-light:#134e4a;
-  --bg:#0F172A;--bg-alt:#1E293B;--bg-subtle:#334155;--bg-code:#0d0f1a;
-  --text:#F1F5F9;--text-secondary:#94A3B8;--text-muted:#64748B;
-  --border:#334155;--border-light:#1E293B;
-  --shadow:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.4);
-  --shadow-lg:0 8px 32px rgba(0,0,0,0.5);
+  --bg:#111827;--bg-alt:#1F2937;--bg-subtle:#374151;
+  --text:#F9FAFB;--text-secondary:#D1D5DB;--text-muted:#6B7280;
+  --border:#374151;--border-light:#1F2937;
+  --primary:#2DD4BF;--primary-hover:#14B8A6;--primary-light:rgba(45,212,191,0.1);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.3);
+  --shadow:0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:0 8px 24px rgba(0,0,0,0.5);
 }
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.7;font-size:15px;transition:background 0.2s,color 0.2s}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--navbar-h) + 24px)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.75;font-size:15px;transition:background 0.2s,color 0.2s}
 a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
 code,pre{font-family:'JetBrains Mono','Fira Code',monospace}
 
+/* ---- NAVBAR ---- */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--navbar-h);background:var(--bg);border-bottom:1px solid var(--border);z-index:200;display:flex;align-items:center;padding:0 24px;gap:16px;transition:background 0.2s,border-color 0.2s}
+.navbar.scrolled{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(255,255,255,0.90);box-shadow:var(--shadow-sm)}
+[data-theme="dark"] .navbar.scrolled{background:rgba(17,24,39,0.90)}
+.navbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.navbar-logo:hover{text-decoration:none}
+.nav-logo-icon{width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;flex-shrink:0}
+.nav-logo-name{font-weight:700;font-size:16px;color:var(--text)}
+.nav-docs-badge{font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg-subtle);border:1px solid var(--border);padding:2px 7px;border-radius:6px;margin-left:4px}
+.navbar-links{display:flex;align-items:center;gap:4px;margin-left:16px}
+.navbar-links a{font-size:14px;font-weight:500;color:var(--text-secondary);padding:6px 12px;border-radius:6px;transition:var(--transition);text-decoration:none}
+.navbar-links a:hover{color:var(--text);background:var(--bg-subtle);text-decoration:none}
+.navbar-links a.active{color:var(--primary)}
+.navbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.search-btn{display:flex;align-items:center;gap:8px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;color:var(--text-muted);transition:var(--transition);min-width:180px}
+.search-btn:hover{border-color:var(--primary);color:var(--text-secondary)}
+.search-btn-kbd{background:var(--bg);border:1px solid var(--border);border-radius:4px;font-size:11px;padding:1px 5px;margin-left:auto;color:var(--text-muted)}
+.theme-toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg-subtle);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:var(--transition)}
+.theme-toggle:hover{border-color:var(--primary);color:var(--primary)}
+.mobile-menu-btn{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg-subtle);cursor:pointer;align-items:center;justify-content:center;color:var(--text-secondary)}
+
+/* ---- LAYOUT ---- */
+.page-layout{display:flex;padding-top:var(--navbar-h);min-height:100vh}
+
 /* ---- SIDEBAR ---- */
-.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-alt);border-right:1px solid var(--border);overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:transform .3s,background 0.2s,border-color 0.2s}
-.sidebar-header{padding:18px 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-.sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--primary-hover));border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex-shrink:0;box-shadow:0 2px 8px rgba(14,124,134,0.3)}
-.logo-text{flex:1}
-.logo-text strong{font-weight:700;font-size:16px;color:var(--text);display:block;line-height:1.2}
-.logo-text small{font-size:11px;color:var(--text-muted);display:block;margin-top:1px}
-.version-badge{display:inline-flex;align-items:center;gap:4px;background:var(--primary-light);color:var(--primary);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.04em;border:1px solid rgba(14,124,134,0.2)}
-.search-box{position:relative}
-.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
-#sidebarSearch{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px 7px 34px;font-size:13px;color:var(--text);outline:none;transition:var(--transition);font-family:inherit}
-#sidebarSearch::placeholder{color:var(--text-muted)}
-#sidebarSearch:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(14,124,134,0.1)}
-.search-kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--text-muted);padding:2px 5px;font-family:inherit;pointer-events:none}
-.sidebar-nav{flex:1;padding:8px 10px;overflow-y:auto}
+.sidebar{position:fixed;top:var(--navbar-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--navbar-h));background:var(--bg);border-right:1px solid var(--border);overflow-y:auto;z-index:100;padding:16px 0;transition:transform 0.3s,opacity 0.3s;opacity:0;pointer-events:none}
+.sidebar.visible{opacity:1;pointer-events:all}
+.sidebar-nav{padding:0 12px}
 .nav-group{margin-bottom:4px}
-.nav-group-header{display:flex;align-items:center;gap:7px;padding:9px 10px 5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);cursor:pointer;border-radius:6px;transition:var(--transition);user-select:none}
-.nav-group-header:hover{color:var(--text-secondary);background:var(--border-light)}
-.nav-group-header svg{flex-shrink:0}
-.nav-group-chevron{margin-left:auto;transition:transform 0.2s;color:var(--text-muted)}
-.nav-group.collapsed .nav-group-chevron{transform:rotate(-90deg)}
+.nav-group-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);padding:16px 12px 6px;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between}
+.nav-group-label:first-child{padding-top:4px}
+.nav-chevron{transition:transform 0.2s;color:var(--text-muted)}
+.nav-group.collapsed .nav-chevron{transform:rotate(-90deg)}
 .nav-group-links{overflow:hidden;transition:max-height 0.25s ease}
 .nav-group.collapsed .nav-group-links{max-height:0!important}
-.sidebar nav a{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;color:var(--text-secondary);font-size:13.5px;font-weight:500;transition:var(--transition);position:relative}
-.sidebar nav a:hover{background:var(--primary-light);color:var(--primary);text-decoration:none}
+.sidebar nav a{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;color:var(--text-secondary);font-size:14px;font-weight:500;transition:var(--transition);position:relative;text-decoration:none}
+.sidebar nav a:hover{background:var(--bg-subtle);color:var(--text);text-decoration:none}
 .sidebar nav a.active{background:var(--primary-light);color:var(--primary);font-weight:600}
-.sidebar nav a.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--primary);border-radius:0 2px 2px 0}
+.sidebar nav a.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--primary);border-radius:0 2px 2px 0}
 .nav-hidden{display:none!important}
-.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
-.sidebar-footer-links{display:flex;gap:12px}
-.sidebar-footer-links a{font-size:12px;color:var(--text-muted)}
-.sidebar-footer-links a:hover{color:var(--primary);text-decoration:none}
-.dark-toggle{background:var(--bg-subtle);border:1px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--text-secondary);transition:var(--transition)}
-.dark-toggle:hover{border-color:var(--primary);color:var(--primary)}
-.dark-toggle .toggle-icon{font-size:13px}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* ---- MAIN ---- */
-.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+/* ---- MAIN CONTENT ---- */
+.main-content{flex:1;min-width:0;transition:margin-left 0.3s}
+.main-content.with-sidebar{margin-left:var(--sidebar-w)}
 
-/* ---- TOC ---- */
-.toc-panel{position:fixed;top:0;right:0;width:var(--toc-w);height:100vh;padding:24px 14px;overflow-y:auto;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s}
-.toc-panel.visible{opacity:1;pointer-events:all}
-.toc-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:10px;padding-top:60px}
-.toc-link{display:block;font-size:12.5px;color:var(--text-muted);padding:3px 0 3px 10px;border-left:2px solid var(--border);margin-bottom:1px;transition:var(--transition);line-height:1.4}
-.toc-link:hover{color:var(--primary);border-left-color:var(--primary);text-decoration:none}
-.toc-link.active{color:var(--primary);border-left-color:var(--primary);font-weight:600}
-.toc-link.toc-h3{padding-left:20px;font-size:12px}
+/* ---- HERO (FULL WIDTH, NO SIDEBAR) ---- */
+.hero-section{padding:80px 48px 60px;text-align:center;max-width:1100px;margin:0 auto}
+.hero-title{font-size:40px;font-weight:800;color:var(--text);letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px}
+.hero-title span{color:var(--primary)}
+.hero-subtitle{font-size:18px;color:var(--text-secondary);max-width:480px;margin:0 auto 56px;line-height:1.6}
+.hero-cards-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:16px}
+.hero-section-block{margin-bottom:48px}
 
-/* ---- CONTENT ---- */
-.content-wrap{max-width:900px;margin:0 auto;padding:40px 48px 100px;width:100%}
+/* ---- CARDS ---- */
+.cards-grid{display:grid;gap:16px}
+.cards-grid.cols-2{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.cards-grid.cols-3{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.cards-grid.cols-4{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;text-decoration:none;display:block;color:var(--text)}
+.card:hover{border-color:var(--primary);box-shadow:var(--shadow);text-decoration:none;color:var(--text)}
+.card-dot{width:8px;height:8px;border-radius:50%;margin-bottom:14px;flex-shrink:0}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.card-icon{width:40px;height:40px;border-radius:10px;background:var(--bg-subtle);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);flex-shrink:0}
+.card-arrow{color:var(--text-muted);opacity:0;transform:translateX(-4px);transition:var(--transition);font-size:16px;flex-shrink:0}
+.card:hover .card-arrow{opacity:1;transform:translateX(0)}
+.card-title{font-weight:600;font-size:16px;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:14px;color:var(--text-secondary);line-height:1.5}
+.card-pkg{font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:6px}
+.badge-soon{display:inline-block;font-size:10px;font-weight:600;background:var(--bg-subtle);color:var(--text-muted);border:1px solid var(--border);padding:2px 7px;border-radius:10px;margin-top:6px}
+.card.coming-soon{opacity:0.65;cursor:default}
+.card.coming-soon:hover{border-color:var(--border);box-shadow:none}
+
+/* ---- CONTENT AREA ---- */
+.content-wrap{max-width:768px;padding:40px 48px 100px}
+section{padding-top:16px;margin-bottom:48px}
 
 /* ---- BREADCRUMBS ---- */
-.breadcrumbs{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-bottom:28px;flex-wrap:wrap}
-.breadcrumbs a{color:var(--text-muted)}
-.breadcrumbs a:hover{color:var(--primary);text-decoration:none}
+.breadcrumbs{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-bottom:24px;flex-wrap:wrap}
+.breadcrumbs a{color:var(--text-muted);text-decoration:none}
+.breadcrumbs a:hover{color:var(--primary)}
 .breadcrumbs .sep{color:var(--border)}
 
-/* ---- HERO ---- */
-.hero{background:linear-gradient(135deg,rgba(14,124,134,0.07) 0%,var(--bg) 50%,rgba(99,102,241,0.05) 100%);border-bottom:1px solid var(--border);padding:72px 48px 56px;text-align:center}
-.hero h1{font-size:40px;font-weight:800;color:var(--text);margin-bottom:14px;letter-spacing:-.025em;line-height:1.15}
-.hero h1 span{color:var(--primary)}
-.hero .tagline{font-size:19px;color:var(--text-secondary);max-width:520px;margin:0 auto 48px;line-height:1.6}
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
-.btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--primary);color:#fff;padding:11px 22px;border-radius:var(--radius);font-weight:600;font-size:14px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none}
-.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(14,124,134,0.35);text-decoration:none;color:#fff}
-.btn-secondary{display:inline-flex;align-items:center;gap:7px;background:var(--bg);color:var(--text-secondary);padding:11px 22px;border-radius:var(--radius);font-weight:600;font-size:14px;border:1.5px solid var(--border);cursor:pointer;transition:var(--transition);text-decoration:none}
-.btn-secondary:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px);text-decoration:none}
-
-/* ---- CARD GRIDS ---- */
-.cards-grid{display:grid;gap:16px}
-.cards-grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.cards-grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-.cards-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-.card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:22px 20px;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;text-decoration:none;display:block;color:var(--text)}
-.card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px);text-decoration:none;color:var(--text)}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),#2DD4BF);opacity:0;transition:opacity 0.2s}
-.card:hover::before{opacity:1}
-.card-icon{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:var(--primary)}
-.card-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:5px}
-.card-desc{font-size:13px;color:var(--text-secondary);line-height:1.5}
-.card-arrow{position:absolute;bottom:16px;right:16px;color:var(--text-muted);opacity:0;transform:translateX(-4px);transition:var(--transition)}
-.card:hover .card-arrow{opacity:1;transform:translateX(0)}
-.card.platform-card{text-align:center;padding:20px 16px}
-.card.platform-card .card-icon{margin:0 auto 10px}
-.card.platform-card.selected{border-color:var(--primary);background:var(--primary-light)}
-.card.platform-card .card-pkg{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:5px}
-.card.coming-soon-card{opacity:0.65;cursor:default}
-.card.coming-soon-card:hover{border-color:var(--border);box-shadow:none;transform:none}
-
-/* ---- SECTION ---- */
-section{padding-top:28px;margin-bottom:52px}
-.section-title{font-size:30px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.02em;padding-bottom:14px;border-bottom:2px solid var(--primary)}
-.section-subtitle{font-size:20px;font-weight:700;color:var(--text);margin:36px 0 12px;display:flex;align-items:center;gap:8px}
+/* ---- HEADINGS ---- */
+.section-title{font-size:30px;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:8px}
+.section-subtitle{font-size:22px;font-weight:600;color:var(--text);margin-top:40px;margin-bottom:12px}
 .section-desc{color:var(--text-secondary);margin-bottom:28px;font-size:15px}
-p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.7}
-
-/* ---- SECTION NAV ---- */
-.section-nav{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:24px;border-top:1px solid var(--border)}
-.section-nav-link{display:flex;flex-direction:column;padding:16px 20px;border:1px solid var(--border);border-radius:var(--radius-lg);flex:1;text-decoration:none;transition:var(--transition)}
-.section-nav-link:hover{border-color:var(--primary);background:var(--primary-light);text-decoration:none}
-.section-nav-link.next{text-align:right}
-.section-nav-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
-.section-nav-title{font-size:15px;font-weight:600;color:var(--primary);margin-top:4px}
-
-/* ---- GLOBAL PLATFORM BAR ---- */
-.global-platform-bar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;display:none;transition:background 0.2s}
-[data-theme="dark"] .global-platform-bar{background:rgba(15,23,42,0.92)}
-.global-platform-bar.visible{display:block}
-.global-platform-bar-inner{max-width:900px;margin:0 auto;padding:0 48px;display:flex;align-items:center;gap:14px}
-.global-platform-bar-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
-.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.global-platform-pills::-webkit-scrollbar{display:none}
-.global-platform-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text-secondary);transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:5px}
-.global-platform-pill:hover{border-color:var(--primary);color:var(--primary)}
-.global-platform-pill.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
-.global-platform-pill .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.75}
+code{background:var(--bg-subtle);color:var(--text);padding:2px 6px;border-radius:4px;font-size:0.875em;border:1px solid var(--border)}
+[data-theme="dark"] code{background:#374151;color:#E5E7EB}
 
 /* ---- PLATFORM TABS ---- */
-.platform-tabs-wrapper{position:relative;border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden}
-.platform-tabs{display:flex;overflow-x:auto;background:var(--bg-alt);scrollbar-width:none}
+.platform-tabs-wrapper{background:var(--bg-alt);border:1px solid var(--border);border-bottom:none;border-radius:var(--radius-lg) var(--radius-lg) 0 0;overflow:hidden}
+.platform-tabs{display:flex;overflow-x:auto;scrollbar-width:none}
 .platform-tabs::-webkit-scrollbar{display:none}
-.platform-tab{flex:0 0 auto;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:var(--transition);border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.platform-tab:hover{color:var(--text);background:var(--bg)}
+.platform-tab{flex:0 0 auto;padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:var(--transition);border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:inherit}
+.platform-tab:hover{color:var(--text-secondary);background:var(--bg)}
 .platform-tab.active{color:var(--primary);background:var(--bg);border-bottom-color:var(--primary)}
 .platform-tab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.platform-tab .dot.react-dot{background:var(--react)}
-.platform-tab .dot.python-dot{background:var(--python)}
-.platform-tab .dot.flutter-dot{background:var(--flutter)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
 /* ---- CODE BLOCKS ---- */
-.code-block{position:relative;background:var(--bg-code);border-radius:0 0 var(--radius) var(--radius);overflow:hidden;margin-bottom:20px;border:1px solid rgba(255,255,255,0.06);transition:box-shadow 0.2s}
-.code-block:hover{box-shadow:0 0 0 2px rgba(45,212,191,0.15)}
-.code-block.standalone{border-radius:var(--radius);border:1px solid rgba(255,255,255,0.06)}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07)}
-.code-lang{display:flex;align-items:center;gap:7px;font-size:12px;color:#8892a4;font-family:'JetBrains Mono',monospace}
-.code-lang-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.copy-btn{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#9ca3af;padding:4px 11px;border-radius:5px;font-size:11.5px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:var(--transition)}
-.copy-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
-.copy-btn.copied{background:rgba(34,197,94,0.2);color:#4ade80;border-color:rgba(34,197,94,0.3)}
-pre{padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.75;color:#CDD6F4}
+.code-block{position:relative;background:#0F1117;border:1px solid #1E293B;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;margin-bottom:20px;transition:border-color 0.15s}
+.code-block:hover{border-color:#2D3748}
+.code-block.standalone{border-radius:var(--radius-lg)}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:#161B22;border-bottom:1px solid #1E293B}
+.code-lang{font-size:13px;color:#8892A4;font-family:'JetBrains Mono',monospace}
+.copy-btn{display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#6B7280;padding:4px 8px;border-radius:5px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:var(--transition)}
+.copy-btn:hover{color:#9CA3AF}
+.copy-btn.copied{color:#4ADE80}
+pre{padding:16px 20px;overflow-x:auto;font-size:13.5px;line-height:1.7;color:#CDD6F4}
 pre::-webkit-scrollbar{height:5px}
-pre::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
-pre code{background:none;padding:0;font-size:inherit}
-code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;border-radius:4px;font-size:0.875em}
-[data-theme="dark"] code{color:var(--primary)}
+pre::-webkit-scrollbar-thumb{background:#2D3748;border-radius:4px}
+pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
+
+/* ---- SYNTAX ---- */
+.kw{color:#CBA6F7}.str{color:#A6E3A1}.cm{color:#585b70;font-style:italic}
+.fn{color:#89B4FA}.num{color:#FAB387}.op{color:#89DCEB}
+.ty{color:#F9E2AF}.at{color:#F38BA8}.var{color:#CDD6F4}
+.tag{color:#89B4FA}.prop{color:#A6E3A1}
 
 /* ---- CALLOUTS ---- */
-.callout{display:flex;gap:14px;padding:16px 18px;border-radius:var(--radius);margin:20px 0;border-left:3px solid;font-size:14px;line-height:1.6}
+.callout{display:flex;gap:12px;align-items:flex-start;padding:16px 20px;border-radius:var(--radius-lg);border:1px solid;margin:20px 0;font-size:14px;line-height:1.6}
 .callout-icon{flex-shrink:0;margin-top:1px}
-.callout-body .callout-title{font-weight:700;margin-bottom:4px;display:block}
+.callout-body .callout-title{font-weight:600;display:block;margin-bottom:4px;font-size:14px}
 .callout-body p{margin:0;font-size:14px}
-.callout.info{background:rgba(59,130,246,0.08);border-color:#3B82F6;color:#1e40af}
-[data-theme="dark"] .callout.info{background:rgba(59,130,246,0.1);color:#93c5fd}
-.callout.warning{background:rgba(245,158,11,0.08);border-color:#F59E0B;color:#92400e}
-[data-theme="dark"] .callout.warning{background:rgba(245,158,11,0.1);color:#fcd34d}
-.callout.tip{background:rgba(16,185,129,0.08);border-color:#10B981;color:#065f46}
-[data-theme="dark"] .callout.tip{background:rgba(16,185,129,0.1);color:#6ee7b7}
-.callout.note{background:var(--primary-light);border-color:var(--primary);color:var(--primary-hover)}
-[data-theme="dark"] .callout.note{background:rgba(45,212,191,0.08);color:var(--primary)}
+.callout.note{background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF}
+.callout.note .callout-title{color:#1D4ED8}
+[data-theme="dark"] .callout.note{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.25);color:#93C5FD}
+[data-theme="dark"] .callout.note .callout-title{color:#60A5FA}
+.callout.tip{background:#F0FDF4;border-color:#BBF7D0;color:#065F46}
+.callout.tip .callout-title{color:#15803D}
+[data-theme="dark"] .callout.tip{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25);color:#86EFAC}
+[data-theme="dark"] .callout.tip .callout-title{color:#4ADE80}
+.callout.warning{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+.callout.warning .callout-title{color:#B45309}
+[data-theme="dark"] .callout.warning{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.25);color:#FCD34D}
+[data-theme="dark"] .callout.warning .callout-title{color:#FBBF24}
+.callout.info{background:#F5F3FF;border-color:#DDD6FE;color:#4C1D95}
+.callout.info .callout-title{color:#6D28D9}
+[data-theme="dark"] .callout.info{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.25);color:#C4B5FD}
+[data-theme="dark"] .callout.info .callout-title{color:#A78BFA}
 
 /* ---- TABLES ---- */
-.table-wrap{border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin:16px 0 24px}
+.table-wrap{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin:16px 0 24px}
 .table-wrap table{width:100%;border-collapse:collapse;font-size:14px}
-.table-wrap thead{position:sticky;top:0;z-index:1}
-.table-wrap th{text-align:left;padding:11px 16px;background:var(--bg-subtle);border-bottom:1px solid var(--border);font-weight:600;color:var(--text);font-size:13px}
-.table-wrap td{padding:10px 16px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
+.table-wrap thead{position:sticky;top:0}
+.table-wrap th{text-align:left;padding:12px 16px;background:var(--bg-alt);border-bottom:1px solid var(--border);font-weight:600;color:var(--text);font-size:13px}
+.table-wrap td{padding:12px 16px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
 .table-wrap tr:last-child td{border-bottom:none}
 .table-wrap tbody tr:nth-child(even){background:var(--bg-alt)}
 .table-wrap td code{font-size:12px}
-.badge-req{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.03em}
-.badge-required{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;background:#FEE2E2;color:#DC2626}
-.badge-optional{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;background:#F1F5F9;color:#64748B}
+.badge-required{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:#FEE2E2;color:#DC2626;border:1px solid #FECACA}
+.badge-optional{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:var(--bg-subtle);color:var(--text-muted);border:1px solid var(--border)}
 
 /* ---- STEPS ---- */
-.steps{counter-reset:step;padding-left:0}
-.step{counter-increment:step;position:relative;padding:0 0 32px 60px;margin-left:0}
+.steps{counter-reset:step;padding-left:0;margin:20px 0}
+.step{counter-increment:step;position:relative;padding:0 0 32px 52px}
 .step:last-child{padding-bottom:0}
-.step::before{content:counter(step);position:absolute;left:0;top:0;width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 2px 8px rgba(14,124,134,0.35);z-index:1}
-.step::after{content:'';position:absolute;left:17px;top:38px;bottom:0;width:2px;background:linear-gradient(180deg,var(--primary),var(--border));opacity:0.5}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:28px;height:28px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;z-index:1;line-height:28px;text-align:center}
+.step::after{content:'';position:absolute;left:13px;top:30px;bottom:0;width:1px;background:var(--border)}
 .step:last-child::after{display:none}
-.step-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius);padding:18px 20px;margin-bottom:4px;transition:var(--transition)}
-.step-card:hover{box-shadow:var(--shadow)}
-.step h4{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.step h4{font-size:17px;font-weight:600;margin-bottom:8px;color:var(--text)}
 .step p{color:var(--text-secondary);margin-bottom:12px;font-size:14px}
 
 /* ---- ENDPOINT CARDS ---- */
-.endpoint{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin:14px 0;overflow:hidden;transition:box-shadow 0.2s}
-.endpoint:hover{box-shadow:var(--shadow)}
-.endpoint.get-border{border-left:3px solid #22C55E}
-.endpoint.post-border{border-left:3px solid #3B82F6}
-.endpoint.put-border{border-left:3px solid #F59E0B}
-.endpoint.patch-border{border-left:3px solid #8B5CF6}
-.endpoint.delete-border{border-left:3px solid #EF4444}
-.endpoint-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg-alt);border-bottom:1px solid transparent;cursor:pointer;user-select:none;transition:var(--transition)}
+.endpoint{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);margin:14px 0;overflow:hidden;transition:border-color 0.15s}
+.endpoint:hover{border-color:color-mix(in srgb, var(--border) 60%, var(--text-muted))}
+.endpoint-header{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;user-select:none;transition:var(--transition)}
 .endpoint-header:hover{background:var(--bg-subtle)}
-.endpoint.open .endpoint-header{border-bottom-color:var(--border)}
-.endpoint-method{padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;flex-shrink:0}
+.endpoint-method{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#fff;flex-shrink:0}
 .endpoint-method.get{background:#22C55E}
 .endpoint-method.post{background:#3B82F6}
 .endpoint-method.put{background:#F59E0B}
@@ -246,100 +218,145 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 .endpoint-chevron{flex-shrink:0;color:var(--text-muted);transition:transform 0.2s}
 .endpoint.open .endpoint-chevron{transform:rotate(180deg)}
 .endpoint-body{max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1)}
-.endpoint.open .endpoint-body{max-height:2000px}
-.endpoint-body-inner{padding:20px}
+.endpoint.open .endpoint-body{max-height:3000px}
+.endpoint-body-inner{padding:20px;border-top:1px solid var(--border)}
 
 /* ---- COMING SOON ---- */
-.coming-soon{text-align:center;padding:52px 24px;color:var(--text-muted);background:var(--bg-alt);border-radius:var(--radius);border:1px dashed var(--border)}
-.coming-soon-icon{font-size:44px;margin-bottom:16px;opacity:0.5}
-.coming-soon h4{font-size:17px;font-weight:700;color:var(--text-secondary);margin-bottom:8px}
-.coming-soon p{font-size:14px;max-width:400px;margin:0 auto;color:var(--text-muted)}
+.coming-soon{text-align:center;padding:52px 24px;color:var(--text-muted);background:var(--bg-alt);border-radius:var(--radius-lg);border:1px dashed var(--border)}
+.coming-soon h4{font-size:17px;font-weight:700;color:var(--text-secondary);margin:16px 0 8px}
+.coming-soon p{font-size:14px;max-width:400px;margin:0 auto}
 
-/* ---- PREV/NEXT NAV ---- */
+/* ---- PREV/NEXT ---- */
 .page-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:60px;padding-top:32px;border-top:1px solid var(--border)}
-.page-nav-btn{display:flex;flex-direction:column;padding:18px 20px;border:1.5px solid var(--border);border-radius:var(--radius-lg);text-decoration:none;color:var(--text-secondary);transition:var(--transition);min-width:0}
-.page-nav-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);text-decoration:none;box-shadow:var(--shadow)}
+.page-nav-btn{display:flex;flex-direction:column;padding:16px 20px;border:1px solid var(--border);border-radius:var(--radius-lg);text-decoration:none;color:var(--text-secondary);transition:var(--transition)}
+.page-nav-btn:hover{border-color:var(--primary);background:var(--primary-light);text-decoration:none}
 .page-nav-btn.prev{align-items:flex-start}
 .page-nav-btn.next{align-items:flex-end;text-align:right}
-.page-nav-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:5px;display:flex;align-items:center;gap:5px}
-.page-nav-title{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.page-nav-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:5px}
+.page-nav-title{font-size:15px;font-weight:600;color:var(--text)}
 .page-nav-btn:hover .page-nav-title{color:var(--primary)}
+
+/* ---- TOC ---- */
+.toc-panel{position:fixed;top:var(--navbar-h);right:0;width:var(--toc-w);height:calc(100vh - var(--navbar-h));padding:24px 16px;overflow-y:auto;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.toc-panel.visible{opacity:1;pointer-events:all}
+.toc-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:10px}
+.toc-link{display:block;font-size:13px;color:var(--text-muted);padding:3px 0 3px 12px;border-left:2px solid var(--border);margin-bottom:2px;transition:var(--transition);line-height:1.4;text-decoration:none}
+.toc-link:hover{color:var(--primary);border-left-color:var(--primary);text-decoration:none}
+.toc-link.active{color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.toc-link.toc-h3{padding-left:22px;font-size:12px}
+
+/* ---- GLOBAL PLATFORM BAR ---- */
+.global-platform-bar{position:sticky;top:var(--navbar-h);z-index:90;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;display:none;transition:background 0.2s}
+[data-theme="dark"] .global-platform-bar{background:rgba(17,24,39,0.95)}
+.global-platform-bar.visible{display:block}
+.global-platform-bar-inner{max-width:768px;padding:0 48px;display:flex;align-items:center;gap:14px}
+.global-platform-bar-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.global-platform-pills::-webkit-scrollbar{display:none}
+.global-platform-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:5px;font-family:inherit}
+.global-platform-pill:hover{border-color:var(--primary);color:var(--primary)}
+.global-platform-pill.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.global-platform-pill .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 
 /* ---- FOOTER ---- */
 .site-footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:48px 0 32px;margin-top:auto}
 .footer-inner{max-width:900px;margin:0 auto;padding:0 48px}
 .footer-grid{display:grid;grid-template-columns:1fr repeat(3,auto);gap:40px;align-items:start;margin-bottom:36px}
 .footer-brand .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.footer-brand .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--primary),var(--primary-hover));border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
+.footer-brand .flogo{width:30px;height:30px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
 .footer-brand strong{font-size:16px;font-weight:700;color:var(--text)}
 .footer-brand p{font-size:13px;color:var(--text-muted);line-height:1.5;max-width:220px;margin:0}
-.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:12px}
-.footer-col a{display:block;font-size:13.5px;color:var(--text-secondary);margin-bottom:7px;transition:var(--transition)}
+.footer-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:12px}
+.footer-col a{display:block;font-size:13.5px;color:var(--text-secondary);margin-bottom:8px;transition:var(--transition);text-decoration:none}
 .footer-col a:hover{color:var(--primary);text-decoration:none}
 .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border)}
 .footer-bottom p{font-size:13px;color:var(--text-muted)}
-.footer-social{display:flex;gap:12px}
-.footer-social a{width:32px;height:32px;border-radius:7px;background:var(--bg-subtle);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:var(--transition)}
+.footer-social{display:flex;gap:10px}
+.footer-social a{width:32px;height:32px;border-radius:7px;background:var(--bg-subtle);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:var(--transition);text-decoration:none}
 .footer-social a:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary);text-decoration:none}
 
-/* ---- MOBILE ---- */
-.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;background:var(--primary);border:none;border-radius:9px;color:#fff;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
-
-/* ---- SYNTAX COLORS ---- */
-.kw{color:#CBA6F7}.str{color:#A6E3A1}.cm{color:#585b70;font-style:italic}
-.fn{color:#89B4FA}.num{color:#FAB387}.op{color:#89DCEB}
-.ty{color:#F9E2AF}.at{color:#F38BA8}.var{color:#CDD6F4}
-.tag{color:#89B4FA}.prop{color:#A6E3A1}
-
-/* ---- SCROLLBAR ---- */
-.sidebar::-webkit-scrollbar,.sidebar-nav::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-thumb,.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+/* ---- SEARCH MODAL ---- */
+.search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-start;justify-content:center;padding-top:80px}
+.search-overlay.open{display:flex}
+.search-modal{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:640px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.search-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.search-modal-input{flex:1;border:none;background:transparent;font-size:16px;color:var(--text);outline:none;font-family:inherit}
+.search-modal-input::placeholder{color:var(--text-muted)}
+.search-empty{padding:32px;text-align:center;color:var(--text-muted);font-size:14px}
+.search-esc{font-size:11px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;padding:2px 6px;color:var(--text-muted);cursor:pointer}
 
 /* ---- RESPONSIVE ---- */
 @media(max-width:1200px){
   .toc-panel{display:none}
-  .content-wrap{max-width:100%}
 }
-@media(max-width:768px){
-  :root{--sidebar-w:272px}
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
+@media(max-width:900px){
+  .main-content.with-sidebar{margin-left:0}
+  .sidebar{transform:translateX(-100%);opacity:1;pointer-events:all}
+  .sidebar.mobile-open{transform:translateX(0)}
   .content-wrap{padding:24px 20px 80px}
-  .hero{padding:48px 20px 40px}
-  .hero h1{font-size:28px}
-  .hero .tagline{font-size:16px}
-  .menu-toggle{display:flex}
-  .endpoint-desc{display:none}
+  .hero-section{padding:48px 20px 40px}
+  .hero-title{font-size:28px}
+  .hero-subtitle{font-size:16px}
+  .global-platform-bar-inner{padding:0 20px}
   .footer-grid{grid-template-columns:1fr;gap:28px}
-  .page-nav{grid-template-columns:1fr}
   .footer-inner{padding:0 20px}
-  .global-platform-bar-inner{padding:0 16px}
-  .global-platform-bar-label{display:none}
-  .cards-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+  .page-nav{grid-template-columns:1fr}
+  .navbar-links{display:none}
+  .search-btn{min-width:auto}
+  .search-btn span:first-child{display:none}
+  .mobile-menu-btn{display:flex}
+  .endpoint-desc{display:none}
+  .cards-grid.cols-3{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 }
 </style>
 </head>
 <body>
-<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+
+<!-- SEARCH MODAL -->
+<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)closeSearch()">
+  <div class="search-modal">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-modal-input" id="searchModalInput" placeholder="Search documentation..." autocomplete="off">
+      <span class="search-esc" onclick="closeSearch()">Esc</span>
+    </div>
+    <div class="search-empty">Start typing to search documentation...</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="navbar-logo" href="#hero">
+    <div class="nav-logo-icon">W</div>
+    <span class="nav-logo-name">WibeChat</span>
+    <span class="nav-docs-badge">Docs</span>
+  </a>
+  <div class="navbar-links" id="navbarLinks">
+    <a href="#quickstart">Documentation</a>
+    <a href="#api-reference">API Reference</a>
+    <a href="#sdk-reference">SDKs</a>
+  </div>
+  <div class="navbar-right">
+    <button class="search-btn" onclick="openSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Search...</span>
+      <span class="search-btn-kbd">&#8984;K</span>
+    </button>
+    <button class="theme-toggle" onclick="toggleDark()" id="themeToggleBtn" title="Toggle theme">
+      <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="themeIconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">
-      <div class="logo-icon">W</div>
-      <div class="logo-text">
-        <strong>WibeChat</strong>
-        <small>Developer Docs</small>
-      </div>
-      <span class="version-badge">v1.0</span>
-    </div>
-    <div class="search-box">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="sidebarSearch" placeholder="Search docs..." autocomplete="off">
-      <span class="search-kbd">⌘K</span>
-    </div>
-  </div>
   <div class="sidebar-nav">
     <nav>
       <a href="#hero" data-nav>
@@ -348,11 +365,10 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
       </a>
 
       <div class="nav-group" id="ng-start">
-        <div class="nav-group-header" onclick="toggleNavGroup('ng-start')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        <span class="nav-group-label" onclick="toggleNavGroup('ng-start')">
           Getting Started
-          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+          <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
         <div class="nav-group-links">
           <a href="#quickstart" data-nav>Quick Start</a>
           <a href="#authentication" data-nav>Authentication</a>
@@ -360,11 +376,10 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
       </div>
 
       <div class="nav-group" id="ng-integration">
-        <div class="nav-group-header" onclick="toggleNavGroup('ng-integration')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="nav-group-label" onclick="toggleNavGroup('ng-integration')">
           Integration
-          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+          <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
         <div class="nav-group-links">
           <a href="#chat" data-nav>Chat Integration</a>
           <a href="#calling" data-nav>Calling Integration</a>
@@ -373,11 +388,10 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
       </div>
 
       <div class="nav-group" id="ng-ref">
-        <div class="nav-group-header" onclick="toggleNavGroup('ng-ref')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nav-group-label" onclick="toggleNavGroup('ng-ref')">
           Reference
-          <svg class="nav-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+          <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
         <div class="nav-group-links">
           <a href="#api-reference" data-nav>API Reference</a>
           <a href="#sdk-reference" data-nav>SDK Reference</a>
@@ -385,16 +399,6 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
         </div>
       </div>
     </nav>
-  </div>
-  <div class="sidebar-footer">
-    <div class="sidebar-footer-links">
-      <a href="https://admin.wibechat.com" target="_blank">Admin Portal</a>
-      <a href="mailto:support@wibechat.com">Support</a>
-    </div>
-    <button class="dark-toggle" onclick="toggleDark()" id="darkToggleBtn">
-      <span class="toggle-icon">🌙</span>
-      <span class="toggle-label">Dark</span>
-    </button>
   </div>
 </aside>
 
@@ -404,73 +408,107 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
   <div id="tocLinks"></div>
 </aside>
 
-<!-- MAIN -->
-<div class="main">
+<!-- MAIN CONTENT -->
+<div class="main-content" id="mainContent">
 
-<!-- HERO -->
-<header class="hero" id="hero">
-  <h1>Build with <span>WibeChat</span></h1>
-  <p class="tagline">Add chat and calling to your app in minutes. One API key, production-ready components.</p>
-  <div class="hero-cta">
-    <a href="#quickstart" class="btn-primary">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Get Started
-    </a>
-    <a href="#api-reference" class="btn-secondary">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      API Reference
-    </a>
-  </div>
+<!-- HERO (full width, no sidebar) -->
+<div id="hero">
+  <div class="hero-section">
+    <h1 class="hero-title">WibeChat <span>Documentation</span></h1>
+    <p class="hero-subtitle">Add chat and calling to your app in minutes.</p>
 
-  <div style="margin-bottom:28px">
-    <p style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:16px">Products</p>
-    <div class="cards-grid cols-2" style="max-width:520px;margin:0 auto 36px">
-      <div class="card" onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
-        <div class="card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <div class="hero-section-block">
+      <p class="hero-cards-label">Get Started</p>
+      <div class="cards-grid cols-3" style="max-width:720px;margin:0 auto">
+        <a class="card" href="#quickstart" onclick="setGlobalPlatform('react')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span class="card-dot" style="background:#61DAFB"></span>
+            <span style="font-weight:600;font-size:16px;color:var(--text)">React</span>
+            <span style="margin-left:auto;color:var(--text-muted);font-size:16px">&rarr;</span>
+          </div>
+          <code style="font-size:11px;color:var(--text-muted)">@wibechat/react</code>
+        </a>
+        <a class="card" href="#quickstart" onclick="setGlobalPlatform('python')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span class="card-dot" style="background:#3776AB"></span>
+            <span style="font-weight:600;font-size:16px;color:var(--text)">Python</span>
+            <span style="margin-left:auto;color:var(--text-muted);font-size:16px">&rarr;</span>
+          </div>
+          <code style="font-size:11px;color:var(--text-muted)">pip install wibechat</code>
+        </a>
+        <div class="card coming-soon">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span class="card-dot" style="background:#02569B"></span>
+            <span style="font-weight:600;font-size:16px;color:var(--text)">Flutter</span>
+          </div>
+          <span class="badge-soon">Coming Soon</span>
         </div>
-        <div class="card-title">Chat &amp; Messaging</div>
-        <div class="card-desc">Channels, DMs, presence, file uploads, real-time events</div>
-        <span class="card-arrow">&#8594;</span>
       </div>
-      <div class="card" onclick="document.getElementById('calling').scrollIntoView({behavior:'smooth'})">
-        <div class="card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.47 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
-        <div class="card-title">Voice &amp; Video Calling</div>
-        <div class="card-desc">LiveKit-powered rooms, token generation, room management</div>
-        <span class="card-arrow">&#8594;</span>
+    </div>
+
+    <div class="hero-section-block">
+      <p class="hero-cards-label">Products</p>
+      <div class="cards-grid cols-2" style="max-width:560px;margin:0 auto">
+        <a class="card" href="#chat" style="text-decoration:none">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+          <div class="card-title">Chat &amp; Messaging</div>
+          <div class="card-desc">Channels, DMs, presence, file uploads, real-time events</div>
+        </a>
+        <a class="card" href="#calling" style="text-decoration:none">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.47 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+          <div class="card-title">Voice &amp; Video Calling</div>
+          <div class="card-desc">LiveKit-powered rooms, token generation, room management</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-section-block">
+      <p class="hero-cards-label">Reference</p>
+      <div class="cards-grid cols-4" style="max-width:860px;margin:0 auto">
+        <a class="card" href="#api-reference" style="text-decoration:none">
+          <div class="card-icon" style="margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-title" style="font-size:14px">API Reference</div>
+          <div class="card-desc" style="font-size:12px">REST endpoints</div>
+        </a>
+        <a class="card" href="#sdk-reference" style="text-decoration:none">
+          <div class="card-icon" style="margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="card-title" style="font-size:14px">SDK Reference</div>
+          <div class="card-desc" style="font-size:12px">Components &amp; hooks</div>
+        </a>
+        <a class="card" href="#realtime" style="text-decoration:none">
+          <div class="card-icon" style="margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="card-title" style="font-size:14px">Real-time Events</div>
+          <div class="card-desc" style="font-size:12px">SSE event stream</div>
+        </a>
+        <a class="card" href="#configuration" style="text-decoration:none">
+          <div class="card-icon" style="margin-bottom:12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          </div>
+          <div class="card-title" style="font-size:14px">Configuration</div>
+          <div class="card-desc" style="font-size:12px">Setup &amp; theming</div>
+        </a>
       </div>
     </div>
   </div>
+</div>
 
-  <p style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:16px">Choose your platform</p>
-  <div class="cards-grid cols-3" style="max-width:520px;margin:0 auto">
-    <div class="card platform-card" data-platform="react" onclick="setGlobalPlatform('react')">
-      <div class="card-icon" style="background:rgba(97,218,251,0.15);color:#61DAFB">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path fill-rule="evenodd" d="M12 4c1.37 0 2.7.147 3.956.44 1.025.24 1.98.597 2.792 1.065C20.025 6.45 20.8 7.4 20.8 8.41c0 1.013-.774 1.963-2.052 2.907-.812.467-1.767.824-2.792 1.065C14.7 12.675 13.37 12.82 12 12.82c-1.37 0-2.7-.145-3.956-.437-1.025-.241-1.98-.598-2.792-1.065C3.974 10.374 3.2 9.424 3.2 8.41c0-1.011.774-1.961 2.052-2.906.812-.468 1.767-.824 2.792-1.064A18.86 18.86 0 0 1 12 4Zm0 1.6a17.3 17.3 0 0 0-3.624.401c-.914.214-1.741.527-2.405.908C4.996 7.502 4.8 7.98 4.8 8.41c0 .43.196.908 1.171 1.502.664.38 1.49.694 2.405.908A17.3 17.3 0 0 0 12 11.22c1.254 0 2.46-.136 3.624-.4.914-.214 1.741-.527 2.405-.908.975-.594 1.171-1.072 1.171-1.502s-.196-.908-1.171-1.502c-.664-.38-1.491-.694-2.405-.908A17.3 17.3 0 0 0 12 5.6Z"/></svg>
-      </div>
-      <div class="card-title">React</div>
-      <div class="card-pkg">@wibechat/react</div>
-    </div>
-    <div class="card platform-card" data-platform="python" onclick="setGlobalPlatform('python')">
-      <div class="card-icon" style="background:rgba(55,118,171,0.15);color:#3776AB">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.959 3.403 5.959h2.03v-2.867s-.109-3.408 3.35-3.408h5.766s3.24.052 3.24-3.13V3.13S18.302 0 11.914 0ZM8.708 1.808a1.049 1.049 0 1 1 0 2.098 1.049 1.049 0 0 1 0-2.098ZM12.086 24c6.093 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.12S24 18.211 24 12.031c0-6.18-3.403-5.959-3.403-5.959h-2.03v2.867s.109 3.408-3.35 3.408H9.451s-3.24-.052-3.24 3.13v5.393S5.698 24 12.086 24Zm3.206-1.808a1.049 1.049 0 1 1 0-2.098 1.049 1.049 0 0 1 0 2.098Z"/></svg>
-      </div>
-      <div class="card-title">Python</div>
-      <div class="card-pkg">pip install wibechat</div>
-    </div>
-    <div class="card platform-card coming-soon-card" data-platform="flutter">
-      <div class="card-icon" style="background:rgba(2,86,155,0.12);color:#02569B">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0 2.3 12 6 15.7 21.684.013h-7.37ZM14.314 11.97l-6.206 6.206 6.206 6.206h7.37L15.478 18.07l6.212-6.1h-7.376Z"/></svg>
-      </div>
-      <div class="card-title">Flutter</div>
-      <div class="card-pkg">Coming Soon</div>
-    </div>
-  </div>
-</header>
-
-<!-- Global platform picker -->
+<!-- Global platform bar -->
 <div class="global-platform-bar" id="globalPlatformBar">
   <div class="global-platform-bar-inner">
     <span class="global-platform-bar-label">Platform</span>
@@ -478,13 +516,13 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
   </div>
 </div>
 
-<div class="content-wrap">
+<div class="content-wrap" id="contentWrap">
 
 <!-- ============================================================ QUICK START -->
 <section id="quickstart">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Getting Started</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Getting Started</span><span class="sep"> / </span>
   <span>Quick Start</span>
 </div>
 <h2 class="section-title">Quick Start</h2>
@@ -492,9 +530,9 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 
 <div class="platform-tabs-wrapper" data-tab-group="quickstart">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 
@@ -503,33 +541,28 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 <div class="steps">
 
 <div class="step">
-<div class="step-card">
 <h4>Install the SDK</h4>
 <p>Install the WibeChat React SDK. The core client (<code>@wibechat/core</code>) is included automatically as a dependency.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>npm install @wibechat/react</code></pre>
 </div>
 </div>
-</div>
 
 <div class="step">
-<div class="step-card">
 <h4>Set your API key</h4>
 <p>Add your WibeChat API key to <code>.env.local</code>. You get this from the WibeChat Admin Portal.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#facc15"></span>.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span></code></pre>
-</div>
 </div>
 </div>
 
 <div class="step">
-<div class="step-card">
 <h4>Wrap your app with WibeChatProvider</h4>
 <p>The provider initializes the SDK client and provides context to all child components. Import the styles CSS for pre-built component styling.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> <span class="str">'@wibechat/react/styles.css'</span>;
 
@@ -544,14 +577,12 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 }</code></pre>
 </div>
 </div>
-</div>
 
 <div class="step">
-<div class="step-card">
 <h4>Add a chat window</h4>
 <p>Drop in a fully-featured chat UI with channels, messages, and input — all in one component.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Chat.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/Chat.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">ChatWindow</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">export default function</span> <span class="fn">Chat</span>() {
@@ -565,19 +596,17 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 }</code></pre>
 </div>
 </div>
-</div>
 
 <div class="step">
-<div class="step-card">
 <h4>Add a call button</h4>
 <p>First, install the LiveKit UI packages for the call interface:</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
 </div>
 <p>Then generate a LiveKit token and launch a call room. Use with <code>@livekit/components-react</code> for the call UI.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
@@ -611,7 +640,6 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 }</code></pre>
 </div>
 </div>
-</div>
 
 </div><!-- /steps -->
 </div><!-- /react tab -->
@@ -620,21 +648,18 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 <div class="tab-content" data-platform="python" data-group="quickstart">
 <div class="steps">
 <div class="step">
-<div class="step-card">
 <h4>Install the SDK</h4>
 <p>Install the WibeChat Python SDK from PyPI.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>pip install wibechat</code></pre>
 </div>
 </div>
-</div>
 <div class="step">
-<div class="step-card">
 <h4>Set environment variables</h4>
 <p>Export your credentials or use a <code>.env</code> file. Chat and Calling use separate servers.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#facc15"></span>.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Chat (Zulip)</span>
 <span class="var">WIBECHAT_CHAT_URL</span>=<span class="str">https://your-chat-server.example.com</span>
 <span class="var">WIBECHAT_CHAT_EMAIL</span>=<span class="str">bot@your-org.example.com</span>
@@ -646,13 +671,11 @@ code{background:var(--primary-light);color:var(--primary-hover);padding:2px 6px;
 <span class="var">WIBECHAT_CLIENT_ID</span>=<span class="str">your-client-uuid</span></code></pre>
 </div>
 </div>
-</div>
 <div class="step">
-<div class="step-card">
 <h4>Initialize the chat client</h4>
 <p>Create a <code>WibechatChat</code> instance to interact with channels and messages.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>(
@@ -662,13 +685,11 @@ chat = <span class="ty">WibechatChat</span>(
 )</code></pre>
 </div>
 </div>
-</div>
 <div class="step">
-<div class="step-card">
 <h4>Send a message</h4>
 <p>Send messages to channels or directly to users.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Send to a channel</span>
 chat.<span class="fn">send_message</span>(
     to=<span class="str">"general"</span>,
@@ -683,13 +704,11 @@ chat.<span class="fn">send_direct_message</span>(
 )</code></pre>
 </div>
 </div>
-</div>
 <div class="step">
-<div class="step-card">
 <h4>Generate a call token</h4>
 <p>Use <code>WibechatClient</code> to get LiveKit access tokens for call rooms.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
@@ -708,14 +727,13 @@ token = client.<span class="fn">get_token</span>(
 <span class="fn">print</span>(token.access_token)  <span class="cm"># Pass to the client</span></code></pre>
 </div>
 </div>
-</div>
 </div><!-- /steps -->
 </div><!-- /python tab -->
 
 <!-- Flutter Quick Start -->
 <div class="tab-content" data-platform="flutter" data-group="quickstart">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -723,22 +741,21 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="page-nav">
   <a href="#hero" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Home</span>
   </a>
   <a href="#authentication" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">Authentication</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ AUTHENTICATION -->
 <section id="authentication">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Getting Started</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Getting Started</span><span class="sep"> / </span>
   <span>Authentication</span>
 </div>
 <h2 class="section-title">Authentication</h2>
@@ -757,7 +774,7 @@ token = client.<span class="fn">get_token</span>(
 </div>
 
 <div class="callout note">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">One key, all services</span>
     <p>Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.</p>
@@ -769,15 +786,15 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="platform-tabs-wrapper" data-tab-group="auth-token">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 
 <div class="tab-content active" data-platform="react" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="cm">// The SDK handles auth headers automatically</span>
@@ -791,7 +808,7 @@ token = client.<span class="fn">get_token</span>(
 &lt;/<span class="ty">WibeChatProvider</span>&gt;</code></pre>
 </div>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm">// All API requests use Bearer token auth</span>
 <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.chat.zartek.in/api/gateway/chat/channels/'</span>, {
   headers: {
@@ -804,7 +821,7 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="tab-content" data-platform="python" data-group="auth-token">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>, <span class="ty">WibechatClient</span>
 
 <span class="cm"># Chat uses email + API key (Zulip credentials)</span>
@@ -829,7 +846,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 
 <div class="tab-content" data-platform="flutter" data-group="auth-token">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -839,7 +856,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 <p>LiveKit call rooms require a JWT access token. Generate one using <code>client.calls.createToken()</code>.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
 <span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_chat_xxxxxxxxxxxx'</span> });
@@ -856,7 +873,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 </div>
 
 <div class="callout warning">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Token security</span>
     <p>The <code>wb_chat_</code> API key is a publishable key — it's safe to use in client-side code (similar to Stripe's publishable key). Call tokens are short-lived JWTs generated through the WibeChat gateway. For additional security, you can proxy API calls through your backend.</p>
@@ -865,29 +882,28 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 
 <div class="page-nav">
   <a href="#quickstart" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Quick Start</span>
   </a>
   <a href="#chat" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">Chat Integration</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ CHAT INTEGRATION -->
 <section id="chat">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Integration</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Integration</span><span class="sep"> / </span>
   <span>Chat Integration</span>
 </div>
 <h2 class="section-title">Chat Integration</h2>
 <p class="section-desc">Embed full-featured messaging in your application: channels, messages, users, presence, and file uploads.</p>
 
 <div class="callout tip">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Pre-built components vs hooks</span>
     <p>Use pre-built components (<code>&lt;ChatWindow&gt;</code>, <code>&lt;ChannelList&gt;</code>, <code>&lt;MessageList&gt;</code>) for the fastest integration. Use hooks (<code>useChannels</code>, <code>useMessages</code>) when you need full control over the UI or want to build custom interfaces.</p>
@@ -899,14 +915,14 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-channels">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-channels">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/ChannelSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/ChannelSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">ChannelList</span>, <span class="fn">useChannels</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built component</span>
@@ -937,7 +953,7 @@ result = chat.<span class="fn">login</span>(<span class="str">"user@example.com"
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-channels">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>channels.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">channels.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>()  <span class="cm"># uses env vars</span>
@@ -950,7 +966,7 @@ streams = chat.<span class="fn">get_streams</span>()
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-channels">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -961,14 +977,14 @@ streams = chat.<span class="fn">get_streams</span>()
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-messages">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-messages">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/Messages.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/Messages.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useMessages</span>, <span class="ty">MessageList</span>, <span class="ty">MessageInput</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built components</span>
@@ -1004,7 +1020,7 @@ streams = chat.<span class="fn">get_streams</span>()
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-messages">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>messages.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">messages.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Send a message to a channel</span>
 chat.<span class="fn">send_message</span>(
     to=<span class="str">"general"</span>,
@@ -1029,7 +1045,7 @@ messages = chat.<span class="fn">get_messages</span>(
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-messages">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -1040,14 +1056,14 @@ messages = chat.<span class="fn">get_messages</span>(
 
 <div class="platform-tabs-wrapper" data-tab-group="chat-presence">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="chat-presence">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/UserSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/UserSidebar.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">UserList</span>, <span class="fn">useUsers</span>, <span class="fn">usePresence</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="cm">// Option 1: Pre-built component with presence indicators</span>
@@ -1075,7 +1091,7 @@ messages = chat.<span class="fn">get_messages</span>(
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-presence">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>users.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">users.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># List all users</span>
 users = chat.<span class="fn">get_users</span>()
 <span class="kw">for</span> u <span class="kw">in</span> users:
@@ -1088,7 +1104,7 @@ profile = chat.<span class="fn">get_profile</span>()
 </div>
 <div class="tab-content" data-platform="flutter" data-group="chat-presence">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -1098,7 +1114,7 @@ profile = chat.<span class="fn">get_profile</span>()
 <p>Upload files and include them in messages.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/FileUpload.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/FileUpload.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">FileUploader</span>() {
@@ -1122,29 +1138,28 @@ profile = chat.<span class="fn">get_profile</span>()
 
 <div class="page-nav">
   <a href="#authentication" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Authentication</span>
   </a>
   <a href="#calling" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">Calling Integration</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ CALLING INTEGRATION -->
 <section id="calling">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Integration</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Integration</span><span class="sep"> / </span>
   <span>Calling Integration</span>
 </div>
 <h2 class="section-title">Calling Integration</h2>
 <p class="section-desc">Add voice and video calls powered by LiveKit. WibeChat generates access tokens and manages rooms — you bring the LiveKit UI components.</p>
 
 <div class="callout note">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">LiveKit dependency</span>
     <p>Calling features require <code>@livekit/components-react</code> and <code>@livekit/components-styles</code> for the React call UI. WibeChat handles token generation and room management; LiveKit handles the actual audio/video rendering. Install them with: <code>npm install @livekit/components-react @livekit/components-styles</code></p>
@@ -1156,14 +1171,14 @@ profile = chat.<span class="fn">get_profile</span>()
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 <div class="tab-content active" data-platform="react" data-group="call-join">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
@@ -1200,7 +1215,7 @@ profile = chat.<span class="fn">get_profile</span>()
 </div>
 <div class="tab-content" data-platform="python" data-group="call-join">
 <div class="code-block">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses env vars</span>
@@ -1221,7 +1236,7 @@ token = client.<span class="fn">get_token</span>(
 </div>
 <div class="tab-content" data-platform="flutter" data-group="call-join">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -1231,7 +1246,7 @@ token = client.<span class="fn">get_token</span>(
 <p>For more control, use the <code>useCallToken</code> hook to generate tokens programmatically.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useCallToken</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
 
@@ -1264,7 +1279,7 @@ token = client.<span class="fn">get_token</span>(
 <p>Create and list call rooms using the core client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>components/RoomManager.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">components/RoomManager.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">RoomManager</span>() {
@@ -1290,22 +1305,21 @@ token = client.<span class="fn">get_token</span>(
 
 <div class="page-nav">
   <a href="#chat" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Chat Integration</span>
   </a>
   <a href="#realtime" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">Real-time Events</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ REAL-TIME EVENTS -->
 <section id="realtime">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Integration</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Integration</span><span class="sep"> / </span>
   <span>Real-time Events</span>
 </div>
 <h2 class="section-title">Real-time Events</h2>
@@ -1315,7 +1329,7 @@ token = client.<span class="fn">get_token</span>(
 <p>Enable real-time events either via the provider prop or manually via the client.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm">// Option 1: Via the provider (auto-connects on mount)</span>
 &lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
@@ -1350,7 +1364,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { useEffect } <span class="kw">from</span> <span class="str">'react'</span>;
 
@@ -1394,7 +1408,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <div class="callout tip">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Auto-reconnect</span>
     <p>The SSE connection automatically reconnects with exponential backoff (3s to 60s cap) if the connection drops. You don't need to handle reconnection logic manually.</p>
@@ -1403,29 +1417,28 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <div class="page-nav">
   <a href="#calling" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Calling Integration</span>
   </a>
   <a href="#api-reference" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">API Reference</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ API REFERENCE -->
 <section id="api-reference">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Reference</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Reference</span><span class="sep"> / </span>
   <span>API Reference</span>
 </div>
 <h2 class="section-title">API Reference</h2>
 <p class="section-desc">REST API endpoints for direct integration. Base URL: <code>https://api.chat.zartek.in</code></p>
 
 <div class="callout info">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Authentication</span>
     <p>All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer {your_api_key}</code></p>
@@ -1433,7 +1446,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <div class="callout note">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Error Responses</span>
     <p>All endpoints return errors in the format: <code>{"error": "message", "status": 400}</code>. Common status codes: <code>400</code> Bad Request, <code>401</code> Unauthorized, <code>403</code> Forbidden, <code>404</code> Not Found, <code>429</code> Rate Limited.</p>
@@ -1443,7 +1456,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <h3 class="section-subtitle">Organization</h3>
 <p>Retrieve your organization profile and check which services are enabled for your API key.</p>
 
-<div class="endpoint get-border" id="ep-org-get">
+<div class="endpoint" id="ep-org-get">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/org/</span>
@@ -1454,7 +1467,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="endpoint-body-inner">
     <p>Returns the organization profile, credential info, and enabled services.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"organization"</span>: {
     <span class="prop">"id"</span>: <span class="num">16</span>,
@@ -1479,7 +1492,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <h3 class="section-subtitle">Chat</h3>
 <p>Endpoints for managing channels, sending and retrieving messages, listing users, tracking presence, and uploading files.</p>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/channels/</span>
@@ -1490,7 +1503,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="endpoint-body-inner">
     <p>Returns all channels the organization has access to.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"channels"</span>: [
     {
@@ -1505,7 +1518,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint post-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/channels/</span>
@@ -1526,7 +1539,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"engineering"</span>,
   <span class="prop">"description"</span>: <span class="str">"Engineering team discussions"</span>,
@@ -1534,7 +1547,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"channel"</span>: {
     <span class="prop">"stream_id"</span>: <span class="num">5</span>,
@@ -1547,7 +1560,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/messages/</span>
@@ -1570,7 +1583,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"messages"</span>: [
     {
@@ -1592,7 +1605,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint post-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/messages/</span>
@@ -1614,7 +1627,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"type"</span>: <span class="str">"stream"</span>,
   <span class="prop">"to"</span>: <span class="str">"general"</span>,
@@ -1623,14 +1636,14 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{ <span class="prop">"id"</span>: <span class="num">12346</span> }</code></pre>
     </div>
     </div>
   </div>
 </div>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/users/</span>
@@ -1641,7 +1654,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="endpoint-body-inner">
     <p>Returns all users in the organization.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"users"</span>: [
     {
@@ -1658,7 +1671,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/chat/presence/</span>
@@ -1669,7 +1682,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="endpoint-body-inner">
     <p>Returns presence status for all users (active, idle, or offline).</p>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"presences"</span>: {
     <span class="prop">"alice@example.com"</span>: {
@@ -1685,7 +1698,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint post-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/chat/files/</span>
@@ -1704,7 +1717,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{ <span class="prop">"uri"</span>: <span class="str">"/user_uploads/1/abc123/report.pdf"</span> }</code></pre>
     </div>
     </div>
@@ -1714,7 +1727,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <h3 class="section-subtitle">Calling</h3>
 <p>Endpoints for generating LiveKit access tokens and managing call rooms in your organization.</p>
 
-<div class="endpoint post-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/calls/token/</span>
@@ -1736,7 +1749,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"room"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"identity"</span>: <span class="str">"alice@example.com"</span>,
@@ -1745,14 +1758,14 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{ <span class="prop">"token"</span>: <span class="str">"eyJhbGciOiJIUzI1NiIs..."</span> }</code></pre>
     </div>
     </div>
   </div>
 </div>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/calls/rooms/</span>
@@ -1763,7 +1776,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="endpoint-body-inner">
     <p>Returns all currently active call rooms in your organization.</p>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"rooms"</span>: [
     {
@@ -1779,7 +1792,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
 </div>
 
-<div class="endpoint post-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method post">POST</span>
     <span class="endpoint-path">/api/gateway/calls/rooms/</span>
@@ -1800,7 +1813,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     </table>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3B82F6"></span>Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Request Body</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
   <span class="prop">"max_participants"</span>: <span class="num">10</span>,
@@ -1808,7 +1821,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 }</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#22C55E"></span>Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"room"</span>: {
     <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
@@ -1825,7 +1838,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 <h3 class="section-subtitle">Events (SSE)</h3>
 <p>Server-Sent Events endpoint for receiving real-time updates without polling.</p>
 
-<div class="endpoint get-border">
+<div class="endpoint">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
     <span class="endpoint-method get">GET</span>
     <span class="endpoint-path">/api/gateway/events/stream/</span>
@@ -1842,22 +1855,21 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <div class="page-nav">
   <a href="#realtime" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">Real-time Events</span>
   </a>
   <a href="#sdk-reference" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">SDK Reference</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ SDK REFERENCE -->
 <section id="sdk-reference">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Reference</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Reference</span><span class="sep"> / </span>
   <span>SDK Reference</span>
 </div>
 <h2 class="section-title">SDK Reference</h2>
@@ -1865,9 +1877,9 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <div class="platform-tabs-wrapper" data-tab-group="sdk-ref">
 <div class="platform-tabs">
-  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot react-dot"></span>React</button>
-  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot python-dot"></span>Python</button>
-  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot flutter-dot"></span>Flutter</button>
+  <button class="platform-tab active" data-tab="react" onclick="switchTab(this)"><span class="dot" style="background:#61DAFB"></span>React</button>
+  <button class="platform-tab" data-tab="python" onclick="switchTab(this)"><span class="dot" style="background:#3776AB"></span>Python</button>
+  <button class="platform-tab" data-tab="flutter" onclick="switchTab(this)"><span class="dot" style="background:#02569B"></span>Flutter</button>
 </div>
 </div>
 
@@ -1908,7 +1920,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">Core Client (<code>@wibechat/core</code>)</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">new</span> <span class="ty">WibeChatClient</span>({
   apiKey: <span class="ty">string</span>,              <span class="cm">// Required — your API key</span>
   baseUrl?: <span class="ty">string</span>,            <span class="cm">// Default: 'https://api.chat.zartek.in'</span>
@@ -1971,7 +1983,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">TypeScript Types</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">interface</span> <span class="ty">OrgInfo</span> {
   organization: { id: <span class="ty">number</span>; name: <span class="ty">string</span>; slug: <span class="ty">string</span> };
   credential: { service: <span class="str">'CHAT'</span> | <span class="str">'AUDIO'</span> | <span class="str">'VIDEO'</span>; key_prefix: <span class="ty">string</span> };
@@ -2050,7 +2062,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <h3 class="section-subtitle">WibechatChat — Chat Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
 
 chat = <span class="ty">WibechatChat</span>(
@@ -2079,7 +2091,7 @@ chat = <span class="ty">WibechatChat</span>(
 
 <h3 class="section-subtitle">WibechatClient — Calling Client</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
@@ -2100,7 +2112,7 @@ client = <span class="ty">WibechatClient</span>(
 
 <h3 class="section-subtitle">Data Classes</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>Types</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">Types</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="at">@dataclass</span>
 <span class="kw">class</span> <span class="ty">Message</span>:
     id: <span class="ty">int</span>
@@ -2135,7 +2147,7 @@ client = <span class="ty">WibechatClient</span>(
 
 <h3 class="section-subtitle">Real-time Events (Long Polling)</h3>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#3776AB"></span>events.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">events.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Register an event queue</span>
 queue = chat.<span class="fn">register_event_queue</span>(
     event_types=[<span class="str">"message"</span>, <span class="str">"typing"</span>, <span class="str">"presence"</span>],
@@ -2159,7 +2171,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <!-- Flutter SDK -->
 <div class="tab-content" data-platform="flutter" data-group="sdk-ref">
 <div class="coming-soon">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
   <h4>Flutter SDK — Coming Soon</h4>
   <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
 </div>
@@ -2167,22 +2179,21 @@ queue = chat.<span class="fn">register_event_queue</span>(
 
 <div class="page-nav">
   <a href="#api-reference" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">API Reference</span>
   </a>
   <a href="#configuration" class="page-nav-btn next">
-    <span class="page-nav-label">Next &#8594;</span>
+    <span class="page-nav-label">Next &rarr;</span>
     <span class="page-nav-title">Configuration</span>
   </a>
 </div>
 </section>
 
-
 <!-- ============================================================ CONFIGURATION -->
 <section id="configuration">
 <div class="breadcrumbs">
-  <a href="#hero">Home</a><span class="sep">›</span>
-  <span>Reference</span><span class="sep">›</span>
+  <a href="#hero">Home</a><span class="sep"> / </span>
+  <span>Reference</span><span class="sep"> / </span>
   <span>Configuration</span>
 </div>
 <h2 class="section-title">Configuration</h2>
@@ -2193,13 +2204,13 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <table>
   <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>NEXT_PUBLIC_WIBECHAT_API_KEY</code></td><td><span class="badge-req badge-required">Required</span></td><td>Your organization API key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_API_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your organization API key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="callout note">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Client-side API keys</span>
     <p>The <code>wb_chat_</code> API key is a publishable key and is safe to expose in the browser (prefixed with <code>NEXT_PUBLIC_</code>). The gateway enforces rate limits and permissions per organization. For additional security, you can proxy API calls through your backend.</p>
@@ -2225,7 +2236,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <p>Override the default theme by passing a <code>theme</code> object to <code>WibeChatProvider</code>, or override CSS custom properties directly.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#61DAFB"></span>app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">app/layout.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>&lt;<span class="ty">WibeChatProvider</span>
   <span class="prop">apiKey</span>=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>
   <span class="prop">theme</span>={{
@@ -2273,12 +2284,12 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <p>For calling features, install the LiveKit React components alongside the WibeChat SDK.</p>
 
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang"><span class="code-lang-dot" style="background:#4ade80"></span>bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
 </div>
 
 <div class="callout tip">
-  <div class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">LiveKit handles the call UI</span>
     <p>WibeChat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.</p>
@@ -2287,11 +2298,11 @@ queue = chat.<span class="fn">register_event_queue</span>(
 
 <div class="page-nav">
   <a href="#sdk-reference" class="page-nav-btn prev">
-    <span class="page-nav-label">&#8592; Previous</span>
+    <span class="page-nav-label">&larr; Previous</span>
     <span class="page-nav-title">SDK Reference</span>
   </a>
   <a href="#hero" class="page-nav-btn next">
-    <span class="page-nav-label">&#8593; Back to top</span>
+    <span class="page-nav-label">&uarr; Back to top</span>
     <span class="page-nav-title">Home</span>
   </a>
 </div>
@@ -2305,10 +2316,10 @@ queue = chat.<span class="fn">register_event_queue</span>(
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="logo-row">
-          <div class="logo-icon">W</div>
+          <div class="flogo">W</div>
           <strong>WibeChat</strong>
         </div>
-        <p>Add chat and calling to your app in minutes. Production-ready components and APIs.</p>
+        <p>Add chat and calling to your app in minutes. Production-ready components and APIs. Built by Zartek.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
@@ -2344,18 +2355,18 @@ queue = chat.<span class="fn">register_event_queue</span>(
   </div>
 </footer>
 
-</div><!-- /main -->
+</div><!-- /main-content -->
+</div><!-- /page-layout -->
 
 <script>
 // ============================================================
 // PLATFORMS
 // ============================================================
 const PLATFORMS = [
-  { id: 'react',   name: 'React',   color: '#61DAFB', pkg: '@wibechat/react' },
-  { id: 'python',  name: 'Python',  color: '#3776AB', pkg: 'pip install wibechat' },
-  { id: 'flutter', name: 'Flutter', color: '#02569B', pkg: 'Coming Soon' },
+  { id: 'react',   name: 'React',   color: '#61DAFB' },
+  { id: 'python',  name: 'Python',  color: '#3776AB' },
+  { id: 'flutter', name: 'Flutter', color: '#02569B' },
 ];
-
 let activePlatform = localStorage.getItem('wb-docs-platform') || 'react';
 
 // ============================================================
@@ -2363,21 +2374,32 @@ let activePlatform = localStorage.getItem('wb-docs-platform') || 'react';
 // ============================================================
 function applyTheme(dark) {
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
-  const btn = document.getElementById('darkToggleBtn');
-  if (btn) {
-    btn.querySelector('.toggle-icon').textContent = dark ? '☀️' : '🌙';
-    btn.querySelector('.toggle-label').textContent = dark ? 'Light' : 'Dark';
-  }
+  const sun = document.getElementById('themeIconSun');
+  const moon = document.getElementById('themeIconMoon');
+  if (sun) sun.style.display = dark ? 'block' : 'none';
+  if (moon) moon.style.display = dark ? 'none' : 'block';
 }
-
 function toggleDark() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   localStorage.setItem('wb-docs-theme', isDark ? 'light' : 'dark');
   applyTheme(!isDark);
 }
-
-// Init theme
 applyTheme(localStorage.getItem('wb-docs-theme') === 'dark');
+
+// ============================================================
+// SEARCH
+// ============================================================
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('searchModalInput')?.focus(), 50);
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  if (e.key === 'Escape') closeSearch();
+});
 
 // ============================================================
 // NAV GROUP COLLAPSE
@@ -2386,8 +2408,6 @@ function toggleNavGroup(id) {
   const group = document.getElementById(id);
   if (group) group.classList.toggle('collapsed');
 }
-
-// Set initial heights for collapsible groups
 document.querySelectorAll('.nav-group-links').forEach(el => {
   el.style.maxHeight = el.scrollHeight + 'px';
 });
@@ -2410,9 +2430,6 @@ function setGlobalPlatform(platform) {
   document.querySelectorAll('.global-platform-pill').forEach(pill => {
     pill.classList.toggle('active', pill.dataset.platform === platform);
   });
-  document.querySelectorAll('.platform-card').forEach(card => {
-    card.classList.toggle('selected', card.dataset.platform === platform);
-  });
   switchAllTabs(platform);
 }
 
@@ -2434,7 +2451,6 @@ function switchTab(btn) {
     sibling = sibling.nextElementSibling;
   }
 }
-
 function switchAllTabs(platform) {
   document.querySelectorAll('.platform-tabs-wrapper').forEach(wrapper => {
     const tab = wrapper.querySelector(`[data-tab="${platform}"]`);
@@ -2446,8 +2462,7 @@ function switchAllTabs(platform) {
 // ENDPOINT CARDS
 // ============================================================
 function toggleEndpoint(header) {
-  const card = header.closest('.endpoint');
-  card.classList.toggle('open');
+  header.closest('.endpoint').classList.toggle('open');
 }
 
 // ============================================================
@@ -2457,32 +2472,50 @@ function copyCode(btn) {
   const pre = btn.closest('.code-block').querySelector('pre');
   navigator.clipboard.writeText(pre.textContent).then(() => {
     const orig = btn.innerHTML;
-    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Copied!';
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
     btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
   });
 }
 
 // ============================================================
-// GLOBAL BAR ON SCROLL
+// SCROLL BEHAVIOR — sidebar appears after hero
 // ============================================================
-function updateGlobalBar() {
-  const hero = document.getElementById('hero');
-  const bar = document.getElementById('globalPlatformBar');
-  if (!hero || !bar) return;
-  bar.classList.toggle('visible', hero.getBoundingClientRect().bottom < 0);
-}
-
-// ============================================================
-// SIDEBAR ACTIVE + TOC
-// ============================================================
-const sections = document.querySelectorAll('section[id], header[id]');
+const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.sidebar nav a[data-nav]');
+const sidebar = document.getElementById('sidebar');
+const mainContent = document.getElementById('mainContent');
+const tocPanel = document.getElementById('tocPanel');
+const navbar = document.getElementById('navbar');
+
+function updateLayout() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  const heroBottom = hero.getBoundingClientRect().bottom;
+  const pastHero = heroBottom < 0;
+
+  // Show/hide sidebar
+  if (pastHero) {
+    sidebar.classList.add('visible');
+    mainContent.classList.add('with-sidebar');
+  } else {
+    sidebar.classList.remove('visible');
+    mainContent.classList.remove('with-sidebar');
+    sidebar.classList.remove('mobile-open');
+  }
+
+  // Global bar
+  const bar = document.getElementById('globalPlatformBar');
+  if (bar) bar.classList.toggle('visible', pastHero);
+
+  // Navbar scroll state
+  navbar.classList.toggle('scrolled', window.scrollY > 10);
+}
 
 function updateActiveNav() {
   let current = '';
   sections.forEach(section => {
-    if (section.getBoundingClientRect().top <= 130) current = section.id;
+    if (section.getBoundingClientRect().top <= 100) current = section.id;
   });
   navLinks.forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === '#' + current);
@@ -2490,19 +2523,18 @@ function updateActiveNav() {
 }
 
 // ============================================================
-// TOC PANEL
+// TOC
 // ============================================================
 function buildTOC() {
   const tocLinks = document.getElementById('tocLinks');
   if (!tocLinks) return;
-  const content = document.querySelector('.content-wrap');
+  const content = document.getElementById('contentWrap');
   if (!content) return;
   const headings = content.querySelectorAll('h2.section-title, h3.section-subtitle');
   let html = '';
   headings.forEach(h => {
     const isH3 = h.tagName === 'H3';
-    const text = h.textContent.replace(/\s+/g,' ').trim();
-    // find nearest section
+    const text = h.textContent.replace(/\s+/g, ' ').trim();
     const section = h.closest('section');
     const id = section ? section.id : '';
     if (id) {
@@ -2513,14 +2545,12 @@ function buildTOC() {
 }
 
 function updateTOC() {
-  const tocPanel = document.getElementById('tocPanel');
-  if (!tocPanel) return;
-  const heroBottom = document.getElementById('hero')?.getBoundingClientRect().bottom ?? 0;
-  tocPanel.classList.toggle('visible', heroBottom < 0);
-
+  const hero = document.getElementById('hero');
+  const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+  if (tocPanel) tocPanel.classList.toggle('visible', heroBottom < 0);
   let current = '';
   sections.forEach(s => {
-    if (s.getBoundingClientRect().top <= 130) current = s.id;
+    if (s.getBoundingClientRect().top <= 100) current = s.id;
   });
   document.querySelectorAll('.toc-link').forEach(link => {
     link.classList.toggle('active', link.getAttribute('data-toc-section') === current);
@@ -2528,33 +2558,21 @@ function updateTOC() {
 }
 
 // ============================================================
-// SIDEBAR SEARCH
+// MOBILE SIDEBAR
 // ============================================================
-document.getElementById('sidebarSearch')?.addEventListener('input', function() {
-  const q = this.value.toLowerCase().trim();
-  document.querySelectorAll('.sidebar nav a[data-nav]').forEach(link => {
-    if (!q) {
-      link.classList.remove('nav-hidden');
-    } else {
-      link.classList.toggle('nav-hidden', !link.textContent.toLowerCase().includes(q));
-    }
-  });
-  document.querySelectorAll('.nav-group').forEach(group => {
-    if (!q) {
-      group.style.display = '';
-      return;
-    }
-    const visibleLinks = group.querySelectorAll('a[data-nav]:not(.nav-hidden)');
-    group.style.display = visibleLinks.length ? '' : 'none';
-  });
-});
-
-// Cmd+K / Ctrl+K shortcut
-document.addEventListener('keydown', e => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-    e.preventDefault();
-    document.getElementById('sidebarSearch')?.focus();
+function toggleMobileSidebar() {
+  sidebar.classList.toggle('mobile-open');
+  // On mobile, force visible class so the sidebar can open
+  if (!sidebar.classList.contains('visible')) {
+    sidebar.classList.add('visible');
   }
+}
+
+// Close mobile sidebar on nav link click
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    sidebar.classList.remove('mobile-open');
+  });
 });
 
 // ============================================================
@@ -2563,25 +2581,15 @@ document.addEventListener('keydown', e => {
 buildGlobalPills();
 switchAllTabs(activePlatform);
 buildTOC();
-
-document.querySelectorAll('.platform-card').forEach(card => {
-  card.classList.toggle('selected', card.dataset.platform === activePlatform);
-});
-
-window.addEventListener('scroll', () => {
-  updateActiveNav();
-  updateGlobalBar();
-  updateTOC();
-}, { passive: true });
-
+updateLayout();
 updateActiveNav();
 updateTOC();
 
-navLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    document.querySelector('.sidebar').classList.remove('open');
-  });
-});
+window.addEventListener('scroll', () => {
+  updateLayout();
+  updateActiveNav();
+  updateTOC();
+}, { passive: true });
 </script>
 </body>
 </html>
