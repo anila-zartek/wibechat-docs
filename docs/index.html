@@ -778,10 +778,12 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
 <div class="step">
 <h4>Set your API key</h4>
-<p>Add your WibeChat API key to <code>.env.local</code>. You get this from the WibeChat Admin Portal.</p>
+<p>Add your chat and video keys to <code>.env.local</code>. You get them from the WibeChat Admin Portal.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span></code></pre>
+<pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_CHAT_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
+<span class="var">NEXT_PUBLIC_WIBECHAT_VIDEO_KEY</span>=<span class="str">wb_video_xxxxxxxxxxxx</span>
+<span class="var">NEXT_PUBLIC_LIVEKIT_URL</span>=<span class="str">wss://call.wibechat.com</span></code></pre>
 </div>
 </div>
 
@@ -796,7 +798,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <span class="kw">export default function</span> <span class="fn">RootLayout</span>({ children }) {
   <span class="kw">return</span> (
     &lt;<span class="ty">WibeChatProvider</span>
-      <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_API_KEY}
+      <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CHAT_KEY}
     &gt;
       {children}
     &lt;/<span class="ty">WibeChatProvider</span>&gt;
@@ -835,7 +837,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
-<span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
+<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
 <span class="kw">import</span> <span class="str">'@livekit/components-styles'</span>;
 
@@ -848,22 +850,28 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
         <span class="prop">token</span>={callState.token}
         <span class="prop">serverUrl</span>={callState.serverUrl}
         <span class="prop">onDisconnected</span>={() =&gt; setCallState(<span class="kw">null</span>)}
+        <span class="prop">video</span>
+        <span class="prop">audio</span>
+        <span class="prop">data-lk-theme</span>=<span class="str">"default"</span>
       &gt;
         &lt;<span class="ty">VideoConference</span> /&gt;
       &lt;/<span class="ty">LiveKitRoom</span>&gt;
     );
   }
 
+  <span class="cm">// Calls need your video key, so CallButton gets its own provider.</span>
   <span class="kw">return</span> (
-    &lt;<span class="ty">CallButton</span>
-      <span class="prop">room</span>=<span class="str">"standup-room"</span>
-      <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
-      <span class="prop">name</span>=<span class="str">"Alice"</span>
-      <span class="prop">livekitServerUrl</span>=<span class="str">"wss://your-call-server.example.com"</span>
-      <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
-        setCallState({ token, serverUrl, room });
-      }}
-    /&gt;
+    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_VIDEO_KEY}&gt;
+      &lt;<span class="ty">CallButton</span>
+        <span class="prop">room</span>=<span class="str">"standup-room"</span>
+        <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
+        <span class="prop">name</span>=<span class="str">"Alice"</span>
+        <span class="prop">livekitServerUrl</span>={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+        <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
+          setCallState({ token, serverUrl, room });
+        }}
+      /&gt;
+    &lt;/<span class="ty">WibeChatProvider</span>&gt;
   );
 }</code></pre>
 </div>
@@ -895,7 +903,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
 <span class="cm"># Calling (LiveKit)</span>
 <span class="var">WIBECHAT_SERVER_URL</span>=<span class="str">https://your-call-server.example.com</span>
-<span class="var">WIBECHAT_API_KEY</span>=<span class="str">your-livekit-api-key</span>
+<span class="var">WIBECHAT_API_KEY</span>=<span class="str">lk_xxxxxxxxxxxx</span>
 <span class="var">WIBECHAT_CLIENT_ID</span>=<span class="str">your-client-uuid</span></code></pre>
 </div>
 </div>
@@ -941,7 +949,7 @@ chat.<span class="fn">send_direct_message</span>(
 
 client = <span class="ty">WibechatClient</span>(
     server_url=<span class="str">"https://your-call-server.example.com"</span>,
-    api_key=<span class="str">"your-livekit-api-key"</span>,
+    api_key=<span class="str">"lk_xxxxxxxxxxxx"</span>,
     client_id=<span class="str">"your-client-uuid"</span>,
 )
 
@@ -1003,10 +1011,12 @@ token = client.<span class="fn">get_token</span>(
 </div>
 <div class="step">
 <h4>Generate a call token</h4>
-<p>Get a LiveKit JWT token for joining a call room.</p>
+<p>Get a LiveKit JWT token for joining a call room. Calls need your video (or audio) key, so create a second client with it.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">call.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">client</span>.calls.<span class="fn">createToken</span>({
+<pre><code><span class="kw">const</span> <span class="var">callClient</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_video_xxxxxxxxxxxx'</span> });
+
+<span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">callClient</span>.calls.<span class="fn">createToken</span>({
   <span class="prop">room</span>: <span class="str">'standup-room'</span>,
   <span class="prop">identity</span>: <span class="str">'alice@example.com'</span>,
   <span class="prop">name</span>: <span class="str">'Alice'</span>,
@@ -1112,7 +1122,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>curl -X POST \
-  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Authorization: Bearer wb_video_xxxxxxxxxxxx"</span> \
   -H <span class="str">"Content-Type: application/json"</span> \
   -d <span class="str">'{"room":"standup-room","identity":"alice@example.com","name":"Alice"}'</span> \
   https://api.chat.zartek.in/api/gateway/calls/token/</code></pre>
@@ -1141,16 +1151,18 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
   <span>Authentication</span>
 </div>
 <h2 class="section-title">Authentication</h2>
-<p class="section-desc">WibeChat uses a single API key for authentication. All API requests require an <code>Authorization: Bearer</code> header. Call tokens are generated via the SDK.</p>
+<p class="section-desc">WibeChat issues one API key per service: chat, audio and video. All API requests require an <code>Authorization: Bearer</code> header. Call tokens are generated via the SDK.</p>
 
 <h3 class="section-subtitle">API Key</h3>
-<p>Each organization gets a single API key from the <a href="https://admin.wibechat.com">WibeChat Admin Portal</a>. This one key grants access to all enabled services (chat, audio, video) — no need for separate keys per service.</p>
+<p>The <a href="https://admin.wibechat.com">WibeChat Admin Portal</a> shows one API key for each service your organization has enabled. Use the chat key for <code>/chat/</code> and events endpoints, and the audio or video key for <code>/calls/</code> endpoints. A key used on another service's endpoints gets <code>403 Forbidden</code>.</p>
 
 <div class="table-wrap">
 <table>
   <thead><tr><th>Key Prefix</th><th>Example</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>wb_chat_</code></td><td><code>wb_chat_a1b2c3d4e5f6</code></td><td>Your organization API key — works for chat, audio, and video</td></tr>
+    <tr><td><code>wb_chat_</code></td><td><code>wb_chat_a1b2c3d4e5f6</code></td><td>Chat: channels, messages, users, presence, files, real-time events</td></tr>
+    <tr><td><code>wb_audio_</code></td><td><code>wb_audio_a1b2c3d4e5f6</code></td><td>Audio calls: call tokens and rooms</td></tr>
+    <tr><td><code>wb_video_</code></td><td><code>wb_video_a1b2c3d4e5f6</code></td><td>Video calls: call tokens and rooms</td></tr>
   </tbody>
 </table>
 </div>
@@ -1158,10 +1170,27 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="callout note">
   <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
-    <span class="callout-title">One key, all services</span>
-    <p>Pass your API key as <code>apiKey</code> when creating the client. The SDK automatically routes requests to the correct services (chat, calling) based on what your organization has enabled in the Admin Portal.</p>
+    <span class="callout-title">One client per key</span>
+    <p>A <code>WibeChatClient</code> or <code>WibeChatProvider</code> holds one key. To use chat and calling in the same app, create one for each: for example, a provider with your chat key around chat components and another with your video key around <code>CallButton</code>.</p>
   </div>
 </div>
+
+<h3 class="section-subtitle">Python SDK credentials</h3>
+<p>The Python SDK (<code>pip install wibechat</code>) connects to the chat and calling servers directly, so it does not use <code>wb_</code> keys. It needs:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Variable</th><th>Example</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>WIBECHAT_CHAT_URL</code></td><td><code>https://your-chat-server.example.com</code></td><td>Your chat server URL</td></tr>
+    <tr><td><code>WIBECHAT_CHAT_EMAIL</code></td><td><code>bot@your-org.example.com</code></td><td>Email of the chat account the SDK acts as</td></tr>
+    <tr><td><code>WIBECHAT_CHAT_API_KEY</code></td><td><code>your-chat-api-key</code></td><td>That account's chat API key</td></tr>
+    <tr><td><code>WIBECHAT_SERVER_URL</code></td><td><code>https://your-call-server.example.com</code></td><td>Calling token server URL</td></tr>
+    <tr><td><code>WIBECHAT_API_KEY</code></td><td><code>lk_xxxxxxxxxxxx</code></td><td>Calling license key (<code>lk_</code> prefix)</td></tr>
+    <tr><td><code>WIBECHAT_CLIENT_ID</code></td><td><code>your-client-uuid</code></td><td>Your calling client ID</td></tr>
+  </tbody>
+</table>
+</div>
+<p>If you only have Admin Portal <code>wb_</code> keys, call the <a href="#api-reference">REST API</a> from Python instead.</p>
 
 <h3 class="section-subtitle">Using the API Key</h3>
 <p>All requests to the WibeChat gateway require the API key in the <code>Authorization</code> header.</p>
@@ -1224,7 +1253,7 @@ chat = <span class="ty">WibechatChat</span>(
 <span class="cm"># Calling uses server URL + license key + client ID</span>
 client = <span class="ty">WibechatClient</span>(
     server_url=<span class="str">"https://your-call-server.example.com"</span>,
-    api_key=<span class="str">"your-livekit-api-key"</span>,
+    api_key=<span class="str">"lk_xxxxxxxxxxxx"</span>,
     client_id=<span class="str">"your-client-uuid"</span>,
 )
 
@@ -1323,7 +1352,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 <div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="ty">WibeChatClient</span> } <span class="kw">from</span> <span class="str">'@wibechat/core'</span>;
 
-<span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_chat_xxxxxxxxxxxx'</span> });
+<span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_video_xxxxxxxxxxxx'</span> });
 
 <span class="cm">// Generate a LiveKit token</span>
 <span class="kw">const</span> token = <span class="kw">await</span> client.calls.<span class="fn">createToken</span>({
@@ -1585,7 +1614,7 @@ messages = chat.<span class="fn">get_messages</span>(
     num_before=<span class="num">50</span>,
 )
 <span class="kw">for</span> msg <span class="kw">in</span> messages:
-    <span class="fn">print</span>(<span class="kw">f</span><span class="str">"{msg.sender_name}: {msg.content}"</span>)</code></pre>
+    <span class="fn">print</span>(<span class="kw">f</span><span class="str">"{msg.sender_name}: {msg.content}"</span>)  <span class="cm"># content is rendered HTML</span></code></pre>
 </div>
 </div>
 <div class="tab-content" data-platform="javascript" data-group="chat-messages">
@@ -1871,7 +1900,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 
 <h3 class="section-subtitle">CallButton Component</h3>
-<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
+<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Wrap it in a <code>WibeChatProvider</code> that holds your video (or audio) key, since the chat key cannot create call tokens. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
@@ -1892,7 +1921,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 <div class="code-block">
 <div class="code-header"><span class="code-lang">components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
-<span class="kw">import</span> { <span class="ty">CallButton</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
+<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 <span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
 <span class="kw">import</span> <span class="str">'@livekit/components-styles'</span>;
 
@@ -1905,23 +1934,29 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
         <span class="prop">token</span>={callState.token}
         <span class="prop">serverUrl</span>={callState.serverUrl}
         <span class="prop">onDisconnected</span>={() =&gt; setCallState(<span class="kw">null</span>)}
+        <span class="prop">video</span>
+        <span class="prop">audio</span>
+        <span class="prop">data-lk-theme</span>=<span class="str">"default"</span>
       &gt;
         &lt;<span class="ty">VideoConference</span> /&gt;
       &lt;/<span class="ty">LiveKitRoom</span>&gt;
     );
   }
 
+  <span class="cm">// Calls need your video key, so CallButton gets its own provider.</span>
   <span class="kw">return</span> (
-    &lt;<span class="ty">CallButton</span>
-      <span class="prop">room</span>=<span class="str">"standup-room"</span>
-      <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
-      <span class="prop">name</span>=<span class="str">"Alice"</span>
-      <span class="prop">label</span>=<span class="str">"Join Call"</span>
-      <span class="prop">livekitServerUrl</span>=<span class="str">"wss://your-call-server.example.com"</span>
-      <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
-        setCallState({ token, serverUrl, room });
-      }}
-    /&gt;
+    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_VIDEO_KEY}&gt;
+      &lt;<span class="ty">CallButton</span>
+        <span class="prop">room</span>=<span class="str">"standup-room"</span>
+        <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
+        <span class="prop">name</span>=<span class="str">"Alice"</span>
+        <span class="prop">label</span>=<span class="str">"Join Call"</span>
+        <span class="prop">livekitServerUrl</span>={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+        <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
+          setCallState({ token, serverUrl, room });
+        }}
+      /&gt;
+    &lt;/<span class="ty">WibeChatProvider</span>&gt;
   );
 }</code></pre>
 </div>
@@ -1950,7 +1985,9 @@ token = client.<span class="fn">get_token</span>(
 <div class="tab-content" data-platform="javascript" data-group="call-join">
 <div class="code-block">
 <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">client</span>.calls.<span class="fn">createToken</span>({
+<pre><code><span class="kw">const</span> <span class="var">callClient</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_video_xxxxxxxxxxxx'</span> });
+
+<span class="kw">const</span> <span class="var">token</span> = <span class="kw">await</span> <span class="var">callClient</span>.calls.<span class="fn">createToken</span>({
   <span class="prop">room</span>: <span class="str">'standup-room'</span>,
   <span class="prop">identity</span>: <span class="str">'alice@example.com'</span>,
   <span class="prop">name</span>: <span class="str">'Alice'</span>,
@@ -2021,7 +2058,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Generate a call token</span>
 curl -X POST \
-  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Authorization: Bearer wb_video_xxxxxxxxxxxx"</span> \
   -H <span class="str">"Content-Type: application/json"</span> \
   -d <span class="str">'{"room":"standup-room","identity":"alice@example.com","name":"Alice","ttl":3600}'</span> \
   https://api.chat.zartek.in/api/gateway/calls/token/</code></pre>
@@ -2029,7 +2066,7 @@ curl -X POST \
 </div>
 
 <h3 class="section-subtitle">useCallToken Hook</h3>
-<p>For more control, use the <code>useCallToken</code> hook to generate tokens programmatically.</p>
+<p>For more control, use the <code>useCallToken</code> hook to generate tokens programmatically. Like <code>CallButton</code>, it must be inside a <code>WibeChatProvider</code> that holds your video or audio key.</p>
 
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
@@ -2051,7 +2088,7 @@ curl -X POST \
 
   <span class="kw">if</span> (token) {
     <span class="kw">return</span> (
-      &lt;<span class="ty">LiveKitRoom</span> <span class="prop">token</span>={token} <span class="prop">serverUrl</span>=<span class="str">"wss://your-call-server.example.com"</span>&gt;
+      &lt;<span class="ty">LiveKitRoom</span> <span class="prop">token</span>={token} <span class="prop">serverUrl</span>=<span class="str">"wss://call.wibechat.com"</span>&gt;
         &lt;<span class="ty">VideoConference</span> /&gt;
       &lt;/<span class="ty">LiveKitRoom</span>&gt;
     );
@@ -2062,14 +2099,14 @@ curl -X POST \
 </div>
 
 <h3 class="section-subtitle">Room Management</h3>
-<p>Create and list call rooms using the core client.</p>
+<p>Create and list call rooms using the core client. Use it inside a <code>WibeChatProvider</code> that holds your video or audio key.</p>
 
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">components/RoomManager.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { <span class="fn">useChat</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">RoomManager</span>() {
-  <span class="kw">const</span> client = <span class="fn">useChat</span>();  <span class="cm">// returns WibeChatClient</span>
+  <span class="kw">const</span> client = <span class="fn">useChat</span>();  <span class="cm">// the provider's client: must hold a call key</span>
 
   <span class="kw">const</span> <span class="fn">createRoom</span> = <span class="kw">async</span> () =&gt; {
     <span class="kw">const</span> room = <span class="kw">await</span> client.calls.<span class="fn">createRoom</span>({
@@ -2227,7 +2264,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Authentication</span>
-    <p>All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer wb_chat_xxxxxxxxxxxx</code></p>
+    <p>All API requests require an <code>Authorization</code> header: <code>Authorization: Bearer wb_chat_xxxxxxxxxxxx</code>. Chat and event endpoints take your <code>wb_chat_</code> key; calling endpoints take your <code>wb_audio_</code> or <code>wb_video_</code> key.</p>
   </div>
 </div>
 
@@ -2235,7 +2272,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
   <div class="callout-body">
     <span class="callout-title">Error Responses</span>
-    <p>All endpoints return errors in the format: <code>{"error": "message", "status": 400}</code>. Common status codes: <code>400</code> Bad Request, <code>401</code> Unauthorized, <code>403</code> Forbidden, <code>404</code> Not Found, <code>429</code> Rate Limited.</p>
+    <p>Errors come back as JSON. Authentication and permission errors use <code>{"detail": "message"}</code>; validation errors list the problem per field, for example <code>{"content": ["This field is required."]}</code>; errors from the chat or calling servers use <code>{"error": "message"}</code>. Common status codes: <code>400</code> Bad Request, <code>401</code> invalid or missing key, <code>403</code> key is for another service or the service is disabled, <code>404</code> Not Found, <code>429</code> Rate Limited, <code>503</code> calling not configured for your organization.</p>
   </div>
 </div>
 
@@ -2351,12 +2388,12 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   https://api.chat.zartek.in/api/gateway/chat/channels/</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 201</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"channel"</span>: {
-    <span class="prop">"stream_id"</span>: <span class="num">5</span>,
     <span class="prop">"name"</span>: <span class="str">"engineering"</span>,
-    <span class="prop">"description"</span>: <span class="str">"Engineering team discussions"</span>
+    <span class="prop">"description"</span>: <span class="str">"Engineering team discussions"</span>,
+    <span class="prop">"is_private"</span>: <span class="kw">false</span>
   }
 }</code></pre>
     </div>
@@ -2453,7 +2490,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   https://api.chat.zartek.in/api/gateway/chat/messages/</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 201</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{ <span class="prop">"id"</span>: <span class="num">12346</span> }</code></pre>
     </div>
     </div>
@@ -2551,7 +2588,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   https://api.chat.zartek.in/api/gateway/chat/files/</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 201</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{ <span class="prop">"uri"</span>: <span class="str">"/user_uploads/1/abc123/report.pdf"</span> }</code></pre>
     </div>
     </div>
@@ -2594,7 +2631,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="code-block standalone">
     <div class="code-header"><span class="code-lang">Example Request</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>curl -X POST \
-  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Authorization: Bearer wb_video_xxxxxxxxxxxx"</span> \
   -H <span class="str">"Content-Type: application/json"</span> \
   -d <span class="str">'{"room":"standup-room","identity":"alice@example.com","name":"Alice","ttl":3600}'</span> \
   https://api.chat.zartek.in/api/gateway/calls/token/</code></pre>
@@ -2619,7 +2656,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <p>Returns all currently active call rooms in your organization.</p>
     <div class="code-block standalone">
     <div class="code-header"><span class="code-lang">Example Request</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code>curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+<pre><code>curl -H <span class="str">"Authorization: Bearer wb_video_xxxxxxxxxxxx"</span> \
   https://api.chat.zartek.in/api/gateway/calls/rooms/</code></pre>
     </div>
     <div class="code-block standalone">
@@ -2670,13 +2707,13 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <div class="code-block standalone">
     <div class="code-header"><span class="code-lang">Example Request</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>curl -X POST \
-  -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Authorization: Bearer wb_video_xxxxxxxxxxxx"</span> \
   -H <span class="str">"Content-Type: application/json"</span> \
   -d <span class="str">'{"name":"standup-room","max_participants":10,"empty_timeout":300}'</span> \
   https://api.chat.zartek.in/api/gateway/calls/rooms/</code></pre>
     </div>
     <div class="code-block standalone">
-    <div class="code-header"><span class="code-lang">Response 200</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+    <div class="code-header"><span class="code-lang">Response 201</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>{
   <span class="prop">"room"</span>: {
     <span class="prop">"name"</span>: <span class="str">"standup-room"</span>,
@@ -3233,7 +3270,9 @@ queue = chat.<span class="fn">register_event_queue</span>(
 <table>
   <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>NEXT_PUBLIC_WIBECHAT_API_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your organization API key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_CHAT_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your chat key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_VIDEO_KEY</code></td><td><span class="badge-optional">Optional</span></td><td>Your video key (<code>wb_video_</code> prefix), for calling</td></tr>
+    <tr><td><code>NEXT_PUBLIC_LIVEKIT_URL</code></td><td><span class="badge-optional">Optional</span></td><td>The WibeChat LiveKit server, <code>wss://call.wibechat.com</code>, for calling. Call tokens do not include it.</td></tr>
   </tbody>
 </table>
 </div>
@@ -3310,7 +3349,7 @@ queue = chat.<span class="fn">register_event_queue</span>(
 </div>
 
 <h3 class="section-subtitle">LiveKit Setup</h3>
-<p>For calling features, install the LiveKit React components alongside the WibeChat SDK.</p>
+<p>For calling features, install the LiveKit React components alongside the WibeChat SDK. Connect them to the WibeChat LiveKit server at <code>wss://call.wibechat.com</code>; call tokens do not include this URL, so pass it yourself as <code>serverUrl</code> (or <code>livekitServerUrl</code> on <code>CallButton</code>).</p>
 
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
@@ -3896,7 +3935,7 @@ const PG_ENDPOINTS = [
     { name: "to", value: "general", type: "text" },
     { name: "content", value: "Hello from the playground!", type: "text" },
     { name: "topic", value: "greetings", type: "text" },
-  ], response: (p) => ({ result: "success", id: 200 + Math.floor(Math.random()*800), msg: "" }), status: 200 },
+  ], response: (p) => ({ result: "success", id: 200 + Math.floor(Math.random()*800), msg: "" }), status: 201 },
   { cat: "chat", method: "GET", path: "/chat/messages/", desc: "Get messages", params: [
     { name: "channel", value: "general", type: "text" },
     { name: "num_before", value: "50", type: "text" },
@@ -3905,7 +3944,7 @@ const PG_ENDPOINTS = [
   { cat: "chat", method: "GET", path: "/chat/presence/", desc: "Get presence", params: [], response: () => ({ result: "success", presences: MOCK_DATA.presence }), status: 200 },
   { cat: "chat", method: "POST", path: "/chat/files/", desc: "Upload file", params: [
     { name: "filename", value: "report.pdf", type: "text" },
-  ], response: (p) => ({ result: "success", uri: "/user_uploads/1/ab/" + (p.filename || "file.pdf"), url: "https://chat.example.com/user_uploads/1/ab/" + (p.filename || "file.pdf") }), status: 200 },
+  ], response: (p) => ({ result: "success", uri: "/user_uploads/1/ab/" + (p.filename || "file.pdf"), url: "https://chat.example.com/user_uploads/1/ab/" + (p.filename || "file.pdf") }), status: 201 },
   { cat: "calling", method: "POST", path: "/calls/token/", desc: "Generate token", params: [
     { name: "room", value: "standup-room", type: "text" },
     { name: "identity", value: "alice@example.com", type: "text" },
@@ -3965,13 +4004,15 @@ function pgSelectEndpoint(idx) {
 }
 
 const PG_API_KEY = 'wb_chat_xxxxxxxxxxxx';
+const PG_CALL_API_KEY = 'wb_video_xxxxxxxxxxxx';
 const PG_BASE_URL = 'https://api.chat.zartek.in/api/gateway';
 
 // Builds the cURL command for an endpoint as [text, isString] parts, in the same
 // layout as the Example Request blocks in the API Reference.
 function pgBuildCurl(ep, params) {
   const str = s => [s, true];
-  const auth = ['-H ', str(`"Authorization: Bearer ${PG_API_KEY}"`), ' \\\n  '];
+  const key = ep.cat === 'calling' ? PG_CALL_API_KEY : PG_API_KEY;
+  const auth = ['-H ', str(`"Authorization: Bearer ${key}"`), ' \\\n  '];
   const url = PG_BASE_URL + ep.path;
   const filled = ep.params.filter(p => (params[p.name] ?? '') !== '');
 
