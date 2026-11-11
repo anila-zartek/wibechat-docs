@@ -300,6 +300,20 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 .search-modal-input{flex:1;border:none;background:transparent;font-size:16px;color:var(--text);outline:none;font-family:inherit}
 .search-modal-input::placeholder{color:var(--text-muted)}
 .search-empty{padding:32px;text-align:center;color:var(--text-muted);font-size:14px}
+.search-results{max-height:min(60vh,460px);overflow-y:auto;padding:8px}
+.search-group-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;padding:10px 12px 6px}
+.search-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--text)}
+.search-item.active{background:var(--primary-light)}
+.search-item-icon{flex-shrink:0;width:40px;height:28px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-muted);background:var(--bg-subtle)}
+.search-item-icon.get{color:#16A34A}.search-item-icon.post{color:#2563EB}.search-item-icon.put,.search-item-icon.patch{color:#D97706}.search-item-icon.delete{color:#DC2626}
+.search-item-text{min-width:0;flex:1}
+.search-item-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-item-title mark,.search-item-crumb mark{background:transparent;color:var(--primary);font-weight:700}
+.search-item-crumb{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-item-arrow{color:var(--text-muted);opacity:0}
+.search-item.active .search-item-arrow{opacity:1}
+.search-footer{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)}
+.search-footer kbd{font-family:inherit;font-size:11px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;padding:0 5px;margin-right:4px}
 .search-esc{font-size:11px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:4px;padding:2px 6px;color:var(--text-muted);cursor:pointer}
 
 /* ---- PLAYGROUND ---- */
@@ -418,7 +432,8 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
       <input class="search-modal-input" id="searchModalInput" placeholder="Search documentation..." autocomplete="off">
       <span class="search-esc" onclick="closeSearch()">Esc</span>
     </div>
-    <div class="search-empty">Start typing to search documentation...</div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-footer"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> open</span><span><kbd>esc</kbd> close</span></div>
   </div>
 </div>
 
@@ -3387,13 +3402,144 @@ applyTheme(localStorage.getItem('wb-docs-theme') === 'dark');
 // ============================================================
 // SEARCH
 // ============================================================
+let searchIndex = null;
+let searchMatches = [];
+let searchActive = 0;
+
+const SEARCH_SUGGESTED = ['quickstart', 'authentication', 'chat', 'calling', 'api-reference', 'playground'];
+
+function buildSearchIndex() {
+  const index = [];
+  const platformName = id => (PLATFORMS.find(p => p.id === id) || {}).name || id;
+  document.querySelectorAll('section[id]').forEach(section => {
+    const h2 = section.querySelector('h2.section-title');
+    const sectionTitle = h2 ? h2.textContent.trim() : section.id;
+    index.push({ type: 'page', title: sectionTitle, crumb: 'Docs', el: section, sectionId: section.id });
+    section.querySelectorAll('h3.section-subtitle').forEach(h3 => {
+      index.push({ type: 'heading', title: h3.textContent.trim(), crumb: sectionTitle, el: h3 });
+    });
+    section.querySelectorAll('.endpoint').forEach(ep => {
+      const method = ep.querySelector('.endpoint-method')?.textContent.trim() || '';
+      const path = ep.querySelector('.endpoint-path')?.textContent.trim() || '';
+      const desc = ep.querySelector('.endpoint-desc')?.textContent.trim() || '';
+      index.push({ type: 'endpoint', method, title: desc || path, crumb: `${method} ${path}`, extra: path, el: ep });
+    });
+    section.querySelectorAll('.tab-content .step h4').forEach(h4 => {
+      const tab = h4.closest('.tab-content');
+      const platform = tab?.dataset.platform;
+      index.push({ type: 'step', title: h4.textContent.trim(), crumb: `${sectionTitle} · ${platformName(platform)}`, el: h4, platform });
+    });
+  });
+  return index;
+}
+
+function scoreEntry(entry, terms) {
+  const title = entry.title.toLowerCase();
+  const hay = `${title} ${entry.crumb} ${entry.extra || ''}`.toLowerCase();
+  let score = 0;
+  for (const t of terms) {
+    if (!hay.includes(t)) return 0;
+    if (title.startsWith(t)) score += 10;
+    else if (new RegExp('\\b' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).test(title)) score += 6;
+    else if (title.includes(t)) score += 4;
+    else score += 1;
+  }
+  const typeBoost = { page: 4, heading: 3, endpoint: 2, step: 1 }[entry.type] || 0;
+  if (entry.platform && entry.platform === activePlatform) score += 2;
+  return score + typeBoost;
+}
+
+function highlight(text, terms) {
+  let html = escHtml(text);
+  terms.forEach(t => {
+    const re = new RegExp('(' + escHtml(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    html = html.replace(re, '<mark>$1</mark>');
+  });
+  return html;
+}
+
+function searchIcon(entry) {
+  if (entry.type === 'endpoint') return `<span class="search-item-icon ${entry.method.toLowerCase()}">${escHtml(entry.method === 'DELETE' ? 'DEL' : entry.method)}</span>`;
+  const icons = { page: '&#9776;', heading: '#', step: '&#8250;' };
+  return `<span class="search-item-icon">${icons[entry.type] || '#'}</span>`;
+}
+
+function renderSearch() {
+  if (!searchIndex) searchIndex = buildSearchIndex();
+  const input = document.getElementById('searchModalInput');
+  const box = document.getElementById('searchResults');
+  const q = input.value.trim().toLowerCase();
+  const terms = q.split(/\s+/).filter(Boolean);
+  let label;
+  if (!terms.length) {
+    searchMatches = SEARCH_SUGGESTED.map(id => searchIndex.find(e => e.type === 'page' && e.sectionId === id)).filter(Boolean);
+    label = 'Suggested';
+  } else {
+    const seen = new Set();
+    searchMatches = searchIndex
+      .map(e => ({ e, s: scoreEntry(e, terms) }))
+      .filter(x => x.s > 0)
+      .sort((a, b) => b.s - a.s)
+      .map(x => x.e)
+      .filter(e => {
+        // Same step title exists per platform — keep only the best-ranked one
+        const key = e.type === 'step' ? e.title + e.crumb.split(' · ')[0] : e.el;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 12);
+    label = 'Results';
+  }
+  searchActive = 0;
+  if (!searchMatches.length) {
+    box.innerHTML = `<div class="search-empty">No results for &ldquo;${escHtml(input.value.trim())}&rdquo;</div>`;
+    return;
+  }
+  box.innerHTML = `<div class="search-group-label">${label}</div>` + searchMatches.map((e, i) =>
+    `<div class="search-item${i === 0 ? ' active' : ''}" data-idx="${i}" onmousemove="setSearchActive(${i})" onclick="openSearchResult(${i})">` +
+    searchIcon(e) +
+    `<div class="search-item-text"><div class="search-item-title">${highlight(e.title, terms)}</div>` +
+    `<div class="search-item-crumb">${highlight(e.crumb, terms)}</div></div>` +
+    `<span class="search-item-arrow">&crarr;</span></div>`
+  ).join('');
+}
+
+function setSearchActive(i) {
+  if (i === searchActive) return;
+  searchActive = i;
+  document.querySelectorAll('#searchResults .search-item').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.idx) === i);
+  });
+  document.querySelector(`#searchResults .search-item[data-idx="${i}"]`)?.scrollIntoView({ block: 'nearest' });
+}
+
+function openSearchResult(i) {
+  const entry = searchMatches[i];
+  if (!entry) return;
+  closeSearch();
+  if (entry.platform) setGlobalPlatform(entry.platform);
+  if (entry.type === 'endpoint') entry.el.classList.add('open');
+  if (entry.sectionId) history.replaceState(null, '', '#' + entry.sectionId);
+  entry.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function openSearch() {
   document.getElementById('searchOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('searchModalInput')?.focus(), 50);
+  const input = document.getElementById('searchModalInput');
+  input.value = '';
+  renderSearch();
+  setTimeout(() => input.focus(), 50);
 }
 function closeSearch() {
   document.getElementById('searchOverlay').classList.remove('open');
 }
+document.getElementById('searchModalInput').addEventListener('input', renderSearch);
+document.getElementById('searchModalInput').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); setSearchActive(Math.min(searchActive + 1, searchMatches.length - 1)); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchActive(Math.max(searchActive - 1, 0)); }
+  else if (e.key === 'Enter') { e.preventDefault(); openSearchResult(searchActive); }
+});
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
   if (e.key === 'Escape') closeSearch();
