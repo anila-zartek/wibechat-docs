@@ -362,6 +362,20 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 .pg-status{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
 .pg-status.s200{background:rgba(34,197,94,0.15);color:#4ADE80}
 .pg-status.s201{background:rgba(59,130,246,0.15);color:#60A5FA}
+.pg-status.s4xx{background:rgba(245,158,11,0.15);color:#FBBF24}
+.pg-status.s5xx{background:rgba(239,68,68,0.15);color:#F87171}
+.pg-mode{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.pg-mode-switch{display:inline-flex;align-self:flex-start;padding:3px;border:1px solid var(--border);border-radius:100px;background:var(--bg)}
+.pg-mode-btn{border:none;background:transparent;color:var(--text-secondary);font:600 13px/1 inherit;font-family:inherit;padding:8px 16px;border-radius:100px;cursor:pointer;transition:var(--transition)}
+.pg-mode-btn.active{background:var(--grad);color:#fff}
+.pg-keys{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.pg-keys[hidden]{display:none}
+.pg-keys label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--text-secondary)}
+.pg-keys input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none}
+.pg-keys input:focus{border-color:var(--primary)}
+.pg-keys-note{grid-column:1/-1;font-size:12.5px;color:var(--text-muted);margin:0}
+.pg-param-row input[type=file]{font-family:inherit;font-size:12px;padding:5px}
+@media (max-width:640px){.pg-keys{grid-template-columns:1fr}}
 .pg-response-time{font-size:12px;color:var(--code-muted);font-family:'JetBrains Mono',monospace}
 .pg-response-body{flex:1;overflow:auto;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:var(--code-text);white-space:pre-wrap}
 .pg-response-body::-webkit-scrollbar{width:5px}
@@ -3384,13 +3398,24 @@ queue = chat.<span class="fn">register_event_queue</span>(
   <span>Interactive Playground</span>
 </div>
 <h2 class="section-title">Interactive Playground</h2>
-<p class="section-desc">Try the WibeChat API without writing any code. All responses are simulated — no backend connection needed.</p>
+<p class="section-desc">Try the WibeChat API without writing any code. Use simulated responses with no setup, or switch to Live API to call the real API with your own keys.</p>
 
 <div class="playground-container">
   <!-- API Explorer -->
   <div class="playground-header">
     <h3>API Explorer</h3>
-    <p>Select an endpoint, edit parameters, and send a simulated request. The example request updates as you type and can be copied to run against the real API.</p>
+    <p>Select an endpoint, edit parameters, and send a request. The example request updates as you type and can be copied to run in a terminal.</p>
+    <div class="pg-mode">
+      <div class="pg-mode-switch" role="group" aria-label="Request mode">
+        <button class="pg-mode-btn active" data-mode="mock" onclick="pgSetMode('mock')">Simulated</button>
+        <button class="pg-mode-btn" data-mode="live" onclick="pgSetMode('live')">Live API</button>
+      </div>
+      <div class="pg-keys" id="pgKeys" hidden>
+        <label>Chat key<input type="password" id="pgLiveChatKey" placeholder="wb_chat_…" autocomplete="off" spellcheck="false"></label>
+        <label>Call key<input type="password" id="pgLiveCallKey" placeholder="wb_video_… or wb_audio_…" autocomplete="off" spellcheck="false"></label>
+        <p class="pg-keys-note">Live requests go straight from your browser to the WibeChat API and act on your real organization: messages are really sent and rooms really created. Your keys stay in this tab and are never stored.</p>
+      </div>
+    </div>
   </div>
   <div class="api-explorer">
     <div class="api-explorer-left">
@@ -3898,65 +3923,80 @@ navLinks.forEach(link => {
 // ============================================================
 // PLAYGROUND — MOCK DATA
 // ============================================================
+// Simulated responses mirror the real gateway responses (shape, fields and status codes).
 const MOCK_DATA = {
   channels: [
-    { stream_id: 1, name: "general", description: "General discussion", invite_only: false, subscribers: [1,2,3,4] },
-    { stream_id: 2, name: "engineering", description: "Engineering team", invite_only: false, subscribers: [1,2] },
-    { stream_id: 3, name: "design", description: "Design discussions", invite_only: false, subscribers: [1,3] },
-    { stream_id: 4, name: "random", description: "Water cooler chat", invite_only: false, subscribers: [1,2,3,4] },
+    { stream_id: 1, name: "general", description: "General discussion", invite_only: false, is_web_public: false, date_created: 1718450000 },
+    { stream_id: 2, name: "engineering", description: "Engineering team", invite_only: false, is_web_public: false, date_created: 1718450100 },
+    { stream_id: 3, name: "design", description: "Design discussions", invite_only: true, is_web_public: false, date_created: 1718450200 },
   ],
   users: [
-    { user_id: 1, email: "alice@demo.com", full_name: "Alice Chen", is_active: true, status: "online" },
-    { user_id: 2, email: "bob@demo.com", full_name: "Bob Smith", is_active: true, status: "idle" },
-    { user_id: 3, email: "charlie@demo.com", full_name: "Charlie Davis", is_active: false, status: "offline" },
-    { user_id: 4, email: "you@demo.com", full_name: "You", is_active: true, status: "online" },
+    { user_id: 1, email: "alice@example.com", full_name: "Alice", is_active: true, is_bot: false, role: 400, timezone: "Asia/Kolkata", avatar_url: "https://example.com/avatars/alice.png" },
+    { user_id: 2, email: "bob@example.com", full_name: "Bob", is_active: true, is_bot: false, role: 400, timezone: "Europe/London", avatar_url: "https://example.com/avatars/bob.png" },
+    { user_id: 3, email: "charlie@example.com", full_name: "Charlie", is_active: false, is_bot: false, role: 400, timezone: "", avatar_url: null },
   ],
   messages: [
-    { id: 101, sender_full_name: "Alice Chen", sender_id: 1, content: "Hey team! Ready for standup?", timestamp: 1718456400, stream_id: 1, subject: "daily" },
-    { id: 102, sender_full_name: "Bob Smith", sender_id: 2, content: "Sure, let me grab coffee first ☕", timestamp: 1718456460, stream_id: 1, subject: "daily" },
-    { id: 103, sender_full_name: "Alice Chen", sender_id: 1, content: "Take your time!", timestamp: 1718456520, stream_id: 1, subject: "daily" },
-    { id: 104, sender_full_name: "Charlie Davis", sender_id: 3, content: "I'll join in 5 min", timestamp: 1718456580, stream_id: 1, subject: "daily" },
+    { id: 101, type: "stream", display_recipient: "general", subject: "daily", sender_id: 1, sender_full_name: "Alice", sender_email: "alice@example.com", content: "<p>Hey team! Ready for standup?</p>", timestamp: 1718456400 },
+    { id: 102, type: "stream", display_recipient: "general", subject: "daily", sender_id: 2, sender_full_name: "Bob", sender_email: "bob@example.com", content: "<p>Sure, let me grab coffee first ☕</p>", timestamp: 1718456460 },
+    { id: 103, type: "stream", display_recipient: "general", subject: "daily", sender_id: 1, sender_full_name: "Alice", sender_email: "alice@example.com", content: "<p>Take your time!</p>", timestamp: 1718456520 },
   ],
   rooms: [
-    { name: "standup-room", sid: "RM_abc123def456", num_participants: 3, creation_time: 1718456400, max_participants: 10 },
-    { name: "interview-room", sid: "RM_def456ghi789", num_participants: 0, creation_time: 1718460000, max_participants: 5 },
+    { name: "standup-room", sid: "RM_abc123def456", num_participants: 3, creation_time: 1718456400, metadata: "" },
+    { name: "interview-room", sid: "RM_def456ghi789", num_participants: 0, creation_time: 1718460000, metadata: "" },
   ],
-  presence: {
-    "alice@demo.com": { status: "active", timestamp: 1718456520 },
-    "bob@demo.com": { status: "idle", timestamp: 1718456200 },
-    "charlie@demo.com": { status: "offline", timestamp: 1718450000 },
-    "you@demo.com": { status: "active", timestamp: 1718456580 },
+  presences: {
+    "alice@example.com": { aggregated: { client: "website", status: "active", timestamp: 1718456520 }, website: { client: "website", status: "active", timestamp: 1718456520, pushable: false } },
+    "bob@example.com": { aggregated: { client: "website", status: "idle", timestamp: 1718456200 }, website: { client: "website", status: "idle", timestamp: 1718456200, pushable: false } },
   },
 };
 
+const pgRandomId = (prefix, n) => prefix + Math.random().toString(36).slice(2, 2 + n);
+const pgFakeJwt = () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaW11bGF0ZWQifQ." + pgRandomId("", 16);
+
 const PG_ENDPOINTS = [
-  { cat: "chat", method: "GET", path: "/chat/channels/", desc: "List channels", params: [], response: () => ({ result: "success", streams: MOCK_DATA.channels }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/channels/", desc: "List channels", params: [],
+    response: () => ({ channels: MOCK_DATA.channels }), status: 200 },
   { cat: "chat", method: "POST", path: "/chat/messages/", desc: "Send a message", params: [
     { name: "to", value: "general", type: "text" },
     { name: "content", value: "Hello from the playground!", type: "text" },
     { name: "topic", value: "greetings", type: "text" },
-  ], response: (p) => ({ result: "success", id: 200 + Math.floor(Math.random()*800), msg: "" }), status: 201 },
+  ], response: () => ({ id: 1000 + Math.floor(Math.random() * 9000) }), status: 201 },
   { cat: "chat", method: "GET", path: "/chat/messages/", desc: "Get messages", params: [
     { name: "channel", value: "general", type: "text" },
     { name: "num_before", value: "50", type: "text" },
-  ], response: () => ({ result: "success", messages: MOCK_DATA.messages }), status: 200 },
-  { cat: "chat", method: "GET", path: "/chat/users/", desc: "List users", params: [], response: () => ({ result: "success", members: MOCK_DATA.users }), status: 200 },
-  { cat: "chat", method: "GET", path: "/chat/presence/", desc: "Get presence", params: [], response: () => ({ result: "success", presences: MOCK_DATA.presence }), status: 200 },
+  ], response: (p) => ({ messages: MOCK_DATA.messages.map(m => ({ ...m, display_recipient: p.channel || m.display_recipient })) }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/users/", desc: "List users", params: [],
+    response: () => ({ users: MOCK_DATA.users }), status: 200 },
+  { cat: "chat", method: "GET", path: "/chat/presence/", desc: "Get presence", params: [],
+    response: () => ({ presences: MOCK_DATA.presences }), status: 200 },
   { cat: "chat", method: "POST", path: "/chat/files/", desc: "Upload file", params: [
-    { name: "filename", value: "report.pdf", type: "text" },
-  ], response: (p) => ({ result: "success", uri: "/user_uploads/1/ab/" + (p.filename || "file.pdf"), url: "https://chat.example.com/user_uploads/1/ab/" + (p.filename || "file.pdf") }), status: 201 },
+    { name: "file", value: "report.pdf", type: "file" },
+  ], response: (p) => ({ uri: "/user_uploads/1/ab/" + pgRandomId("", 8) + "/" + (p.file || "report.pdf") }), status: 201 },
   { cat: "calling", method: "POST", path: "/calls/token/", desc: "Generate token", params: [
     { name: "room", value: "standup-room", type: "text" },
     { name: "identity", value: "alice@example.com", type: "text" },
     { name: "name", value: "Alice", type: "text" },
     { name: "ttl", value: "3600", type: "text", num: true },
-  ], response: (p) => ({ access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBUEl" + btoa(Math.random().toString()).slice(0,20) + "...", token_type: "Bearer", room: p.room || "standup-room", identity: p.identity || "alice@example.com", name: p.name || "Alice", expires_in: parseInt(p.ttl) || 3600 }), status: 201 },
-  { cat: "calling", method: "GET", path: "/calls/rooms/", desc: "List rooms", params: [], response: () => ({ rooms: MOCK_DATA.rooms }), status: 200 },
+  ], response: () => ({ token: pgFakeJwt() }), status: 200 },
+  { cat: "calling", method: "GET", path: "/calls/rooms/", desc: "List rooms", params: [],
+    response: () => ({ rooms: MOCK_DATA.rooms }), status: 200 },
   { cat: "calling", method: "POST", path: "/calls/rooms/", desc: "Create room", params: [
     { name: "name", value: "meeting-room", type: "text" },
     { name: "max_participants", value: "10", type: "text", num: true },
-  ], response: (p) => ({ name: p.name || "meeting-room", sid: "RM_" + Math.random().toString(36).slice(2,14), num_participants: 0, creation_time: Math.floor(Date.now()/1000), max_participants: parseInt(p.max_participants) || 10 }), status: 201 },
+    { name: "empty_timeout", value: "300", type: "text", num: true },
+  ], response: (p) => ({ room: { name: p.name || "meeting-room", sid: pgRandomId("RM_", 12),
+    empty_timeout: parseInt(p.empty_timeout) || 300, max_participants: parseInt(p.max_participants) || 0 } }), status: 201 },
 ];
+
+let pgMode = "mock";
+
+function pgSetMode(mode) {
+  pgMode = mode;
+  document.querySelectorAll('.pg-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  const keys = document.getElementById('pgKeys');
+  if (keys) keys.hidden = mode !== 'live';
+  pgSelectEndpoint(pgSelectedIdx);
+}
 
 let pgCurrentCat = "chat";
 let pgSelectedIdx = 0;
@@ -3996,9 +4036,12 @@ function pgSelectEndpoint(idx) {
   if (ep.params.length === 0) {
     fields.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:4px 0">No parameters required</div>';
   } else {
-    fields.innerHTML = ep.params.map(p =>
-      `<div class="pg-param-row"><label>${p.name}</label><input type="${p.type}" value="${p.value}" data-param="${p.name}" oninput="pgRenderRequest()"></div>`
-    ).join('');
+    fields.innerHTML = ep.params.map(p => {
+      const input = p.type === 'file' && pgMode === 'live'
+        ? `<input type="file" data-param="${p.name}" onchange="pgRenderRequest()">`
+        : `<input type="text" value="${p.value}" data-param="${p.name}" oninput="pgRenderRequest()">`;
+      return `<div class="pg-param-row"><label>${p.name}</label>${input}</div>`;
+    }).join('');
   }
   pgRenderRequest();
 }
@@ -4021,7 +4064,7 @@ function pgBuildCurl(ep, params) {
     return ['curl ', ...auth, query ? str(`"${url}?${query}"`) : url];
   }
   if (ep.path === '/chat/files/') {
-    return ['curl -X POST \\\n  ', ...auth, '-F ', str(`"file=@${params.filename || 'report.pdf'}"`), ' \\\n  ', url];
+    return ['curl -X POST \\\n  ', ...auth, '-F ', str(`"file=@${params.file || 'report.pdf'}"`), ' \\\n  ', url];
   }
   const body = {};
   filled.forEach(p => {
@@ -4033,14 +4076,25 @@ function pgBuildCurl(ep, params) {
     '-d ', str(`'${json}'`), ' \\\n  ', url];
 }
 
+function pgCollectParams() {
+  const params = {};
+  const files = {};
+  document.querySelectorAll('#pgParamFields input').forEach(inp => {
+    if (inp.type === 'file') {
+      files[inp.dataset.param] = inp.files[0] || null;
+      params[inp.dataset.param] = inp.files[0] ? inp.files[0].name : '';
+    } else {
+      params[inp.dataset.param] = inp.value;
+    }
+  });
+  return { params, files };
+}
+
 function pgRenderRequest() {
   const el = document.getElementById('pgRequestBody');
   const ep = pgGetFiltered()[pgSelectedIdx];
   if (!el || !ep) return;
-  const params = {};
-  document.querySelectorAll('#pgParamFields input').forEach(inp => {
-    params[inp.dataset.param] = inp.value;
-  });
+  const { params } = pgCollectParams();
   el.textContent = '';
   pgBuildCurl(ep, params).forEach(part => {
     if (Array.isArray(part)) {
@@ -4054,46 +4108,88 @@ function pgRenderRequest() {
   });
 }
 
-function pgSendRequest() {
+const PG_STATUS_TEXT = { 0: 'Network error', 200: 'OK', 201: 'Created', 400: 'Bad Request', 401: 'Unauthorized',
+  403: 'Forbidden', 404: 'Not Found', 413: 'Too Large', 429: 'Too Many Requests', 500: 'Server Error', 502: 'Bad Gateway', 503: 'Unavailable' };
+
+function pgSimulate(ep, params) {
+  const latency = 120 + Math.floor(Math.random() * 180);
+  return new Promise(resolve => setTimeout(() => resolve({ status: ep.status, body: ep.response(params) }), latency));
+}
+
+// Build the same request the Example Request shows, and send it to the real API.
+function pgBodyFor(ep, params) {
+  const body = {};
+  ep.params.filter(p => (params[p.name] ?? '') !== '').forEach(p => {
+    const v = params[p.name];
+    body[p.name] = p.num && /^\d+$/.test(v) ? Number(v) : v;
+  });
+  return body;
+}
+
+async function pgSendLive(ep, params, files) {
+  const keyInput = document.getElementById(ep.cat === 'calling' ? 'pgLiveCallKey' : 'pgLiveChatKey');
+  const key = keyInput ? keyInput.value.trim() : '';
+  if (!key) {
+    keyInput?.focus();
+    return { status: 0, label: 'Not sent', body: { error: `Enter your ${ep.cat === 'calling' ? 'call (wb_video_ or wb_audio_)' : 'chat (wb_chat_)'} key above.` } };
+  }
+  let url = PG_BASE_URL + ep.path;
+  const init = { method: ep.method, headers: { Authorization: `Bearer ${key}` } };
+  if (ep.method === 'GET') {
+    const query = new URLSearchParams(pgBodyFor(ep, params)).toString();
+    if (query) url += '?' + query;
+  } else if (ep.path === '/chat/files/') {
+    if (!files.file) return { status: 0, label: 'Not sent', body: { error: 'Choose a file to upload.' } };
+    const form = new FormData();
+    form.append('file', files.file);
+    init.body = form;
+  } else {
+    init.headers['Content-Type'] = 'application/json';
+    init.body = JSON.stringify(pgBodyFor(ep, params));
+  }
+  try {
+    const res = await fetch(url, init);
+    const text = await res.text();
+    let body;
+    try { body = JSON.parse(text); } catch { body = text; }
+    return { status: res.status, body };
+  } catch (e) {
+    return { status: 0, body: { error: 'Could not reach the WibeChat API: ' + e.message } };
+  }
+}
+
+async function pgSendRequest() {
   const btn = document.getElementById('pgSendBtn');
   const body = document.getElementById('pgResponseBody');
   const bar = document.getElementById('pgResponseBar');
   const badge = document.getElementById('pgStatusBadge');
   const timeEl = document.getElementById('pgResponseTime');
-  if (!btn || !body) return;
+  const ep = pgGetFiltered()[pgSelectedIdx];
+  if (!btn || !body || !ep) return;
 
   btn.disabled = true;
   btn.innerHTML = '<span class="pg-spinner"></span> Sending...';
   body.innerHTML = '';
   if (bar) bar.style.display = 'none';
 
-  const endpoints = pgGetFiltered();
-  const ep = endpoints[pgSelectedIdx];
-  if (!ep) return;
+  const { params, files } = pgCollectParams();
+  const started = performance.now();
+  const result = pgMode === 'live' ? await pgSendLive(ep, params, files) : await pgSimulate(ep, params);
+  const elapsed = Math.round(performance.now() - started);
 
-  const params = {};
-  document.querySelectorAll('#pgParamFields input').forEach(inp => {
-    params[inp.dataset.param] = inp.value;
-  });
+  if (bar) bar.style.display = 'flex';
+  if (badge) {
+    const s = result.status;
+    badge.textContent = result.label || (s ? `${s} ${PG_STATUS_TEXT[s] || ''}`.trim() : PG_STATUS_TEXT[0]);
+    badge.className = 'pg-status ' + (s === 201 ? 's201' : s >= 200 && s < 300 ? 's200' : result.label || (s >= 400 && s < 500) ? 's4xx' : 's5xx');
+  }
+  if (timeEl) timeEl.textContent = `${elapsed}ms · ${pgMode === 'live' ? 'live' : 'simulated'}`;
+  body.innerHTML = typeof result.body === 'string'
+    ? result.body.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    : pgHighlightJson(JSON.stringify(result.body, null, 2));
 
-  const latency = 120 + Math.floor(Math.random() * 180);
-
-  setTimeout(() => {
-    const result = ep.response(params);
-    const json = JSON.stringify(result, null, 2);
-    const highlighted = pgHighlightJson(json);
-
-    if (bar) bar.style.display = 'flex';
-    if (badge) {
-      badge.textContent = ep.status === 201 ? '201 Created' : '200 OK';
-      badge.className = 'pg-status ' + (ep.status === 201 ? 's201' : 's200');
-    }
-    if (timeEl) timeEl.textContent = latency + 'ms';
-    body.innerHTML = highlighted;
-
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Send Request';
-  }, latency);
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Send Request';
 }
 
 function pgHighlightJson(json) {
