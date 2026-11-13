@@ -20,7 +20,7 @@
   --java:#E76F00;--ruby:#CC342D;--javascript:#F7DF1E;
   --rest:#22C55E;--react-native:#61DAFB;
   --radius:10px;--radius-lg:14px;--radius-xl:18px;
-  --sidebar-w:256px;--toc-w:200px;--navbar-h:60px;
+  --sidebar-w:256px;--toc-w:200px;--navbar-h:60px;--platform-bar-h:50px;
   --shadow-sm:0 1px 2px rgba(23,17,48,0.05);
   --shadow:0 2px 4px rgba(23,17,48,0.04),0 10px 28px rgba(45,27,105,0.08);
   --shadow-lg:0 2px 4px rgba(23,17,48,0.04),0 16px 44px rgba(45,27,105,0.12);
@@ -36,7 +36,7 @@
   --shadow:0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg:0 8px 24px rgba(0,0,0,0.5);
 }
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--navbar-h) + 24px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--navbar-h) + var(--platform-bar-h) + 20px)}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Inter','Segoe UI',Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:var(--text);background:var(--bg);line-height:1.75;font-size:15px;transition:background 0.2s,color 0.2s}
 a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -85,8 +85,9 @@ code,pre{font-family:'JetBrains Mono','Fira Code',monospace}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
 /* ---- MAIN CONTENT ---- */
-.main-content{flex:1;min-width:0;transition:margin-left 0.3s}
-.main-content.with-sidebar{margin-left:var(--sidebar-w)}
+.main-content{flex:1;min-width:0}
+/* Docs area always leaves room for the sidebar, so nothing shifts when it fades in after the hero */
+@media(min-width:901px){.global-platform-bar,.content-wrap,.site-footer{margin-left:var(--sidebar-w)}}
 
 /* ---- HERO (FULL WIDTH, NO SIDEBAR) ---- */
 .hero-section{padding:80px 48px 60px;text-align:center;max-width:1100px;margin:0 auto}
@@ -145,7 +146,7 @@ code{background:var(--bg-subtle);color:var(--text);padding:2px 6px;border-radius
 .soon-badge{font-size:10px;font-weight:600;background:var(--bg-subtle);color:var(--text-muted);padding:1px 6px;border-radius:8px}
 /* ---- PLATFORM TABS ---- */
 .platform-tabs-wrapper{background:var(--bg-alt);border:1px solid var(--border);border-bottom:none;border-radius:var(--radius-lg) var(--radius-lg) 0 0;overflow:hidden}
-.platform-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;background:var(--bg-alt);border-bottom:1px solid var(--border)}
+.platform-tabs{display:flex;flex-wrap:wrap;gap:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;background:var(--bg-alt);border-bottom:1px solid var(--border)}
 .platform-tabs::-webkit-scrollbar{display:none}
 .platform-tab{flex:0 0 auto;padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:var(--transition);border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:inherit}
 .platform-tab:hover{color:var(--text-secondary);background:var(--bg)}
@@ -258,12 +259,18 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 .toc-link.toc-h3{padding-left:22px;font-size:12px}
 
 /* ---- GLOBAL PLATFORM BAR ---- */
-.global-platform-bar{position:sticky;top:var(--navbar-h);z-index:90;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;display:none;transition:background 0.2s}
+.global-platform-bar{position:sticky;top:var(--navbar-h);z-index:90;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:9px 0;visibility:hidden;opacity:0;transition:opacity 0.2s,background 0.2s}
 [data-theme="dark"] .global-platform-bar{background:rgba(23,17,48,0.95)}
-.global-platform-bar.visible{display:block}
+.global-platform-bar.visible{visibility:visible;opacity:1}
 .global-platform-bar-inner{max-width:768px;padding:0 48px;display:flex;align-items:center;gap:14px}
 .global-platform-bar-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
-.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.global-platform-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;min-width:0;scroll-behavior:smooth}
+.global-platform-pills.fade-right{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.global-platform-pills.fade-left{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%)}
+.global-platform-pills.fade-left.fade-right{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.pills-arrow{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:14px;line-height:1;font-family:inherit}
+.pills-arrow:hover{border-color:var(--primary);color:var(--primary)}
+.pills-arrow.show{display:flex}
 .global-platform-pills::-webkit-scrollbar{display:none}
 .global-platform-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:5px;font-family:inherit}
 .global-platform-pill:hover{border-color:var(--primary);color:var(--primary)}
@@ -414,7 +421,6 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
   .toc-panel{display:none}
 }
 @media(max-width:900px){
-  .main-content.with-sidebar{margin-left:0}
   .sidebar{transform:translateX(-100%);opacity:1;pointer-events:all}
   .sidebar.mobile-open{transform:translateX(0)}
   .content-wrap{padding:24px 20px 80px}
@@ -735,7 +741,9 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="global-platform-bar" id="globalPlatformBar">
   <div class="global-platform-bar-inner">
     <span class="global-platform-bar-label">Platform</span>
+    <button class="pills-arrow" id="pillsPrev" aria-label="Scroll platforms left" onclick="scrollPills(-1)">&#8249;</button>
     <div class="global-platform-pills" id="globalPills"></div>
+    <button class="pills-arrow" id="pillsNext" aria-label="Scroll platforms right" onclick="scrollPills(1)">&#8250;</button>
   </div>
 </div>
 
@@ -3714,13 +3722,58 @@ function buildGlobalPills() {
   ).join('');
 }
 
+// Switching platform changes the height of code above the viewport; keep the
+// element the reader is looking at in the same place on screen.
+function keepPosition(anchor, change) {
+  const before = anchor ? anchor.getBoundingClientRect().top : null;
+  change();
+  if (anchor && anchor.isConnected) {
+    const delta = anchor.getBoundingClientRect().top - before;
+    if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: 'instant' });
+  }
+}
+
+function firstVisibleHeading() {
+  const top = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  return [...document.querySelectorAll('#contentWrap h2, #contentWrap h3, #contentWrap .platform-tabs-wrapper')]
+    .find(el => el.getBoundingClientRect().bottom > top) || null;
+}
+
 function setGlobalPlatform(platform) {
   activePlatform = platform;
   localStorage.setItem('wb-docs-platform', platform);
   document.querySelectorAll('.global-platform-pill').forEach(pill => {
     pill.classList.toggle('active', pill.dataset.platform === platform);
   });
-  switchAllTabs(platform);
+  keepPosition(firstVisibleHeading(), () => switchAllTabs(platform));
+  revealActivePill();
+}
+
+// Scroll only the pill strip (scrollIntoView could also scroll the page).
+function revealActivePill() {
+  const pills = document.getElementById('globalPills');
+  const pill = pills && pills.querySelector('.global-platform-pill.active');
+  if (!pill) return;
+  const left = pill.offsetLeft - pills.offsetLeft;
+  if (left < pills.scrollLeft || left + pill.offsetWidth > pills.scrollLeft + pills.clientWidth) {
+    pills.scrollLeft = left - (pills.clientWidth - pill.offsetWidth) / 2;
+  }
+}
+
+function scrollPills(dir) {
+  const pills = document.getElementById('globalPills');
+  pills.scrollBy({ left: dir * pills.clientWidth * 0.7 });
+}
+
+function updatePillsOverflow() {
+  const pills = document.getElementById('globalPills');
+  if (!pills) return;
+  const left = pills.scrollLeft > 2;
+  const right = pills.scrollLeft + pills.clientWidth < pills.scrollWidth - 2;
+  pills.classList.toggle('fade-left', left);
+  pills.classList.toggle('fade-right', right);
+  document.getElementById('pillsPrev').classList.toggle('show', left);
+  document.getElementById('pillsNext').classList.toggle('show', right);
 }
 
 // ============================================================
@@ -3793,18 +3846,15 @@ function updateLayout() {
   const pastHero = isPastHero();
 
   // Show/hide sidebar
-  if (pastHero) {
-    sidebar.classList.add('visible');
-    mainContent.classList.add('with-sidebar');
-  } else {
-    sidebar.classList.remove('visible');
-    mainContent.classList.remove('with-sidebar');
-    sidebar.classList.remove('mobile-open');
-  }
+  sidebar.classList.toggle('visible', pastHero);
+  if (!pastHero) sidebar.classList.remove('mobile-open');
 
   // Global bar
   const bar = document.getElementById('globalPlatformBar');
-  if (bar) bar.classList.toggle('visible', pastHero);
+  if (bar && bar.classList.contains('visible') !== pastHero) {
+    bar.classList.toggle('visible', pastHero);
+    if (pastHero) { revealActivePill(); updatePillsOverflow(); }
+  }
 
   // Navbar scroll state
   navbar.classList.toggle('scrolled', window.scrollY > 10);
@@ -4292,6 +4342,8 @@ function initPlayground() {
 // ============================================================
 buildGlobalPills();
 switchAllTabs(activePlatform);
+document.getElementById('globalPills').addEventListener('scroll', updatePillsOverflow, { passive: true });
+window.addEventListener('resize', updatePillsOverflow);
 buildTOC();
 initPlayground();
 updateLayout();
