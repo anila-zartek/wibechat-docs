@@ -943,7 +943,7 @@ chat.<span class="fn">send_direct_message</span>(
 </div>
 <div class="step">
 <h4>Generate a call token</h4>
-<p>Calls use your video (or audio) key. The token comes with the LiveKit server URL to connect to.</p>
+<p>Calls use your call key. The token comes with the LiveKit server URL to connect to.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
@@ -1009,7 +1009,7 @@ token = client.<span class="fn">get_token</span>(
 </div>
 <div class="step">
 <h4>Generate a call token</h4>
-<p>Get a LiveKit JWT token for joining a call room. Calls need your video (or audio) key, so create a second client with it.</p>
+<p>Get a LiveKit JWT token for joining a call room. Calls need your call key, so create a second client with it.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">call.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">const</span> <span class="var">callClient</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_key_xxxxxxxxxxxx'</span> });
@@ -1039,8 +1039,8 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="tab-content" data-platform="flutter" data-group="quickstart">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-  <h4>Flutter SDK — Coming Soon</h4>
-  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+  <h4>Flutter: calling is ready, chat SDK coming soon</h4>
+  <p>For calls, follow the Flutter tab under <a href="#calling">Calling Integration</a>: your backend creates the token and the app joins with LiveKit's Flutter SDK. A Flutter chat SDK is under development; until then, use chat through your backend with the <a href="#api-reference">REST API</a>.</p>
 </div>
 </div>
 
@@ -1267,8 +1267,8 @@ client = <span class="ty">WibechatClient</span>()</code></pre>
 <div class="tab-content" data-platform="flutter" data-group="auth-token">
 <div class="coming-soon">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-  <h4>Flutter SDK — Coming Soon</h4>
-  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+  <h4>Flutter: calling is ready, chat SDK coming soon</h4>
+  <p>For calls, follow the Flutter tab under <a href="#calling">Calling Integration</a>: your backend creates the token and the app joins with LiveKit's Flutter SDK. A Flutter chat SDK is under development; until then, use chat through your backend with the <a href="#api-reference">REST API</a>.</p>
 </div>
 </div>
 
@@ -1877,7 +1877,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 
 <h3 class="section-subtitle">CallButton Component</h3>
-<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Wrap it in a <code>WibeChatProvider</code> that holds your video (or audio) key, since the chat key cannot create call tokens. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
+<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Wrap it in a <code>WibeChatProvider</code> that holds your call key, since the chat key cannot create call tokens. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
@@ -1988,11 +1988,211 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 </div>
 
 <div class="tab-content" data-platform="flutter" data-group="call-join">
-<div class="coming-soon">
-  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-  <h4>Flutter SDK — Coming Soon</h4>
-  <p>The Flutter SDK is under development. Use the <a href="#api-reference">REST API</a> directly in the meantime.</p>
+<p>A Flutter app joins WibeChat calls with LiveKit's Flutter SDK, <code>livekit_client</code>. There is no separate WibeChat package to install for calling. Your backend creates the call token (see the <b>Python</b> or <b>REST API</b> tab), and the app joins with that token and the server URL.</p>
+<div class="callout warning">
+  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+  <div class="callout-body">
+    <span class="callout-title">Keep the call key on your backend</span>
+    <p>Do not put the <code>wb_key_</code> call key inside a mobile app. Anyone who extracts it from the app can create call tokens for any room in your organization. The app asks your backend for a token; only the backend talks to WibeChat with the key.</p>
+  </div>
 </div>
+<div class="steps">
+<div class="step">
+<h4>Add a token endpoint to your backend</h4>
+<p>Your backend needs one endpoint the app can call, for example <code>POST /calls/token</code>. It checks who the logged-in user is and whether they may join the room, asks WibeChat for a token with the <code>wb_key_</code> call key, and returns <code>{"token": "...", "server_url": "wss://call.wibechat.com"}</code>. Take the user's identity from their login, never from the request body, so one user cannot join as another. Each user needs a unique identity: if the same identity joins a room twice, the first connection is dropped.</p>
+</div>
+<div class="step">
+<h4>Add the packages</h4>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">pubspec.yaml</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>dependencies:
+  livekit_client: ^2.14.0   <span class="cm"># LiveKit's Flutter SDK</span>
+  http: ^1.2.0              <span class="cm"># to call your own backend</span></code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Add the permissions</h4>
+<p>Android:</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">AndroidManifest.xml</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm">&lt;!-- android/app/src/main/AndroidManifest.xml, inside &lt;manifest&gt; --&gt;</span>
+&lt;uses-feature android:name=<span class="str">"android.hardware.camera"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.CAMERA"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.RECORD_AUDIO"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.CHANGE_NETWORK_STATE"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.MODIFY_AUDIO_SETTINGS"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.BLUETOOTH"</span> android:maxSdkVersion=<span class="str">"30"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.BLUETOOTH_CONNECT"</span> /&gt;</code></pre>
+</div>
+<p>iOS (minimum deployment target 12.1):</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">Info.plist</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm">&lt;!-- ios/Runner/Info.plist --&gt;</span>
+&lt;key&gt;NSCameraUsageDescription&lt;/key&gt;
+&lt;string&gt;$(PRODUCT_NAME) uses your camera for video calls&lt;/string&gt;
+&lt;key&gt;NSMicrophoneUsageDescription&lt;/key&gt;
+&lt;string&gt;$(PRODUCT_NAME) uses your microphone for calls&lt;/string&gt;
+<span class="cm">&lt;!-- keeps the call audio running when the app is in the background --&gt;</span>
+&lt;key&gt;UIBackgroundModes&lt;/key&gt;
+&lt;array&gt;
+  &lt;string&gt;audio&lt;/string&gt;
+&lt;/array&gt;</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Join, mute and leave</h4>
+<p>One small class holds the call. It fetches the token from your backend, connects, turns on the microphone (and the camera for a video call), and reports what happens in the room.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">lib/call_service.dart</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">import</span> <span class="str">'dart:convert'</span>;
+
+<span class="kw">import</span> <span class="str">'package:http/http.dart'</span> <span class="kw">as</span> http;
+<span class="kw">import</span> <span class="str">'package:livekit_client/livekit_client.dart'</span>;
+
+<span class="kw">class</span> CallService {
+  Room? _room;
+  EventsListener&lt;RoomEvent&gt;? _listener;
+
+  <span class="cm">// Ask YOUR backend for a call token. It holds the wb_key_ call key</span>
+  <span class="cm">// and decides whether this user may join this room.</span>
+  Future&lt;Map&lt;String, dynamic&gt;&gt; _fetchToken(
+    String roomName,
+    String authToken,
+  ) <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> http.post(
+      Uri.parse(<span class="str">'https://your-backend.example.com/calls/token'</span>),
+      headers: {
+        <span class="str">'Authorization'</span>: <span class="str">'Bearer $authToken'</span>,
+        <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>,
+      },
+      body: jsonEncode({<span class="str">'room'</span>: roomName}),
+    );
+    <span class="kw">if</span> (res.statusCode != 200) {
+      <span class="kw">throw</span> Exception(<span class="str">'Could not get a call token (${res.statusCode})'</span>);
+    }
+    <span class="cm">// Expected reply:</span>
+    <span class="cm">// {"token": "&lt;JWT&gt;", "server_url": "wss://call.wibechat.com"}</span>
+    <span class="kw">return</span> jsonDecode(res.body) <span class="kw">as</span> Map&lt;String, dynamic&gt;;
+  }
+
+  Future&lt;Room&gt; join(
+    String roomName,
+    String authToken, {
+    <span class="kw">bool</span> video = <span class="kw">false</span>,
+    <span class="kw">required</span> <span class="kw">void</span> Function(RoomEvent event) onEvent,
+  }) <span class="kw">async</span> {
+    <span class="kw">final</span> t = <span class="kw">await</span> _fetchToken(roomName, authToken);
+
+    <span class="kw">final</span> room = Room(
+      roomOptions: <span class="kw">const</span> RoomOptions(
+        adaptiveStream: <span class="kw">true</span>,
+        dynacast: <span class="kw">true</span>,
+      ),
+    );
+
+    <span class="cm">// Listen before connecting, so no event is missed.</span>
+    _listener = room.createListener()
+      ..on&lt;ParticipantConnectedEvent&gt;(onEvent)     <span class="cm">// other person joined</span>
+      ..on&lt;ParticipantDisconnectedEvent&gt;(onEvent)  <span class="cm">// other person left</span>
+      ..on&lt;TrackSubscribedEvent&gt;(onEvent)          <span class="cm">// their audio/video arrived</span>
+      ..on&lt;RoomReconnectingEvent&gt;(onEvent)         <span class="cm">// network changed</span>
+      ..on&lt;RoomReconnectedEvent&gt;(onEvent)          <span class="cm">// back to normal</span>
+      ..on&lt;RoomDisconnectedEvent&gt;(onEvent);        <span class="cm">// call is over</span>
+
+    <span class="kw">await</span> room.connect(t[<span class="str">'server_url'</span>] <span class="kw">as</span> String, t[<span class="str">'token'</span>] <span class="kw">as</span> String);
+
+    <span class="cm">// The first time, the system asks the user for permission here.</span>
+    <span class="kw">await</span> room.localParticipant?.setMicrophoneEnabled(<span class="kw">true</span>);
+    <span class="kw">if</span> (video) {
+      <span class="kw">await</span> room.localParticipant?.setCameraEnabled(<span class="kw">true</span>);
+    }
+
+    _room = room;
+    <span class="kw">return</span> room;
+  }
+
+  Future&lt;<span class="kw">void</span>&gt; setMuted(<span class="kw">bool</span> muted) <span class="kw">async</span> {
+    <span class="kw">await</span> _room?.localParticipant?.setMicrophoneEnabled(!muted);
+  }
+
+  Future&lt;<span class="kw">void</span>&gt; setCamera(<span class="kw">bool</span> on) <span class="kw">async</span> {
+    <span class="kw">await</span> _room?.localParticipant?.setCameraEnabled(on);
+  }
+
+  Future&lt;<span class="kw">void</span>&gt; leave() <span class="kw">async</span> {
+    <span class="kw">await</span> _listener?.dispose();
+    <span class="kw">await</span> _room?.disconnect();
+    _listener = <span class="kw">null</span>;
+    _room = <span class="kw">null</span>;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Show the call on screen</h4>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">lib/call_screen.dart</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm">// In your call screen's State class</span>
+<span class="kw">final</span> _calls = CallService();
+VideoTrack? _remoteVideo;
+String _status = <span class="str">'Connecting...'</span>;
+
+Future&lt;<span class="kw">void</span>&gt; _start() <span class="kw">async</span> {
+  <span class="kw">await</span> _calls.join(
+    <span class="str">'standup-room'</span>,
+    authToken,          <span class="cm">// your own app's login token</span>
+    video: <span class="kw">true</span>,
+    onEvent: (event) {
+      <span class="kw">if</span> (!mounted) <span class="kw">return</span>;
+      setState(() {
+        <span class="kw">if</span> (event <span class="kw">is</span> ParticipantConnectedEvent) {
+          _status = <span class="str">'Connected'</span>;
+        } else <span class="kw">if</span> (event <span class="kw">is</span> TrackSubscribedEvent &amp;&amp;
+            event.track <span class="kw">is</span> VideoTrack) {
+          _remoteVideo = event.track <span class="kw">as</span> VideoTrack;
+        } else <span class="kw">if</span> (event <span class="kw">is</span> RoomReconnectingEvent) {
+          _status = <span class="str">'Reconnecting...'</span>;   <span class="cm">// do NOT end the call here</span>
+        } else <span class="kw">if</span> (event <span class="kw">is</span> RoomReconnectedEvent) {
+          _status = <span class="str">'Connected'</span>;
+        } else <span class="kw">if</span> (event <span class="kw">is</span> ParticipantDisconnectedEvent) {
+          _status = <span class="str">'The other person left'</span>;
+        } else <span class="kw">if</span> (event <span class="kw">is</span> RoomDisconnectedEvent) {
+          _status = <span class="str">'Call ended'</span>;
+        }
+      });
+    },
+  );
+}
+
+<span class="cm">// Show the other person's video</span>
+Widget build(BuildContext context) {
+  <span class="kw">final</span> video = _remoteVideo;
+  <span class="kw">return</span> video == <span class="kw">null</span>
+      ? Center(child: Text(_status))
+      : VideoTrackRenderer(video);
+}
+
+<span class="cm">// Always leave when the screen closes</span>
+<span class="kw">void</span> dispose() {
+  _calls.leave();
+  super.dispose();
+}</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>What your app handles itself</h4>
+<ul>
+  <li><b>Ringing and incoming calls.</b> WibeChat does not ring the other phone. Your backend sends a push notification (for example with Firebase Cloud Messaging), and the app shows the incoming call screen and joins when the user accepts.</li>
+  <li><b>Call start, duration and end.</b> WibeChat does not tell your backend when a user joins or leaves. If you need call length or billing, the app reports start, a regular heartbeat and end to your backend, and the backend treats a missing heartbeat as the end.</li>
+  <li><b>Network changes.</b> When the phone moves between Wi-Fi and mobile data, the room sends <code>RoomReconnectingEvent</code> and then <code>RoomReconnectedEvent</code>. Keep the call screen open and keep sending heartbeats while reconnecting. End the call only on <code>RoomDisconnectedEvent</code>.</li>
+  <li><b>Rejoining.</b> If the room does disconnect because of the network, ask your backend for a fresh token and join once more before telling the user the call ended. Call <code>leave()</code> first, so the old connection is closed before the new one starts.</li>
+  <li><b>Refused permissions.</b> If the user refuses the microphone or camera, show a message and a way to open the app settings.</li>
+  <li><b>Real devices.</b> Test on real phones. The iOS simulator has no camera.</li>
+</ul>
+</div>
+</div>
+<p>Audio and video calls use the same token and the same code: an audio call simply leaves the camera off. More options, such as switching cameras and audio output, are in the <a href="https://docs.livekit.io/home/quickstarts/flutter/" target="_blank" rel="noopener">LiveKit Flutter documentation</a>.</p>
 </div>
 
 <div class="tab-content" data-platform="swift" data-group="call-join">
