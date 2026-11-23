@@ -793,8 +793,8 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <p>Add your chat and call keys to <code>.env.local</code>. You get them from the WibeChat Admin Portal.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_CHAT_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
-<span class="var">NEXT_PUBLIC_WIBECHAT_CALL_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
+<pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
+<span class="var">NEXT_PUBLIC_WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
 </div>
 </div>
 
@@ -809,7 +809,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <span class="kw">export default function</span> <span class="fn">RootLayout</span>({ children }) {
   <span class="kw">return</span> (
     &lt;<span class="ty">WibeChatProvider</span>
-      <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CHAT_KEY}
+      <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CHAT_API_KEY}
     &gt;
       {children}
     &lt;/<span class="ty">WibeChatProvider</span>&gt;
@@ -861,7 +861,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
   <span class="cm">// Calls need your call key, so CallButton gets its own provider.</span>
   <span class="kw">return</span> (
-    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CALL_KEY}&gt;
+    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CALL_API_KEY}&gt;
       &lt;<span class="ty">CallButton</span>
         <span class="prop">room</span>=<span class="str">"standup-room"</span>
         <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
@@ -884,10 +884,10 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="steps">
 <div class="step">
 <h4>Install the SDK</h4>
-<p>Install the WibeChat Python SDK from PyPI. Version 0.6.0 or later uses your dashboard keys, including the single call key.</p>
+<p>Install the WibeChat Python SDK from PyPI. Version 0.10.0 or later reads your keys from the two variables below.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code>pip install "wibechat&gt;=0.6.0"</code></pre>
+<pre><code>pip install "wibechat&gt;=0.10.0"</code></pre>
 </div>
 </div>
 <div class="step">
@@ -896,7 +896,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
-<span class="var">WIBECHAT_API_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
+<span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
 </div>
 </div>
 <div class="step">
@@ -963,11 +963,12 @@ token = client.<span class="fn">get_token</span>(
 </div>
 </div>
 <div class="step">
-<h4>Set your API key</h4>
-<p>Add your WibeChat API key to your <code>.env</code> file.</p>
+<h4>Set your API keys</h4>
+<p>Add your WibeChat chat and call keys to your <code>.env</code> file.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="var">WIBECHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span></code></pre>
+<pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
+<span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
 </div>
 </div>
 <div class="step">
@@ -1161,7 +1162,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 </div>
 
 <h3 class="section-subtitle">Python SDK</h3>
-<p>The Python SDK (<code>pip install "wibechat&gt;=0.6.0"</code>) uses the same dashboard keys: your chat key for <code>WibechatChat</code> and your call key for <code>WibechatClient</code>. Versions before 0.5.0 used a chat account's email and API key and an <code>lk_</code> calling license key; those still work if you already have them.</p>
+<p>The Python SDK (<code>pip install "wibechat&gt;=0.10.0"</code>) uses the same dashboard keys: your chat key for <code>WibechatChat</code> and your call key for <code>WibechatClient</code>. Versions before 0.5.0 used a chat account's email and API key and an <code>lk_</code> calling license key; those still work if you already have them.</p>
 
 <h3 class="section-subtitle">Using the API Key</h3>
 <p>All requests to the WibeChat gateway require the API key in the <code>Authorization</code> header.</p>
@@ -1220,7 +1221,7 @@ chat = <span class="ty">WibechatChat</span>(api_key=<span class="str">"wb_chat_x
 <span class="cm"># Calling uses your wb_key_ call key</span>
 client = <span class="ty">WibechatClient</span>(api_key=<span class="str">"wb_key_xxxxxxxxxxxx"</span>)
 
-<span class="cm"># Or read them from WIBECHAT_CHAT_API_KEY and WIBECHAT_API_KEY</span>
+<span class="cm"># Or read them from WIBECHAT_CHAT_API_KEY and WIBECHAT_CALL_API_KEY</span>
 chat = <span class="ty">WibechatChat</span>()
 client = <span class="ty">WibechatClient</span>()</code></pre>
 </div>
@@ -1895,7 +1896,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 
   <span class="cm">// Calls need your call key, so CallButton gets its own provider.</span>
   <span class="kw">return</span> (
-    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CALL_KEY}&gt;
+    &lt;<span class="ty">WibeChatProvider</span> <span class="prop">apiKey</span>={process.env.NEXT_PUBLIC_WIBECHAT_CALL_API_KEY}&gt;
       &lt;<span class="ty">CallButton</span>
         <span class="prop">room</span>=<span class="str">"standup-room"</span>
         <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
@@ -1915,7 +1916,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 <div class="code-header"><span class="code-lang">calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
-client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses WIBECHAT_API_KEY (your wb_key_ call key)</span>
+client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses WIBECHAT_CALL_API_KEY (your wb_key_ call key)</span>
 
 <span class="cm"># Generate a call token</span>
 token = client.<span class="fn">get_token</span>(
@@ -3097,7 +3098,7 @@ chat = <span class="ty">WibechatChat</span>(
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(
-    api_key: <span class="ty">str</span>,  <span class="cm"># your wb_key_ call key, or WIBECHAT_API_KEY env var</span>
+    api_key: <span class="ty">str</span>,  <span class="cm"># your wb_key_ call key, or WIBECHAT_CALL_API_KEY env var</span>
 )</code></pre>
 </div>
 
@@ -3388,8 +3389,8 @@ client = <span class="ty">WibechatClient</span>(
 <table>
   <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
   <tbody>
-    <tr><td><code>NEXT_PUBLIC_WIBECHAT_CHAT_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your chat key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
-    <tr><td><code>NEXT_PUBLIC_WIBECHAT_CALL_KEY</code></td><td><span class="badge-optional">Optional</span></td><td>Your call key (<code>wb_key_</code> prefix), for audio and video calling</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_CHAT_API_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your chat key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_WIBECHAT_CALL_API_KEY</code></td><td><span class="badge-optional">Optional</span></td><td>Your call key (<code>wb_key_</code> prefix), for audio and video calling</td></tr>
   </tbody>
 </table>
 </div>
