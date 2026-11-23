@@ -568,7 +568,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
       <p class="hero-cards-label">Get Started</p>
       <p class="home-section-desc" style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Choose your platform to see tailored integration guides.</p>
       <div class="platform-grid" style="max-width:960px;margin:0 auto">
-        <div class="platform-card" data-platform="react" onclick="setGlobalPlatform('react');window.location.hash='quickstart'">
+        <div class="platform-card" data-platform="react" onclick="openPlatform('react')">
           <div class="platform-dot" style="background:#61DAFB"></div>
           <div class="platform-info">
             <span class="platform-name">React</span>
@@ -576,7 +576,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card" data-platform="javascript" onclick="setGlobalPlatform('javascript');window.location.hash='quickstart'">
+        <div class="platform-card" data-platform="javascript" onclick="openPlatform('javascript')">
           <div class="platform-dot" style="background:#F7DF1E"></div>
           <div class="platform-info">
             <span class="platform-name">JavaScript</span>
@@ -584,7 +584,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="react-native" onclick="setGlobalPlatform('react-native');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="react-native" onclick="openPlatform('react-native')">
           <div class="platform-dot" style="background:#61DAFB"></div>
           <div class="platform-info">
             <span class="platform-name">React Native <span class="soon-badge">Soon</span></span>
@@ -592,7 +592,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card" data-platform="python" onclick="setGlobalPlatform('python');window.location.hash='quickstart'">
+        <div class="platform-card" data-platform="python" onclick="openPlatform('python')">
           <div class="platform-dot" style="background:#3776AB"></div>
           <div class="platform-info">
             <span class="platform-name">Python</span>
@@ -600,7 +600,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="swift" onclick="setGlobalPlatform('swift');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="swift" onclick="openPlatform('swift')">
           <div class="platform-dot" style="background:#F05138"></div>
           <div class="platform-info">
             <span class="platform-name">Swift (iOS) <span class="soon-badge">Soon</span></span>
@@ -608,7 +608,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="kotlin" onclick="setGlobalPlatform('kotlin');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="kotlin" onclick="openPlatform('kotlin')">
           <div class="platform-dot" style="background:#7F52FF"></div>
           <div class="platform-info">
             <span class="platform-name">Kotlin (Android) <span class="soon-badge">Soon</span></span>
@@ -616,7 +616,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card" data-platform="flutter" onclick="setGlobalPlatform('flutter');window.location.hash='quickstart'">
+        <div class="platform-card" data-platform="flutter" onclick="openPlatform('flutter')">
           <div class="platform-dot" style="background:#02569B"></div>
           <div class="platform-info">
             <span class="platform-name">Flutter</span>
@@ -624,7 +624,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="go" onclick="setGlobalPlatform('go');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="go" onclick="openPlatform('go')">
           <div class="platform-dot" style="background:#00ADD8"></div>
           <div class="platform-info">
             <span class="platform-name">Go <span class="soon-badge">Soon</span></span>
@@ -632,7 +632,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="java" onclick="setGlobalPlatform('java');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="java" onclick="openPlatform('java')">
           <div class="platform-dot" style="background:#E76F00"></div>
           <div class="platform-info">
             <span class="platform-name">Java <span class="soon-badge">Soon</span></span>
@@ -640,7 +640,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card coming-soon" data-platform="ruby" onclick="setGlobalPlatform('ruby');window.location.hash='quickstart'">
+        <div class="platform-card coming-soon" data-platform="ruby" onclick="openPlatform('ruby')">
           <div class="platform-dot" style="background:#CC342D"></div>
           <div class="platform-info">
             <span class="platform-name">Ruby <span class="soon-badge">Soon</span></span>
@@ -648,7 +648,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
           </div>
           <span class="platform-arrow">&#8594;</span>
         </div>
-        <div class="platform-card" data-platform="rest" onclick="setGlobalPlatform('rest');window.location.hash='quickstart'">
+        <div class="platform-card" data-platform="rest" onclick="openPlatform('rest')">
           <div class="platform-dot" style="background:#22C55E"></div>
           <div class="platform-info">
             <span class="platform-name">REST API</span>
@@ -3907,6 +3907,15 @@ function setGlobalPlatform(platform) {
   });
   keepPosition(firstVisibleHeading(), () => switchAllTabs(platform));
   revealActivePill();
+}
+
+// A platform card on the home page: switch platform and go to its quick start.
+// Setting location.hash alone does nothing when the hash is already
+// #quickstart, so scroll explicitly every time.
+function openPlatform(platform) {
+  setGlobalPlatform(platform);
+  if (location.hash !== '#quickstart') history.pushState(null, '', '#quickstart');
+  document.getElementById('quickstart').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Scroll only the pill strip (scrollIntoView could also scroll the page).
