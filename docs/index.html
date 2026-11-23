@@ -898,6 +898,18 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
 <span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_call_xxxxxxxxxxxx</span></code></pre>
 </div>
+<p>The SDK reads these two variables from the process environment. Many projects load <code>.env</code> into their own settings instead (Django with <code>python-decouple</code> or <code>django-environ</code>, for example). The SDK cannot see those values, and <code>WibechatClient()</code> fails with "api_key is required". In that case, pass the key yourself:</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">Django</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># settings.py</span>
+WIBECHAT_CALL_API_KEY = <span class="fn">config</span>(<span class="str">"WIBECHAT_CALL_API_KEY"</span>)
+
+<span class="cm"># wherever you create the client</span>
+<span class="kw">from</span> django.conf <span class="kw">import</span> settings
+<span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
+
+client = <span class="ty">WibechatClient</span>(api_key=settings.WIBECHAT_CALL_API_KEY)</code></pre>
+</div>
 </div>
 <div class="step">
 <h4>Initialize the chat client</h4>
@@ -1917,6 +1929,8 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses WIBECHAT_CALL_API_KEY (your wb_call_ call key)</span>
+<span class="cm"># If your keys live in project settings (Django, for example), pass it instead:</span>
+<span class="cm"># client = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)</span>
 
 <span class="cm"># Generate a call token</span>
 token = client.<span class="fn">get_token</span>(
@@ -1989,6 +2003,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="code-header"><span class="code-lang">AndroidManifest.xml</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm">&lt;!-- android/app/src/main/AndroidManifest.xml, inside &lt;manifest&gt; --&gt;</span>
 &lt;uses-feature android:name=<span class="str">"android.hardware.camera"</span> /&gt;
+&lt;uses-permission android:name=<span class="str">"android.permission.INTERNET"</span> /&gt;
 &lt;uses-permission android:name=<span class="str">"android.permission.CAMERA"</span> /&gt;
 &lt;uses-permission android:name=<span class="str">"android.permission.RECORD_AUDIO"</span> /&gt;
 &lt;uses-permission android:name=<span class="str">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;
@@ -2091,6 +2106,18 @@ Widget build(BuildContext context) {
   </tbody>
 </table>
 </div>
+</div>
+<div class="step">
+<h4>Test it with a backend on your computer</h4>
+<p>While developing, your backend usually runs on your computer over plain <code>http</code>. A few things are needed for the app to reach it:</p>
+<ul>
+  <li><b>On a phone, use your computer's network address.</b> <code>localhost</code> on a phone is the phone itself. Use an address such as <code>http://192.168.1.20:8000</code>, with the phone on the same Wi-Fi, and start the backend so it listens on all addresses (for example <code>runserver 0.0.0.0:8000</code>).</li>
+  <li><b>Android blocks plain <code>http</code> by default.</b> For testing only, add <code>android:usesCleartextTraffic="true"</code> to the <code>&lt;application&gt;</code> tag in <code>AndroidManifest.xml</code>.</li>
+  <li><b>iOS blocks plain <code>http</code> by default.</b> For testing only, add <code>NSAppTransportSecurity</code> with <code>NSAllowsLocalNetworking</code> set to <code>true</code> in <code>Info.plist</code>.</li>
+  <li><b>In a browser, the backend must allow the app's address.</b> If you run the app as Flutter web, enable CORS on your backend for the address the app is served from.</li>
+  <li><b>Two users in a browser need the built app.</b> <code>flutter run -d chrome</code> only works in the one window it opens. To test a call between two windows, run <code>flutter build web</code> and serve the <code>build/web</code> folder.</li>
+</ul>
+<p>Remove the two <code>http</code> settings once your backend is on <code>https</code>.</p>
 </div>
 <div class="step">
 <h4>What your app handles itself</h4>
