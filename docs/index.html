@@ -898,7 +898,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
 <span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_call_xxxxxxxxxxxx</span></code></pre>
 </div>
-<p>The SDK reads these two variables from the process environment. Many projects load <code>.env</code> into their own settings instead (Django with <code>python-decouple</code> or <code>django-environ</code>, for example). The SDK cannot see those values, and <code>WibechatClient()</code> fails with "api_key is required". In that case, pass the key yourself:</p>
+<p>The SDK reads these two variables from the process environment. Many projects load <code>.env</code> into their own settings instead (Django with <code>python-decouple</code> or <code>django-environ</code>, or FastAPI with <code>pydantic-settings</code>, for example). The SDK cannot see those values, and <code>WibechatClient()</code> fails with "api_key is required". In that case, pass the key yourself:</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">Django</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># settings.py</span>
@@ -909,6 +909,25 @@ WIBECHAT_CALL_API_KEY = <span class="fn">config</span>(<span class="str">"WIBECH
 <span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
 
 client = <span class="ty">WibechatClient</span>(api_key=settings.WIBECHAT_CALL_API_KEY)</code></pre>
+</div>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">FastAPI</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="cm"># config.py</span>
+<span class="kw">from</span> pydantic_settings <span class="kw">import</span> BaseSettings, SettingsConfigDict
+
+
+<span class="kw">class</span> Settings(BaseSettings):
+    wibechat_call_api_key: str
+
+    model_config = SettingsConfigDict(env_file=<span class="str">".env"</span>, extra=<span class="str">"ignore"</span>)
+
+
+settings = Settings()
+
+<span class="cm"># wherever you create the client</span>
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatClient
+
+client = WibechatClient(api_key=settings.wibechat_call_api_key)</code></pre>
 </div>
 </div>
 <div class="step">
@@ -1950,6 +1969,70 @@ client.<span class="fn">create_room</span>(name=<span class="str">"standup-room"
 <span class="kw">for</span> room <span class="kw">in</span> client.<span class="fn">list_rooms</span>():
     <span class="fn">print</span>(room[<span class="str">"name"</span>], room[<span class="str">"num_participants"</span>])</code></pre>
 </div>
+
+<h4>A call token endpoint for your app</h4>
+<p>Your web or mobile app asks your backend for a call token; the backend checks who is logged in and asks WibeChat. The endpoint returns <code>{"token": "...", "server_url": "..."}</code>, which is what <code>&lt;CallRoom&gt;</code> in React and <code>WibeChatCall</code> in Flutter need. Take the identity from the logged-in user, never from the request, and check here that this user may join this room.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">Django REST Framework</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> django.conf <span class="kw">import</span> settings
+<span class="kw">from</span> rest_framework.permissions <span class="kw">import</span> IsAuthenticated
+<span class="kw">from</span> rest_framework.response <span class="kw">import</span> Response
+<span class="kw">from</span> rest_framework.views <span class="kw">import</span> APIView
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError, WibechatClient
+
+client = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)
+
+
+<span class="kw">class</span> CallTokenView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    <span class="kw">def</span> post(self, request):
+        room = str(request.data.get(<span class="str">"room"</span>, <span class="str">""</span>)).strip()
+        <span class="kw">if</span> <span class="kw">not</span> room:
+            <span class="kw">return</span> Response({<span class="str">"detail"</span>: <span class="str">"room is required."</span>}, status=400)
+        <span class="kw">try</span>:
+            token = client.get_token(
+                room_name=room,
+                user_identity=str(request.user.pk),  <span class="cm"># from the login, never from the request</span>
+                user_name=request.user.get_username(),
+            )
+        <span class="kw">except</span> WibechatAPIError:
+            <span class="kw">return</span> Response({<span class="str">"detail"</span>: <span class="str">"Calls are unavailable right now."</span>}, status=503)
+        <span class="kw">return</span> Response({<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url})</code></pre>
+</div>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">FastAPI</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> APIRouter, Depends, HTTPException
+<span class="kw">from</span> fastapi.concurrency <span class="kw">import</span> run_in_threadpool
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError, WibechatClient
+
+<span class="kw">from</span> auth <span class="kw">import</span> current_user  <span class="cm"># your own login dependency</span>
+<span class="kw">from</span> config <span class="kw">import</span> settings
+
+router = APIRouter()
+client = WibechatClient(api_key=settings.wibechat_call_api_key)
+
+
+<span class="kw">class</span> CallTokenRequest(BaseModel):
+    room: str
+
+
+@router.post(<span class="str">"/calls/token"</span>)
+<span class="kw">async</span> <span class="kw">def</span> call_token(body: CallTokenRequest, user=Depends(current_user)):
+    <span class="kw">try</span>:
+        <span class="cm"># The SDK is synchronous, so run it off the event loop.</span>
+        token = <span class="kw">await</span> run_in_threadpool(
+            client.get_token,
+            room_name=body.room,
+            user_identity=str(user.id),  <span class="cm"># from the login, never from the request</span>
+            user_name=user.name,
+        )
+    <span class="kw">except</span> WibechatAPIError:
+        <span class="kw">raise</span> HTTPException(503, <span class="str">"Calls are unavailable right now."</span>)
+    <span class="kw">return</span> {<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url}</code></pre>
+</div>
+<p>The SDK is synchronous. In FastAPI, call it through <code>run_in_threadpool</code> as above so it does not block other requests.</p>
 </div>
 <div class="tab-content" data-platform="javascript" data-group="call-join">
 <div class="code-block">
