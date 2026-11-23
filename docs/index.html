@@ -443,6 +443,16 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
   .pg-endpoint-list{max-height:200px}
   .chat-messages{height:260px}
 }
+
+/* Framework chooser inside the Python tab */
+.fw-switch{display:flex;align-items:center;gap:8px;margin:16px 0 20px;flex-wrap:wrap}
+.fw-switch-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-right:4px}
+.fw-btn{font:inherit;font-size:13.5px;font-weight:500;padding:6px 16px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary,var(--text-muted));cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.fw-btn:hover{border-color:var(--primary);color:var(--primary)}
+.fw-btn.active{border-color:var(--primary);background:var(--primary);color:var(--bg)}
+.tab-content > p:first-child,.tab-content > .fw-switch:first-child{margin-top:18px}
+.fw-content{display:none}
+.fw-content.active{display:block}
 </style>
 </head>
 <body>
@@ -881,102 +891,222 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
 <!-- Python Quick Start -->
 <div class="tab-content" data-platform="python" data-group="quickstart">
+<p>Choose your framework. The WibeChat SDK is the same in both; only the way you load settings and write endpoints differs.</p>
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
 <div class="steps">
 <div class="step">
 <h4>Install the SDK</h4>
-<p>Install the WibeChat Python SDK from PyPI. Version 0.11.0 or later reads your keys from the two variables below.</p>
+<p>Install the WibeChat Python SDK. This guide reads the keys with <code>python-decouple</code>; use whatever your project already uses for settings.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code>pip install "wibechat&gt;=0.11.0"</code></pre>
+<pre><code>pip install <span class="str">"wibechat&gt;=0.11.0"</span> python-decouple</code></pre>
 </div>
 </div>
 <div class="step">
 <h4>Set your API keys</h4>
-<p>Add your chat and call keys from the WibeChat dashboard (<b>Profile → API Credentials</b>) to a <code>.env</code> file or your environment.</p>
+<p>Add your chat and call keys from the WibeChat dashboard (<b>Profile → API Credentials</b>) to your <code>.env</code> file.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
 <span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_call_xxxxxxxxxxxx</span></code></pre>
 </div>
-<p>The SDK reads these two variables from the process environment. Many projects load <code>.env</code> into their own settings instead (Django with <code>python-decouple</code> or <code>django-environ</code>, or FastAPI with <code>pydantic-settings</code>, for example). The SDK cannot see those values, and <code>WibechatClient()</code> fails with "api_key is required". In that case, pass the key yourself:</p>
+</div>
+<div class="step">
+<h4>Load the keys and create the clients</h4>
+<p>Django settings do not put <code>.env</code> values into the process environment, so pass the keys to the SDK yourself. Create each client once and reuse it.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">Django</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="cm"># settings.py</span>
-WIBECHAT_CALL_API_KEY = <span class="fn">config</span>(<span class="str">"WIBECHAT_CALL_API_KEY"</span>)
+<div class="code-header"><span class="code-lang">settings.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> decouple <span class="kw">import</span> config
 
-<span class="cm"># wherever you create the client</span>
-<span class="kw">from</span> django.conf <span class="kw">import</span> settings
-<span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
-
-client = <span class="ty">WibechatClient</span>(api_key=settings.WIBECHAT_CALL_API_KEY)</code></pre>
+WIBECHAT_CHAT_API_KEY = config(<span class="str">"WIBECHAT_CHAT_API_KEY"</span>)
+WIBECHAT_CALL_API_KEY = config(<span class="str">"WIBECHAT_CALL_API_KEY"</span>)</code></pre>
 </div>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">FastAPI</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="cm"># config.py</span>
-<span class="kw">from</span> pydantic_settings <span class="kw">import</span> BaseSettings, SettingsConfigDict
+<div class="code-header"><span class="code-lang">wibechat_clients.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> django.conf <span class="kw">import</span> settings
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatChat, WibechatClient
+
+<span class="cm"># Create each client once and reuse it: it keeps an HTTP session open.</span>
+chat = WibechatChat(api_key=settings.WIBECHAT_CHAT_API_KEY)
+calls = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Add a call token endpoint</h4>
+<p>Your web or mobile app asks this endpoint for a call token. Take the identity from the logged-in user, never from the request, and check here that this user may join this room.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">calls/views.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> rest_framework.permissions <span class="kw">import</span> IsAuthenticated
+<span class="kw">from</span> rest_framework.response <span class="kw">import</span> Response
+<span class="kw">from</span> rest_framework.views <span class="kw">import</span> APIView
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError
+
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
+
+
+<span class="kw">class</span> CallTokenView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    <span class="kw">def</span> post(self, request):
+        room = str(request.data.get(<span class="str">"room"</span>, <span class="str">""</span>)).strip()
+        <span class="kw">if</span> <span class="kw">not</span> room:
+            <span class="kw">return</span> Response({<span class="str">"detail"</span>: <span class="str">"room is required."</span>}, status=400)
+        <span class="kw">try</span>:
+            token = calls.get_token(
+                room_name=room,
+                user_identity=str(request.user.pk),  <span class="cm"># from the login, never from the request</span>
+                user_name=request.user.get_username(),
+            )
+        <span class="kw">except</span> WibechatAPIError:
+            <span class="kw">return</span> Response({<span class="str">"detail"</span>: <span class="str">"Calls are unavailable right now."</span>}, status=503)
+        <span class="kw">return</span> Response({<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url})</code></pre>
+</div>
+<p>The reply, <code>{"token": "...", "server_url": "..."}</code>, is what <code>&lt;CallRoom&gt;</code> in React and <code>WibeChatCall</code> in Flutter need to join the call.</p>
+</div>
+<div class="step">
+<h4>Send a chat message</h4>
+<p>Call the SDK directly from a view, a service or a background task.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">chat/views.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> rest_framework.permissions <span class="kw">import</span> IsAuthenticated
+<span class="kw">from</span> rest_framework.response <span class="kw">import</span> Response
+<span class="kw">from</span> rest_framework.views <span class="kw">import</span> APIView
+
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> chat
+
+
+<span class="kw">class</span> SendMessageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    <span class="kw">def</span> post(self, request):
+        result = chat.send_message(
+            to=request.data[<span class="str">"channel"</span>],
+            content=request.data[<span class="str">"content"</span>],
+            topic=<span class="str">"general"</span>,
+        )
+        <span class="kw">return</span> Response({<span class="str">"id"</span>: result[<span class="str">"id"</span>]})</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<div class="steps">
+<div class="step">
+<h4>Install the SDK</h4>
+<p>Install the WibeChat Python SDK with <code>pydantic-settings</code>, which reads your keys from <code>.env</code>.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code>pip install <span class="str">"wibechat&gt;=0.11.0"</span> pydantic-settings</code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Set your API keys</h4>
+<p>Add your chat and call keys from the WibeChat dashboard (<b>Profile → API Credentials</b>) to your <code>.env</code> file.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">.env</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="var">WIBECHAT_CHAT_API_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
+<span class="var">WIBECHAT_CALL_API_KEY</span>=<span class="str">wb_call_xxxxxxxxxxxx</span></code></pre>
+</div>
+</div>
+<div class="step">
+<h4>Load the keys and create the clients</h4>
+<p>Read the keys through your settings and pass them to the SDK. Create each client once and reuse it.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">config.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> pydantic_settings <span class="kw">import</span> BaseSettings, SettingsConfigDict
 
 
 <span class="kw">class</span> Settings(BaseSettings):
+    wibechat_chat_api_key: str
     wibechat_call_api_key: str
 
     model_config = SettingsConfigDict(env_file=<span class="str">".env"</span>, extra=<span class="str">"ignore"</span>)
 
 
-settings = Settings()
+settings = Settings()</code></pre>
+</div>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">wibechat_clients.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> WibechatChat, WibechatClient
 
-<span class="cm"># wherever you create the client</span>
-<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatClient
+<span class="kw">from</span> config <span class="kw">import</span> settings
 
-client = WibechatClient(api_key=settings.wibechat_call_api_key)</code></pre>
+<span class="cm"># Create each client once and reuse it: it keeps an HTTP session open.</span>
+chat = WibechatChat(api_key=settings.wibechat_chat_api_key)
+calls = WibechatClient(api_key=settings.wibechat_call_api_key)</code></pre>
 </div>
 </div>
 <div class="step">
-<h4>Initialize the chat client</h4>
-<p>Create a <code>WibechatChat</code> instance with your chat key.</p>
+<h4>Add a call token endpoint</h4>
+<p>Your web or mobile app asks this endpoint for a call token. Take the identity from the logged-in user, never from the request, and check here that this user may join this room.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
+<div class="code-header"><span class="code-lang">calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> APIRouter, Depends, HTTPException
+<span class="kw">from</span> fastapi.concurrency <span class="kw">import</span> run_in_threadpool
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError
 
-chat = <span class="ty">WibechatChat</span>(api_key=<span class="str">"wb_chat_xxxxxxxxxxxx"</span>)</code></pre>
+<span class="kw">from</span> auth <span class="kw">import</span> current_user  <span class="cm"># your own login dependency</span>
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
+
+router = APIRouter()
+
+
+<span class="kw">class</span> CallTokenRequest(BaseModel):
+    room: str
+
+
+@router.post(<span class="str">"/calls/token"</span>)
+<span class="kw">async</span> <span class="kw">def</span> call_token(body: CallTokenRequest, user=Depends(current_user)):
+    <span class="kw">try</span>:
+        <span class="cm"># The SDK is synchronous, so run it off the event loop.</span>
+        token = <span class="kw">await</span> run_in_threadpool(
+            calls.get_token,
+            room_name=body.room,
+            user_identity=str(user.id),  <span class="cm"># from the login, never from the request</span>
+            user_name=user.name,
+        )
+    <span class="kw">except</span> WibechatAPIError:
+        <span class="kw">raise</span> HTTPException(503, <span class="str">"Calls are unavailable right now."</span>)
+    <span class="kw">return</span> {<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url}</code></pre>
 </div>
+<p>The reply, <code>{"token": "...", "server_url": "..."}</code>, is what <code>&lt;CallRoom&gt;</code> in React and <code>WibeChatCall</code> in Flutter need to join the call.</p>
 </div>
 <div class="step">
-<h4>Send a message</h4>
-<p>Send to a channel, or directly to a user.</p>
+<h4>Send a chat message</h4>
+<p>The SDK is synchronous, so run each call through <code>run_in_threadpool</code> inside an <code>async def</code> endpoint.</p>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="cm"># Send to a channel</span>
-chat.<span class="fn">send_message</span>(
-    to=<span class="str">"general"</span>,
-    content=<span class="str">"Hello from the Python SDK!"</span>,
-    topic=<span class="str">"greetings"</span>,
-)
+<div class="code-header"><span class="code-lang">messages.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> APIRouter, Depends
+<span class="kw">from</span> fastapi.concurrency <span class="kw">import</span> run_in_threadpool
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
 
-<span class="cm"># Send a direct message</span>
-chat.<span class="fn">send_direct_message</span>(
-    to=<span class="str">"alice@example.com"</span>,
-    content=<span class="str">"Hey, are you free for a call?"</span>,
-)</code></pre>
+<span class="kw">from</span> auth <span class="kw">import</span> current_user  <span class="cm"># your own login dependency</span>
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> chat
+
+router = APIRouter()
+
+
+<span class="kw">class</span> MessageRequest(BaseModel):
+    channel: str
+    content: str
+
+
+@router.post(<span class="str">"/messages"</span>)
+<span class="kw">async</span> <span class="kw">def</span> send_message(body: MessageRequest, user=Depends(current_user)):
+    result = <span class="kw">await</span> run_in_threadpool(
+        chat.send_message,
+        to=body.channel,
+        content=body.content,
+        topic=<span class="str">"general"</span>,
+    )
+    <span class="kw">return</span> {<span class="str">"id"</span>: result[<span class="str">"id"</span>]}</code></pre>
 </div>
-</div>
-<div class="step">
-<h4>Generate a call token</h4>
-<p>Calls use your call key. The token comes with the call server URL to connect to.</p>
-<div class="code-block standalone">
-<div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
-
-client = <span class="ty">WibechatClient</span>(api_key=<span class="str">"wb_call_xxxxxxxxxxxx"</span>)
-
-token = client.<span class="fn">get_token</span>(
-    room_name=<span class="str">"standup-room"</span>,
-    user_identity=<span class="str">"alice@example.com"</span>,
-    user_name=<span class="str">"Alice"</span>,
-    ttl_seconds=<span class="num">3600</span>,
-)
-
-<span class="fn">print</span>(token.access_token)  <span class="cm"># Pass to the client</span>
-<span class="fn">print</span>(token.server_url)    <span class="cm"># wss://call.wibechat.com</span></code></pre>
 </div>
 </div>
 </div>
@@ -1242,6 +1372,17 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 </div>
 
 <div class="tab-content" data-platform="python" data-group="auth-token">
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
+<p>In Django, call the SDK directly from a view, a service or a background task, using the clients from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<p>The SDK is synchronous. Inside an <code>async def</code> endpoint, run each call through <code>run_in_threadpool</code>, for example <code>await run_in_threadpool(chat.get_streams)</code>.</p>
+</div>
 <div class="code-block">
 <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>, <span class="ty">WibechatClient</span>
@@ -1448,6 +1589,17 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-channels">
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
+<p>In Django, call the SDK directly from a view, a service or a background task, using the clients from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<p>The SDK is synchronous. Inside an <code>async def</code> endpoint, run each call through <code>run_in_threadpool</code>, for example <code>await run_in_threadpool(chat.get_streams)</code>.</p>
+</div>
 <div class="code-block">
 <div class="code-header"><span class="code-lang">channels.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatChat</span>
@@ -1590,6 +1742,17 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-messages">
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
+<p>In Django, call the SDK directly from a view, a service or a background task, using the clients from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<p>The SDK is synchronous. Inside an <code>async def</code> endpoint, run each call through <code>run_in_threadpool</code>, for example <code>await run_in_threadpool(chat.get_streams)</code>.</p>
+</div>
 <div class="code-block">
 <div class="code-header"><span class="code-lang">messages.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># Send a message to a channel</span>
@@ -1751,6 +1914,17 @@ curl -X POST \
 </div>
 </div>
 <div class="tab-content" data-platform="python" data-group="chat-presence">
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
+<p>In Django, call the SDK directly from a view, a service or a background task, using the clients from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<p>The SDK is synchronous. Inside an <code>async def</code> endpoint, run each call through <code>run_in_threadpool</code>, for example <code>await run_in_threadpool(chat.get_streams)</code>.</p>
+</div>
 <div class="code-block">
 <div class="code-header"><span class="code-lang">users.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm"># List all users</span>
@@ -1971,16 +2145,21 @@ client.<span class="fn">create_room</span>(name=<span class="str">"standup-room"
 </div>
 
 <h4>A call token endpoint for your app</h4>
-<p>Your web or mobile app asks your backend for a call token; the backend checks who is logged in and asks WibeChat. The endpoint returns <code>{"token": "...", "server_url": "..."}</code>, which is what <code>&lt;CallRoom&gt;</code> in React and <code>WibeChatCall</code> in Flutter need. Take the identity from the logged-in user, never from the request, and check here that this user may join this room.</p>
+<p>Your web or mobile app asks your backend for a call token; the backend checks who is logged in and asks WibeChat. The endpoint returns <code>{"token": "...", "server_url": "..."}</code>, which is what <code>&lt;CallRoom&gt;</code> in React and <code>WibeChatCall</code> in Flutter need. Take the identity from the logged-in user, never from the request, and check here that this user may join this room. The clients come from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">Django REST Framework</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">from</span> django.conf <span class="kw">import</span> settings
-<span class="kw">from</span> rest_framework.permissions <span class="kw">import</span> IsAuthenticated
+<div class="code-header"><span class="code-lang">calls/views.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> rest_framework.permissions <span class="kw">import</span> IsAuthenticated
 <span class="kw">from</span> rest_framework.response <span class="kw">import</span> Response
 <span class="kw">from</span> rest_framework.views <span class="kw">import</span> APIView
-<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError, WibechatClient
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError
 
-client = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
 
 
 <span class="kw">class</span> CallTokenView(APIView):
@@ -1991,7 +2170,7 @@ client = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)
         <span class="kw">if</span> <span class="kw">not</span> room:
             <span class="kw">return</span> Response({<span class="str">"detail"</span>: <span class="str">"room is required."</span>}, status=400)
         <span class="kw">try</span>:
-            token = client.get_token(
+            token = calls.get_token(
                 room_name=room,
                 user_identity=str(request.user.pk),  <span class="cm"># from the login, never from the request</span>
                 user_name=request.user.get_username(),
@@ -2001,17 +2180,26 @@ client = WibechatClient(api_key=settings.WIBECHAT_CALL_API_KEY)
         <span class="kw">return</span> Response({<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url})</code></pre>
 </div>
 <div class="code-block standalone">
-<div class="code-header"><span class="code-lang">FastAPI</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<div class="code-header"><span class="code-lang">rooms</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
+
+<span class="cm"># Rooms are also created when the first person joins.</span>
+room = calls.create_room(name=<span class="str">"standup-room"</span>, max_participants=10)
+rooms = calls.list_rooms()</code></pre>
+</div>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">calls.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> APIRouter, Depends, HTTPException
 <span class="kw">from</span> fastapi.concurrency <span class="kw">import</span> run_in_threadpool
 <span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
-<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError, WibechatClient
+<span class="kw">from</span> wibechat <span class="kw">import</span> WibechatAPIError
 
 <span class="kw">from</span> auth <span class="kw">import</span> current_user  <span class="cm"># your own login dependency</span>
-<span class="kw">from</span> config <span class="kw">import</span> settings
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
 
 router = APIRouter()
-client = WibechatClient(api_key=settings.wibechat_call_api_key)
 
 
 <span class="kw">class</span> CallTokenRequest(BaseModel):
@@ -2023,7 +2211,7 @@ client = WibechatClient(api_key=settings.wibechat_call_api_key)
     <span class="kw">try</span>:
         <span class="cm"># The SDK is synchronous, so run it off the event loop.</span>
         token = <span class="kw">await</span> run_in_threadpool(
-            client.get_token,
+            calls.get_token,
             room_name=body.room,
             user_identity=str(user.id),  <span class="cm"># from the login, never from the request</span>
             user_name=user.name,
@@ -2032,7 +2220,18 @@ client = WibechatClient(api_key=settings.wibechat_call_api_key)
         <span class="kw">raise</span> HTTPException(503, <span class="str">"Calls are unavailable right now."</span>)
     <span class="kw">return</span> {<span class="str">"token"</span>: token.access_token, <span class="str">"server_url"</span>: token.server_url}</code></pre>
 </div>
-<p>The SDK is synchronous. In FastAPI, call it through <code>run_in_threadpool</code> as above so it does not block other requests.</p>
+<p>The SDK is synchronous. Calling it through <code>run_in_threadpool</code> keeps it from blocking other requests.</p>
+<div class="code-block standalone">
+<div class="code-header"><span class="code-lang">rooms</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+<pre><code><span class="kw">from</span> fastapi.concurrency <span class="kw">import</span> run_in_threadpool
+
+<span class="kw">from</span> wibechat_clients <span class="kw">import</span> calls
+
+<span class="cm"># Rooms are also created when the first person joins.</span>
+room = <span class="kw">await</span> run_in_threadpool(calls.create_room, name=<span class="str">"standup-room"</span>, max_participants=10)
+rooms = <span class="kw">await</span> run_in_threadpool(calls.list_rooms)</code></pre>
+</div>
+</div>
 </div>
 <div class="tab-content" data-platform="javascript" data-group="call-join">
 <div class="code-block">
@@ -3172,6 +3371,17 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 
 <!-- Python SDK -->
 <div class="tab-content" data-platform="python" data-group="sdk-ref">
+<div class="fw-switch" role="group" aria-label="Python framework">
+  <span class="fw-switch-label">Framework</span>
+  <button type="button" class="fw-btn" data-framework="django" onclick="setFramework('django')">Django</button>
+  <button type="button" class="fw-btn" data-framework="fastapi" onclick="setFramework('fastapi')">FastAPI</button>
+</div>
+<div class="fw-content" data-framework="django">
+<p>In Django, call the SDK directly from a view, a service or a background task, using the clients from <code>wibechat_clients.py</code> in the <a href="#quickstart">Quick Start</a>.</p>
+</div>
+<div class="fw-content" data-framework="fastapi">
+<p>The SDK is synchronous. Inside an <code>async def</code> endpoint, run each call through <code>run_in_threadpool</code>, for example <code>await run_in_threadpool(chat.get_streams)</code>.</p>
+</div>
 <h3 class="section-subtitle">WibechatChat — Chat Client</h3>
 
 <div class="code-block standalone">
@@ -3982,6 +4192,19 @@ function firstVisibleHeading() {
     .find(el => el.getBoundingClientRect().bottom > top) || null;
 }
 
+// Django or FastAPI, inside the Python tab. One choice for the whole page.
+function setFramework(framework) {
+  localStorage.setItem('wb-docs-python-framework', framework);
+  keepPosition(firstVisibleHeading(), () => {
+    document.querySelectorAll('.fw-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.framework === framework);
+    });
+    document.querySelectorAll('.fw-content').forEach(el => {
+      el.classList.toggle('active', el.dataset.framework === framework);
+    });
+  });
+}
+
 function setGlobalPlatform(platform) {
   activePlatform = platform;
   localStorage.setItem('wb-docs-platform', platform);
@@ -4594,6 +4817,7 @@ function initPlayground() {
 // ============================================================
 buildGlobalPills();
 switchAllTabs(activePlatform);
+setFramework(localStorage.getItem('wb-docs-python-framework') || 'django');
 document.getElementById('globalPills').addEventListener('scroll', updatePillsOverflow, { passive: true });
 window.addEventListener('resize', updatePillsOverflow);
 buildTOC();
