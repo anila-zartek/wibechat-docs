@@ -680,7 +680,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
             <span class="card-arrow">&rarr;</span>
           </div>
           <div class="card-title">Voice &amp; Video Calling</div>
-          <div class="card-desc">LiveKit-powered rooms, token generation, room management</div>
+          <div class="card-desc">Voice and video rooms, call tokens, room management</div>
         </a>
       </div>
     </div>
@@ -794,8 +794,7 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">.env.local</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="var">NEXT_PUBLIC_WIBECHAT_CHAT_KEY</span>=<span class="str">wb_chat_xxxxxxxxxxxx</span>
-<span class="var">NEXT_PUBLIC_WIBECHAT_CALL_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span>
-<span class="var">NEXT_PUBLIC_LIVEKIT_URL</span>=<span class="str">wss://call.wibechat.com</span></code></pre>
+<span class="var">NEXT_PUBLIC_WIBECHAT_CALL_KEY</span>=<span class="str">wb_key_xxxxxxxxxxxx</span></code></pre>
 </div>
 </div>
 
@@ -840,34 +839,23 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
 
 <div class="step">
 <h4>Add a call button</h4>
-<p>First, install the LiveKit UI packages for the call interface:</p>
-<div class="code-block standalone">
-<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
-</div>
-<p>Then generate a LiveKit token and launch a call room. Use with <code>@livekit/components-react</code> for the call UI.</p>
+<p>Generate a call token with <code>CallButton</code>, then show the call with <code>CallRoom</code>. Both come with <code>@wibechat/react</code>; the call screen's styles are in the stylesheet you imported above.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">components/Call.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
-<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
-<span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
-<span class="kw">import</span> <span class="str">'@livekit/components-styles'</span>;
+<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">CallRoom</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">export default function</span> <span class="fn">Call</span>() {
   <span class="kw">const</span> [callState, setCallState] = useState(<span class="kw">null</span>);
 
   <span class="kw">if</span> (callState) {
     <span class="kw">return</span> (
-      &lt;<span class="ty">LiveKitRoom</span>
+      &lt;<span class="ty">CallRoom</span>
         <span class="prop">token</span>={callState.token}
         <span class="prop">serverUrl</span>={callState.serverUrl}
-        <span class="prop">onDisconnected</span>={() =&gt; setCallState(<span class="kw">null</span>)}
-        <span class="prop">video</span>
-        <span class="prop">audio</span>
-        <span class="prop">data-lk-theme</span>=<span class="str">"default"</span>
-      &gt;
-        &lt;<span class="ty">VideoConference</span> /&gt;
-      &lt;/<span class="ty">LiveKitRoom</span>&gt;
+        <span class="prop">style</span>={{ height: <span class="str">'100vh'</span> }}
+        <span class="prop">onLeave</span>={() =&gt; setCallState(<span class="kw">null</span>)}
+      /&gt;
     );
   }
 
@@ -878,7 +866,6 @@ pre code{background:none;padding:0;border:none;font-size:inherit;color:inherit}
         <span class="prop">room</span>=<span class="str">"standup-room"</span>
         <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
         <span class="prop">name</span>=<span class="str">"Alice"</span>
-        <span class="prop">livekitServerUrl</span>={process.env.NEXT_PUBLIC_LIVEKIT_URL}
         <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
           setCallState({ token, serverUrl, room });
         }}
@@ -943,7 +930,7 @@ chat.<span class="fn">send_direct_message</span>(
 </div>
 <div class="step">
 <h4>Generate a call token</h4>
-<p>Calls use your call key. The token comes with the LiveKit server URL to connect to.</p>
+<p>Calls use your call key. The token comes with the call server URL to connect to.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">main.py</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">from</span> wibechat <span class="kw">import</span> <span class="ty">WibechatClient</span>
@@ -1009,7 +996,7 @@ token = client.<span class="fn">get_token</span>(
 </div>
 <div class="step">
 <h4>Generate a call token</h4>
-<p>Get a LiveKit JWT token for joining a call room. Calls need your call key, so create a second client with it.</p>
+<p>Get a call token for joining a call room. Calls need your call key, so create a second client with it.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">call.js</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">const</span> <span class="var">callClient</span> = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_key_xxxxxxxxxxxx'</span> });
@@ -1020,7 +1007,7 @@ token = client.<span class="fn">get_token</span>(
   <span class="prop">name</span>: <span class="str">'Alice'</span>,
   <span class="prop">ttl</span>: <span class="num">3600</span>,
 });
-console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// JWT string — pass to LiveKit</span></code></pre>
+console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// call token (a JWT string)</span></code></pre>
 </div>
 </div>
 </div>
@@ -1322,7 +1309,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 </div>
 
 <h3 class="section-subtitle">Call Room Tokens</h3>
-<p>LiveKit call rooms require a JWT access token. Generate one using <code>client.calls.createToken()</code>.</p>
+<p>Joining a call room requires a call token. Generate one using <code>client.calls.createToken()</code>.</p>
 
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">TypeScript</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
@@ -1330,7 +1317,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 
 <span class="kw">const</span> client = <span class="kw">new</span> <span class="ty">WibeChatClient</span>({ apiKey: <span class="str">'wb_key_xxxxxxxxxxxx'</span> });
 
-<span class="cm">// Generate a LiveKit token</span>
+<span class="cm">// Generate a call token</span>
 <span class="kw">const</span> token = <span class="kw">await</span> client.calls.<span class="fn">createToken</span>({
   room: <span class="str">'standup-room'</span>,
   identity: <span class="str">'alice@example.com'</span>,
@@ -1338,7 +1325,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
   ttl: <span class="num">3600</span>,  <span class="cm">// 1 hour (60–86400 seconds)</span>
 });
 
-<span class="cm">// Pass this token to LiveKitRoom or the CallButton component</span></code></pre>
+<span class="cm">// Pass this token to the CallRoom component</span></code></pre>
 </div>
 
 <div class="callout warning">
@@ -1866,18 +1853,10 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
   <span>Calling Integration</span>
 </div>
 <h2 class="section-title">Calling Integration</h2>
-<p class="section-desc">Add voice and video calls powered by LiveKit. WibeChat generates access tokens and manages rooms — you bring the LiveKit UI components.</p>
-
-<div class="callout note">
-  <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-  <div class="callout-body">
-    <span class="callout-title">LiveKit dependency</span>
-    <p>Calling features require <code>@livekit/components-react</code> and <code>@livekit/components-styles</code> for the React call UI. WibeChat handles token generation and room management; LiveKit handles the actual audio/video rendering. Install them with: <code>npm install @livekit/components-react @livekit/components-styles</code></p>
-  </div>
-</div>
+<p class="section-desc">Add voice and video calls. WibeChat issues call tokens, runs the call server and manages rooms; the SDKs give you the call screen.</p>
 
 <h3 class="section-subtitle">CallButton Component</h3>
-<p>The simplest way to add calling. Generates a LiveKit token on click and fires a callback with the token and server URL. Wrap it in a <code>WibeChatProvider</code> that holds your call key, since the chat key cannot create call tokens. Set <code>livekitServerUrl</code> to your LiveKit server URL: the component passes it to the callback as <code>serverUrl</code>, and it is empty if you leave the prop out.</p>
+<p>The simplest way to add calling. <code>CallButton</code> generates a call token on click and fires a callback with the token and the call server URL; pass both to <code>CallRoom</code> to show the call. Wrap it in a <code>WibeChatProvider</code> that holds your call key, since the chat key cannot create call tokens.</p>
 
 <div class="platform-tabs-wrapper" data-tab-group="call-join">
 <div class="platform-tabs">
@@ -1898,25 +1877,19 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 <div class="code-block">
 <div class="code-header"><span class="code-lang">components/VideoCall.tsx</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
-<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
-<span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
-<span class="kw">import</span> <span class="str">'@livekit/components-styles'</span>;
+<span class="kw">import</span> { <span class="ty">CallButton</span>, <span class="ty">CallRoom</span>, <span class="ty">WibeChatProvider</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">export default function</span> <span class="fn">VideoCall</span>() {
   <span class="kw">const</span> [callState, setCallState] = useState(<span class="kw">null</span>);
 
   <span class="kw">if</span> (callState) {
     <span class="kw">return</span> (
-      &lt;<span class="ty">LiveKitRoom</span>
+      &lt;<span class="ty">CallRoom</span>
         <span class="prop">token</span>={callState.token}
         <span class="prop">serverUrl</span>={callState.serverUrl}
-        <span class="prop">onDisconnected</span>={() =&gt; setCallState(<span class="kw">null</span>)}
-        <span class="prop">video</span>
-        <span class="prop">audio</span>
-        <span class="prop">data-lk-theme</span>=<span class="str">"default"</span>
-      &gt;
-        &lt;<span class="ty">VideoConference</span> /&gt;
-      &lt;/<span class="ty">LiveKitRoom</span>&gt;
+        <span class="prop">style</span>={{ height: <span class="str">'100vh'</span> }}
+        <span class="prop">onLeave</span>={() =&gt; setCallState(<span class="kw">null</span>)}
+      /&gt;
     );
   }
 
@@ -1928,7 +1901,6 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
         <span class="prop">identity</span>=<span class="str">"alice@example.com"</span>
         <span class="prop">name</span>=<span class="str">"Alice"</span>
         <span class="prop">label</span>=<span class="str">"Join Call"</span>
-        <span class="prop">livekitServerUrl</span>={process.env.NEXT_PUBLIC_LIVEKIT_URL}
         <span class="prop">onTokenGenerated</span>={(token, serverUrl, room) =&gt; {
           setCallState({ token, serverUrl, room });
         }}
@@ -1945,7 +1917,7 @@ curl -H <span class="str">"Authorization: Bearer wb_chat_xxxxxxxxxxxx"</span> \
 
 client = <span class="ty">WibechatClient</span>()  <span class="cm"># uses WIBECHAT_API_KEY (your wb_key_ call key)</span>
 
-<span class="cm"># Generate a LiveKit access token</span>
+<span class="cm"># Generate a call token</span>
 token = client.<span class="fn">get_token</span>(
     room_name=<span class="str">"standup-room"</span>,
     user_identity=<span class="str">"alice@example.com"</span>,
@@ -1953,7 +1925,7 @@ token = client.<span class="fn">get_token</span>(
     ttl_seconds=<span class="num">3600</span>,
 )
 
-<span class="fn">print</span>(token.access_token)       <span class="cm"># JWT for LiveKit</span>
+<span class="fn">print</span>(token.access_token)       <span class="cm"># call token (JWT)</span>
 <span class="fn">print</span>(token.server_url)         <span class="cm"># wss://call.wibechat.com</span>
 <span class="fn">print</span>(token.room_name)          <span class="cm"># "standup-room"</span>
 <span class="fn">print</span>(token.expires_in_seconds) <span class="cm"># 3600</span>
@@ -1975,7 +1947,7 @@ client.<span class="fn">create_room</span>(name=<span class="str">"standup-room"
   <span class="prop">name</span>: <span class="str">'Alice'</span>,
   <span class="prop">ttl</span>: <span class="num">3600</span>,
 });
-console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// JWT string for LiveKit</span></code></pre>
+console.<span class="fn">log</span>(<span class="var">token</span>); <span class="cm">// call token (a JWT string)</span></code></pre>
 </div>
 </div>
 
@@ -1988,7 +1960,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 </div>
 
 <div class="tab-content" data-platform="flutter" data-group="call-join">
-<p>Use the WibeChat Flutter package, <a href="https://pub.dev/packages/wibechat_flutter" target="_blank" rel="noopener"><code>wibechat_flutter</code></a>. Your backend creates the call token (see the <b>Python</b> or <b>REST API</b> tab); the package connects the app, handles the microphone and camera, reports the call status, and recovers from network changes. It is built on LiveKit's Flutter SDK, which it installs for you.</p>
+<p>Use the WibeChat Flutter package, <a href="https://pub.dev/packages/wibechat_flutter" target="_blank" rel="noopener"><code>wibechat_flutter</code></a>. Your backend creates the call token (see the <b>Python</b> or <b>REST API</b> tab); the package connects the app, handles the microphone, camera and speaker, shows the video, reports the call status, and recovers from network changes.</p>
 <div class="callout warning">
   <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
   <div class="callout-body">
@@ -2006,7 +1978,7 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">pubspec.yaml</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code>dependencies:
-  wibechat_flutter: ^0.1.0</code></pre>
+  wibechat_flutter: ^0.2.0</code></pre>
 </div>
 </div>
 <div class="step">
@@ -2059,13 +2031,15 @@ console.<span class="fn">log</span>(<span class="var">token</span>); <span class
 
 <span class="kw">await</span> call.setMicrophoneEnabled(<span class="kw">false</span>);  <span class="cm">// mute</span>
 <span class="kw">await</span> call.setCameraEnabled(<span class="kw">false</span>);      <span class="cm">// camera off</span>
+<span class="kw">await</span> call.switchCamera();               <span class="cm">// front / back</span>
+<span class="kw">await</span> call.setSpeakerphoneEnabled(<span class="kw">true</span>); <span class="cm">// loudspeaker</span>
 
 <span class="kw">await</span> call.leave();</code></pre>
 </div>
 </div>
 <div class="step">
 <h4>Show the call on screen</h4>
-<p><code>WibeChatCall</code> notifies its listeners whenever the call changes. Rebuild from <code>call.status</code> and show the other person's camera with <code>VideoTrackRenderer</code>.</p>
+<p><code>WibeChatCall</code> notifies its listeners whenever the call changes. Rebuild from <code>call.status</code>. <code>call.remoteVideo</code> is a ready widget showing the other person's camera, or <code>null</code> while their camera is off.</p>
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">lib/call_screen.dart</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
 <pre><code><span class="cm">// In your call screen's State class</span>
@@ -2094,10 +2068,7 @@ String get statusText =&gt; <span class="kw">switch</span> (call.status) {
 
 @override
 Widget build(BuildContext context) {
-  <span class="kw">final</span> video = call.remoteVideoTrack;
-  <span class="kw">return</span> video == <span class="kw">null</span>
-      ? Center(child: Text(statusText))
-      : VideoTrackRenderer(video);
+  <span class="kw">return</span> call.remoteVideo ?? Center(child: Text(statusText));
 }
 
 @override
@@ -2132,7 +2103,6 @@ Widget build(BuildContext context) {
 <p>Network changes are handled for you. When the phone moves between Wi-Fi and mobile data the status goes to <code>reconnecting</code> and back, and if the connection is lost for good the package gets a fresh token from your backend and joins once more before ending the call.</p>
 </div>
 </div>
-<p>For anything the package does not wrap, such as switching cameras or choosing the audio output, <code>call.room</code> is the underlying LiveKit <code>Room</code>.</p>
 </div>
 
 <div class="tab-content" data-platform="swift" data-group="call-join">
@@ -2192,8 +2162,7 @@ curl -X POST \
 
 <div class="code-block standalone">
 <div class="code-header"><span class="code-lang">hooks/useCall.ts</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code><span class="kw">import</span> { <span class="fn">useCallToken</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
-<span class="kw">import</span> { <span class="ty">LiveKitRoom</span>, <span class="ty">VideoConference</span> } <span class="kw">from</span> <span class="str">'@livekit/components-react'</span>;
+<pre><code><span class="kw">import</span> { <span class="fn">useCallToken</span>, <span class="ty">CallRoom</span> } <span class="kw">from</span> <span class="str">'@wibechat/react'</span>;
 
 <span class="kw">function</span> <span class="fn">CustomCallUI</span>() {
   <span class="kw">const</span> { token, loading, error, <span class="fn">generateToken</span> } = <span class="fn">useCallToken</span>();
@@ -2205,14 +2174,12 @@ curl -X POST \
       name: <span class="str">'Alice'</span>,
       ttl: <span class="num">3600</span>,
     });
-    <span class="cm">// t is the JWT token string — pass to LiveKitRoom</span>
+    <span class="cm">// t is the call token string: pass it to CallRoom</span>
   };
 
   <span class="kw">if</span> (token) {
     <span class="kw">return</span> (
-      &lt;<span class="ty">LiveKitRoom</span> <span class="prop">token</span>={token} <span class="prop">serverUrl</span>=<span class="str">"wss://call.wibechat.com"</span>&gt;
-        &lt;<span class="ty">VideoConference</span> /&gt;
-      &lt;/<span class="ty">LiveKitRoom</span>&gt;
+      &lt;<span class="ty">CallRoom</span> <span class="prop">token</span>={token} <span class="prop">style</span>={{ height: <span class="str">'100vh'</span> }} /&gt;
     );
   }
 
@@ -2718,7 +2685,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
 </div>
 
 <h3 class="section-subtitle">Calling</h3>
-<p>Endpoints for generating LiveKit access tokens and managing call rooms in your organization.</p>
+<p>Endpoints for generating call tokens and managing call rooms in your organization.</p>
 
 <div class="endpoint" id="ep-calls-token-post">
   <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -2729,7 +2696,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
-    <p>Generates a short-lived LiveKit JWT access token for joining a call room. Pass the returned token to <code>&lt;LiveKitRoom&gt;</code> or the <code>livekit_client</code> SDK.</p>
+    <p>Generates a short-lived call token (a JWT) for joining a call room. Pass the returned token to <code>&lt;CallRoom&gt;</code> in React or <code>WibeChatCall</code> in Flutter.</p>
     <div class="table-wrap">
     <table>
       <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
@@ -2807,7 +2774,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
   </div>
   <div class="endpoint-body">
     <div class="endpoint-body-inner">
-    <p>Creates or ensures a LiveKit room exists. Rooms are also created automatically when the first participant joins using a token.</p>
+    <p>Creates a call room, or confirms it exists. Rooms are also created automatically when the first participant joins using a token.</p>
     <div class="table-wrap">
     <table>
       <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
@@ -2932,7 +2899,8 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>&lt;MessageBubble&gt;</code></td><td>Single message display</td><td><code>message</code></td></tr>
     <tr><td><code>&lt;MessageInput&gt;</code></td><td>Text input with file upload</td><td><code>channel?</code>, <code>topic?</code>, <code>placeholder?</code>, <code>onMessageSent?</code></td></tr>
     <tr><td><code>&lt;UserList&gt;</code></td><td>User list with presence indicators</td><td><code>className?</code></td></tr>
-    <tr><td><code>&lt;CallButton&gt;</code></td><td>Generates LiveKit token on click</td><td><code>room</code>, <code>identity</code>, <code>name?</code>, <code>livekitServerUrl?</code>, <code>ttl?</code>, <code>onTokenGenerated?</code>, <code>label?</code></td></tr>
+    <tr><td><code>&lt;CallButton&gt;</code></td><td>Generates a call token on click</td><td><code>room</code>, <code>identity</code>, <code>name?</code>, <code>serverUrl?</code>, <code>ttl?</code>, <code>onTokenGenerated?</code>, <code>label?</code></td></tr>
+    <tr><td><code>&lt;CallRoom&gt;</code></td><td>Complete call screen: video, microphone, camera, screen share, leave</td><td><code>token</code>, <code>serverUrl?</code>, <code>video?</code>, <code>audio?</code>, <code>onLeave?</code>, <code>style?</code>, <code>className?</code></td></tr>
   </tbody>
 </table>
 </div>
@@ -2947,7 +2915,7 @@ client.<span class="fn">connectRealTime</span>();</code></pre>
     <tr><td><code>useMessages(opts?)</code></td><td><code>{ messages, loading, error, hasMore, loadMore, sendMessage, refetch }</code></td><td>Messages with infinite scroll and real-time</td></tr>
     <tr><td><code>useUsers()</code></td><td><code>{ users, loading, error, refetch }</code></td><td>Fetches organization users</td></tr>
     <tr><td><code>usePresence()</code></td><td><code>{ presences, loading, error, refetch }</code></td><td>User presence (online/idle/offline)</td></tr>
-    <tr><td><code>useCallToken()</code></td><td><code>{ token, loading, error, generateToken }</code></td><td>On-demand LiveKit token generation</td></tr>
+    <tr><td><code>useCallToken()</code></td><td><code>{ token, loading, error, generateToken }</code></td><td>On-demand call token generation</td></tr>
   </tbody>
 </table>
 </div>
@@ -3168,7 +3136,7 @@ client = <span class="ty">WibechatClient</span>(
 @dataclass
 <span class="kw">class</span> <span class="ty">TokenResponse</span>:
     access_token: <span class="ty">str</span>
-    server_url: <span class="ty">str</span>        <span class="cm"># LiveKit server, wss://call.wibechat.com</span>
+    server_url: <span class="ty">str</span>        <span class="cm"># call server, wss://call.wibechat.com</span>
     room_name: <span class="ty">str</span>
     expires_in_seconds: <span class="ty">int</span>
     issued_at: <span class="ty">str</span></code></pre>
@@ -3278,7 +3246,7 @@ client = <span class="ty">WibechatClient</span>(
 
 <!-- Flutter SDK -->
 <div class="tab-content" data-platform="flutter" data-group="sdk-ref">
-<p>Package <a href="https://pub.dev/packages/wibechat_flutter" target="_blank" rel="noopener"><code>wibechat_flutter</code></a>, version 0.1.0. Calling only.</p>
+<p>Package <a href="https://pub.dev/packages/wibechat_flutter" target="_blank" rel="noopener"><code>wibechat_flutter</code></a>, version 0.2.0. Calling only.</p>
 <h3 class="section-subtitle">WibeChatCall</h3>
 <div class="table-wrap">
 <table>
@@ -3294,8 +3262,9 @@ client = <span class="ty">WibechatClient</span>(
     <tr><td><code>microphoneEnabled</code>, <code>cameraEnabled</code></td><td>Current microphone and camera state</td></tr>
     <tr><td><code>remoteParticipantCount</code></td><td>How many other people are in the room</td></tr>
     <tr><td><code>connectedAt</code></td><td>When another participant was first in the room with this user</td></tr>
-    <tr><td><code>remoteVideoTrack</code>, <code>localVideoTrack</code></td><td>Video to show with <code>VideoTrackRenderer</code>; <code>null</code> while the camera is off</td></tr>
-    <tr><td><code>room</code></td><td>The underlying LiveKit <code>Room</code></td></tr>
+    <tr><td><code>switchCamera()</code></td><td>Switches between the front and back camera</td></tr>
+    <tr><td><code>setSpeakerphoneEnabled(bool)</code></td><td>Loudspeaker or earpiece. Phones only</td></tr>
+    <tr><td><code>remoteVideo</code>, <code>localVideo</code></td><td>Ready widgets showing the other person's camera and this user's own; <code>null</code> while that camera is off</td></tr>
     <tr><td><code>addListener</code> / <code>removeListener</code> / <code>dispose</code></td><td><code>WibeChatCall</code> is a <code>ChangeNotifier</code>. <code>dispose</code> also leaves the call</td></tr>
   </tbody>
 </table>
@@ -3421,7 +3390,6 @@ client = <span class="ty">WibechatClient</span>(
   <tbody>
     <tr><td><code>NEXT_PUBLIC_WIBECHAT_CHAT_KEY</code></td><td><span class="badge-required">Required</span></td><td>Your chat key from the <a href="https://admin.wibechat.com">Admin Portal</a> (<code>wb_chat_</code> prefix)</td></tr>
     <tr><td><code>NEXT_PUBLIC_WIBECHAT_CALL_KEY</code></td><td><span class="badge-optional">Optional</span></td><td>Your call key (<code>wb_key_</code> prefix), for audio and video calling</td></tr>
-    <tr><td><code>NEXT_PUBLIC_LIVEKIT_URL</code></td><td><span class="badge-optional">Optional</span></td><td>The WibeChat LiveKit server, <code>wss://call.wibechat.com</code>, for calling. Call tokens do not include it.</td></tr>
   </tbody>
 </table>
 </div>
@@ -3497,19 +3465,14 @@ client = <span class="ty">WibechatClient</span>(
 </table>
 </div>
 
-<h3 class="section-subtitle">LiveKit Setup</h3>
-<p>For calling features, install the LiveKit React components alongside the WibeChat SDK. Connect them to the WibeChat LiveKit server at <code>wss://call.wibechat.com</code>; call tokens do not include this URL, so pass it yourself as <code>serverUrl</code> (or <code>livekitServerUrl</code> on <code>CallButton</code>).</p>
-
-<div class="code-block standalone">
-<div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-<pre><code>npm install @livekit/components-react @livekit/components-styles</code></pre>
-</div>
+<h3 class="section-subtitle">Call Screen</h3>
+<p>The call screen is part of the SDKs: <code>&lt;CallRoom&gt;</code> in <code>@wibechat/react</code> and <code>WibeChatCall</code> in <code>wibechat_flutter</code>. There is nothing else to install. Calls connect to the WibeChat call server at <code>wss://call.wibechat.com</code>, which is the default <code>serverUrl</code>.</p>
 
 <div class="callout tip">
   <div class="callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26A7 7 0 0 1 12 2z"/></svg></div>
   <div class="callout-body">
-    <span class="callout-title">LiveKit handles the call UI</span>
-    <p>WibeChat generates LiveKit access tokens and manages rooms. The actual call UI (video grid, controls, screen sharing) comes from <code>@livekit/components-react</code>. Use the <code>CallButton</code> component to generate tokens, then pass them to <code>&lt;LiveKitRoom&gt;</code>.</p>
+    <span class="callout-title">One stylesheet</span>
+    <p>In React, the call screen's styles ship in <code>@wibechat/react/styles.css</code>, the same stylesheet as the chat components. Import it once in your app.</p>
   </div>
 </div>
 
